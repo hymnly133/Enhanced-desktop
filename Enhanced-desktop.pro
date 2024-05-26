@@ -11,11 +11,13 @@ CONFIG += c++17
 SOURCES += \
     SysFunctions.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    mousehook.cpp
 
 HEADERS += \
     SysFunctions.h \
-    mainwindow.h
+    mainwindow.h \
+    mousehook.h
 
 FORMS += \
     mainwindow.ui
