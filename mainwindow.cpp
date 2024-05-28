@@ -71,34 +71,40 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 // 拖拽对象置顶，卡牌积压的时候，拖动的那张卡牌置顶
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    qDebug("mw-releasse");
-    int dtwidth = 2560;
-    int dtheight = 1440;
-    int mindeltaX = dtwidth;
-    int mindeltaY = dtheight;
-    int bpx, bpy;
-    // 遍历各个点位寻找最小差异的位置
-    for (int j = 0; j < 10; j++)
-    {
-        int deltaY = abs(temp->pos().y() - 144 * j);
-        if (deltaY < mindeltaY)
+    if(moving){
+
+        qDebug("mw-releasse");
+        int dtwidth = 2560;
+        int dtheight = 1440;
+        int mindeltaX = dtwidth;
+        int mindeltaY = dtheight;
+        int bpx, bpy;
+        // 遍历各个点位寻找最小差异的位置
+        for (int j = 0; j < 10; j++)
         {
-            mindeltaY = deltaY;
-            bpy = 144 * j;
+            int deltaY = abs(temp->pos().y() - 144 * j);
+            if (deltaY < mindeltaY)
+            {
+                mindeltaY = deltaY;
+                bpy = 144 * j;
+            }
         }
-    }
-    for (int j = 0; j < 22; j++)
-    {
-        int deltaX = abs(temp->pos().x() - 115 * j);
-        if (deltaX < mindeltaX)
+        for (int j = 0; j < 22; j++)
         {
-            mindeltaX = deltaX;
-            bpx = 115 * j;
+            int deltaX = abs(temp->pos().x() - 115 * j);
+            if (deltaX < mindeltaX)
+            {
+                mindeltaX = deltaX;
+                bpx = 115 * j;
+            }
         }
+
+        temp->move(bpx, bpy);
+        temp->raise();
+        moving = false;
+
     }
-    temp->move(bpx, bpy);
-    temp->raise();
-    moving = false;
+
 }
 // void MainWindow::mousePressEvent(QMouseEvent *event)
 // {
