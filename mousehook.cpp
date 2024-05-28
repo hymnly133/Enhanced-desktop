@@ -46,7 +46,6 @@ void MouseHook::SetMouseOffCallBack(void(*func)(int,int))
 
 LRESULT CALLBACK MouseHook::MouseHookEvent(int ncode, WPARAM wParam, LPARAM lParam)
 {
-    qDebug("111");
     LPMSLLHOOKSTRUCT p = (LPMSLLHOOKSTRUCT)lParam;
     POINT   pt = p->pt;
     DWORD   mouseData = p->time;

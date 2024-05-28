@@ -25,17 +25,25 @@ void InitMouseHook(){
     pmh->SetMouseOffCallBack(mouse_off);
     pmh->SetMouseOnCallBack(mouse_on);
 }
+
+
 void Init(MainWindow* mainwindow){
     //初始化
+    qDebug()<<"Initing";
 
-
+    //无边框全屏
     // mainwindow->setWindowState(Qt::WindowFullScreen);
-        qDebug()<<"Initing";
+
+
+
     //无边框
     mainwindow->setWindowFlags(Qt::FramelessWindowHint);
 
+
+
     //把窗口背景设置为透明
     // mainwindow->  setAttribute(Qt::WA_TranslucentBackground);
+
 
     //绑定函数
 

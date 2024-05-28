@@ -23,7 +23,13 @@ int main(int argc, char *argv[])
     }
 
     MainWindow mw ;
-    InitMouseHook();
+    //鼠标钩子
+    // InitMouseHook();
+
+    //注入壁纸
+    // inplace(&mw);
+
+
     mw.show();
     return a.exec();
 }

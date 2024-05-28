@@ -24,5 +24,6 @@ void card::paintEvent(QPaintEvent *event)
 void card::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
+    qDebug("card-press");
     emit sendSelf(this);                                  //信号发送该控件地址
 }

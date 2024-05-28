@@ -61,6 +61,7 @@ void MainWindow::getObject(card *w)
 }
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
+        qDebug("mw-moving");
     if(moving)
     temp->move(yuanP.x()+event->x()-startP.x(),yuanP.y()+event->y()-startP.y());
 }
@@ -68,6 +69,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 //拖拽对象置顶，卡牌积压的时候，拖动的那张卡牌置顶
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
+    qDebug("mw-releasse");
     temp->raise();
     moving  =false;
 }
