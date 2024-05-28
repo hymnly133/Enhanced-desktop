@@ -79,11 +79,8 @@ void inplace(MainWindow* mainwindow) {
     // 如果找到了正确的WorkerW窗口，设置父窗口
     if (background != NULL) {
         SetParent((HWND)mainwindow->winId(), background);
-        // 将MainWindow_E窗口置于SHELLDLL_DefView窗口上方
         SetWindowPos((HWND)mainwindow->winId(), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-        // 设置MainWindow_E窗口为顶层窗口，以便接收点击事件
         SetWindowPos((HWND)mainwindow->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-        // 确保MainWindow_E窗口可以获得焦点
         SetFocus((HWND)mainwindow->winId());
     } else {
         // 如果没有找到合适的WorkerW窗口，可以在这里处理错误
