@@ -52,30 +52,43 @@ void Init(MainWindow* mainwindow){
     pmw = mainwindow;
 }
 
-void inplace(MainWindow* mainwindow){
-    //接入到壁纸层
+void inplace(MainWindow* mainwindow) {
+    // 接入到壁纸层
     HWND background = NULL;
-    HWND hwnd = FindWindowA("progman","Program Manager");
+    HWND hwnd = FindWindowA("Progman", "Program Manager");
     HWND worker = NULL;
-    do{
-        worker = FindWindowExA(NULL,worker,"WorkerW",NULL);
-        if(worker!=NULL){
-            char buff[200] = {0};
 
-            int ret = GetClassName(worker,(WCHAR*)buff,sizeof(buff)*2);
-            if(ret == 0){
-                int err = GetLastError();
-                qDebug()<<"err:"<<err;
+    // 循环查找WorkerW窗口
+    do {
+        worker = FindWindowExA(NULL, worker, "WorkerW", NULL);
+        if (worker != NULL) {
+            // 尝试找到SHELLDLL_DefView窗口
+            HWND shelldlldefview = FindWindowExA(worker, NULL, "SHELLDLL_DefView", NULL);
+            if (shelldlldefview != NULL) {
+                // 检查SHELLDLL_DefView的父窗口是否为当前的WorkerW窗口
+                HWND parent = GetParent(shelldlldefview);
+                if (parent == worker) {
+                    // 找到了正确的WorkerW窗口
+                    background = worker;
+                    break; // 结束循环
+                }
             }
-            //QString className = QString::fromUtf16((char16_t*)buff);
         }
-        if(GetParent(worker) == hwnd){
-            background = worker;
-        }
-    }while(worker !=NULL);
-    SetParent((HWND)mainwindow->winId(),background);
+    } while (worker != NULL);
+
+    // 如果找到了正确的WorkerW窗口，设置父窗口
+    if (background != NULL) {
+        SetParent((HWND)mainwindow->winId(), background);
+        // 将MainWindow_E窗口置于SHELLDLL_DefView窗口上方
+        SetWindowPos((HWND)mainwindow->winId(), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        // 设置MainWindow_E窗口为顶层窗口，以便接收点击事件
+        SetWindowPos((HWND)mainwindow->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        // 确保MainWindow_E窗口可以获得焦点
+        SetFocus((HWND)mainwindow->winId());
+    } else {
+        // 如果没有找到合适的WorkerW窗口，可以在这里处理错误
+        qDebug() << "未能找到合适的WorkerW窗口";
+    }
 }
-
-
 
 
