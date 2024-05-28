@@ -7,6 +7,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include<QWidget>
+#include<cmath>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -70,6 +71,31 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     qDebug("mw-releasse");
+    int dtwidth=2560;
+    int dtheight=1440;
+    int mindeltaX=dtwidth;
+    int mindeltaY=dtheight;
+    int bpx,bpy;
+    //遍历各个点位寻找最小差异的位置
+    for(int j=0;j<10;j++)
+    {
+        int deltaY=abs(temp->pos().y()-144*j);
+        if(deltaY<mindeltaY)
+        {
+            mindeltaY=deltaY;
+            bpy=144*j;
+        }
+    }
+    for(int j=0;j<22;j++)
+    {
+        int deltaX=abs(temp->pos().x()-115*j);
+        if(deltaX<mindeltaX)
+        {
+            mindeltaX=deltaX;
+            bpx=115*j;
+        }
+    }
+    temp->move(bpx,bpy);
     temp->raise();
     moving  =false;
 }
