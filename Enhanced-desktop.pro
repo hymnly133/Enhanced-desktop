@@ -14,14 +14,20 @@ CONFIG += c++17
 
 SOURCES += \
     SysFunctions.cpp \
+    card.cpp \
+    ed_block.cpp \
     main.cpp \
     mainwindow.cpp \
-    mousehook.cpp
+    mousehook.cpp \
+    mylineedit.cpp
 
 HEADERS += \
     SysFunctions.h \
+    card.h \
+    ed_block.h \
     mainwindow.h \
-    mousehook.h
+    mousehook.h \
+    mylineedit.h
 
 FORMS += \
     mainwindow.ui

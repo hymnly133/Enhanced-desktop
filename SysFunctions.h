@@ -5,5 +5,5 @@
 #include"mousehook.h"
 void Init(MainWindow* mainwindow);
 void inplace(MainWindow* mainwindow);
-void InitMouseHook(MouseHook* mh);
+void InitMouseHook();
 #endif // SYSFUNCTIONS_H

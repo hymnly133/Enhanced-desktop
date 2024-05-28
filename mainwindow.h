@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include "card.h"
 #include <QMainWindow>
 #include <mousehook.h>
 
@@ -16,7 +17,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    MouseHook mh;
     // virtual void mousePressEvent(QMouseEvent *event);
     // virtual void mouseReleaseEvent(QMouseEvent *event);
     // virtual void mouseDoubleClickEvent(QMouseEvent *event);
@@ -24,10 +24,18 @@ public:
 
 private slots:
     void on_test_pushButton_clicked();
+    void getObject(card *w);
 
 private:
     Ui::MainWindow *ui;
-     //m_pt=差值=鼠标当前位置-窗口左上角点
+    card* cd[8];
+    card *temp;
+    QPoint startP;
+    QPoint yuanP;
+    bool moving;
+protected:
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
 
 };
 

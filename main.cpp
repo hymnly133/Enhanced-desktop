@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     }
 
     MainWindow mw ;
-    inplace(&mw);
+    InitMouseHook();
     mw.show();
     return a.exec();
 }

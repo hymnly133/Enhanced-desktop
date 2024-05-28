@@ -23,8 +23,8 @@ private:
     static void(*m_MoveFunc)(int,int) ;//抬起的回调,int代表键码
 };
 
-class QMouseEvent;
-class QWheelEvent;
+// class QMouseEvent;
+// class QWheelEvent;
 
 /**
  *  全局鼠标事件单例信号类

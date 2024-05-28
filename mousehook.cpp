@@ -13,7 +13,7 @@ void(*MouseHook::m_MoveFunc)(int,int)  = NULL;
 MouseHook::MouseHook()
 {
     Q_ASSERT(!mouse_hook_);
-    //构造函数里把keyHookEvent函数的地址当钩子写入到windows消息循环
+    //构造函数里把MouseHookEvent函数的地址当钩子写入到windows消息循环
     mouse_hook_ = SetWindowsHookEx(WH_MOUSE_LL, (HOOKPROC)MouseHookEvent, GetModuleHandle(NULL), 0);
     qDebug("hook created");
 }
