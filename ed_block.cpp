@@ -7,10 +7,10 @@
 ED_BLOCK::ED_BLOCK(QWidget *parent)
     : QWidget{parent}
 {
-    QVBoxLayout* vl = new QVBoxLayout();
-
-    QGraphicsView* gv = new QGraphicsView();
-    QLabel* lb = new QLabel();
+    vl = new QVBoxLayout();
+    gv = new QGraphicsView();
+    lb = new QLabel();
+    // connect(gv)
     vl->addWidget(gv);
     vl->addWidget(lb);
     lb->setAlignment(Qt::AlignCenter);
@@ -18,4 +18,11 @@ ED_BLOCK::ED_BLOCK(QWidget *parent)
     setMinimumSize(100 ,100);
     setMaximumSize(100,100);
     setLayout(vl);
+}
+
+void ED_BLOCK::mousePressEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    qDebug("BLOCK-press");
+    emit sendSelf(this);                                  //信号发送该控件地址
 }

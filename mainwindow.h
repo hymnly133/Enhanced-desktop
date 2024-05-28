@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "card.h"
+#include "ed_block.h"
 #include <QMainWindow>
 #include <mousehook.h>
 
@@ -24,12 +25,12 @@ public:
 
 private slots:
     void on_test_pushButton_clicked();
-    void getObject(card *w);
+    void getObject(ED_BLOCK *w);
 
 private:
     Ui::MainWindow *ui;
-    card* cd[8];
-    card *temp;
+    ED_BLOCK* cd[8];
+    ED_BLOCK *temp;
     QPoint startP;
     QPoint yuanP;
     bool moving;

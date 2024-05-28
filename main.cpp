@@ -24,10 +24,10 @@ int main(int argc, char *argv[])
 
     MainWindow mw ;
     //鼠标钩子
-    // InitMouseHook();
+    InitMouseHook();
 
     //注入壁纸
-    // inplace(&mw);
+    inplace(&mw);
 
 
     mw.show();

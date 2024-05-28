@@ -34,8 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     for(int i=0;i<8;i++)
     {
-     cd[i] = new card(this);
-     connect(cd[i],&card::sendSelf,this,&MainWindow::getObject);
+     cd[i] = new ED_BLOCK(this);
+     connect(cd[i],&ED_BLOCK::sendSelf,this,&MainWindow::getObject);
      cd[i]->move(i%4*200,i/4*400+20);
  }
 
@@ -50,7 +50,7 @@ void MainWindow::on_test_pushButton_clicked()
 {
     qDebug()<<"clicked";
 }
-void MainWindow::getObject(card *w)
+void MainWindow::getObject(ED_BLOCK *w)
 {
     moving = true;
     temp = w;
