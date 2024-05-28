@@ -1,6 +1,7 @@
 #ifndef ED_BLOCK_H
 #define ED_BLOCK_H
 
+#include "picturebox.h"
 #include "qboxlayout.h"
 #include "qgraphicsview.h"
 #include "qlabel.h"
@@ -10,7 +11,7 @@ class ED_BLOCK : public QWidget
 {
     Q_OBJECT;
     QVBoxLayout* vl;
-    QGraphicsView* gv ;
+    PictureBox* gv ;
     QLabel* lb ;
 public:
     explicit ED_BLOCK(QWidget *parent = nullptr);
@@ -19,7 +20,7 @@ protected:
 signals:
     void sendSelf(ED_BLOCK *self);
 public slots:
-    // void getformGV();
+    void getformGV();
 };
 
 

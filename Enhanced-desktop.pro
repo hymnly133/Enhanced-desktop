@@ -14,20 +14,20 @@ CONFIG += c++17
 
 SOURCES += \
     SysFunctions.cpp \
-    card.cpp \
     ed_block.cpp \
     main.cpp \
     mainwindow.cpp \
     mousehook.cpp \
-    mylineedit.cpp
+    mylineedit.cpp \
+    picturebox.cpp
 
 HEADERS += \
     SysFunctions.h \
-    card.h \
     ed_block.h \
     mainwindow.h \
     mousehook.h \
-    mylineedit.h
+    mylineedit.h \
+    picturebox.h
 
 FORMS += \
     mainwindow.ui
@@ -41,3 +41,8 @@ CONFIG += embed_translations
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES +=
+
+RESOURCES += \
+    res.qrc

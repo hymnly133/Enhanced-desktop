@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="testicon">C:/Users/ASUS/Downloads/bizum_payment_method_logo_icon_263128.png</file>
+    </qresource>
+</RCC>

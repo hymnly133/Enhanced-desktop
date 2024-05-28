@@ -5,7 +5,6 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
-#include"mousehook.h"
 
 
 int main(int argc, char *argv[])
@@ -24,7 +23,7 @@ int main(int argc, char *argv[])
 
     MainWindow mw ;
     //鼠标钩子
-    InitMouseHook();
+    // InitMouseHook();
 
     //注入壁纸
     inplace(&mw);
