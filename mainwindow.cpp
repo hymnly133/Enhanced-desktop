@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "ed_block.h"
-#include "qlabel.h"
-#include"mylineedit.h"
 #include "ui_mainwindow.h"
 #include"SysFunctions.h"
 #include <QMouseEvent>
@@ -61,17 +59,22 @@ void MainWindow::getObject(ED_BLOCK *w)
 }
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-        qDebug("mw-moving");
+    qDebug("mw-moving");
     if(moving)
+            if(temp)
     temp->move(yuanP.x()+event->x()-startP.x(),yuanP.y()+event->y()-startP.y());
 }
 
 //拖拽对象置顶，卡牌积压的时候，拖动的那张卡牌置顶
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    qDebug("mw-releasse");
-    temp->raise();
-    moving  =false;
+        Q_UNUSED(event);
+    if(moving){
+            temp->raise();
+            moving  =false;
+        }
+    // qDebug("mw-releasse");
+
 }
 // void MainWindow::mousePressEvent(QMouseEvent *event)
 // {

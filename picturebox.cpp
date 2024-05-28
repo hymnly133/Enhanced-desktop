@@ -39,6 +39,7 @@ bool PictureBox::setImage(QImage &image, double scale)
 {
     if(image.isNull())
     {
+        qDebug("NONE");
         return false;
     }
     m_pixmap = QPixmap::fromImage(image);
@@ -97,8 +98,15 @@ void PictureBox::paintEvent(QPaintEvent * event)
     }
 }
 void PictureBox::mousePressEvent(QMouseEvent *event){
-    emit sendaclick();
+        Q_UNUSED(event);
+    qDebug("pc-1click");
+    emit sendaClick();
 
+}
+void PictureBox::mouseDoubleClickEvent(QMouseEvent *event){
+        Q_UNUSED(event);
+        qDebug("pc-2click");
+    emit sendaDoubleClick();
 }
 PictureBox::~PictureBox()
 {

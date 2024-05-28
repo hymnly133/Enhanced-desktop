@@ -32,12 +32,12 @@ void Init(MainWindow* mainwindow){
     qDebug()<<"Initing";
 
     //无边框全屏
-    // mainwindow->setWindowState(Qt::WindowFullScreen);
+    mainwindow->setWindowState(Qt::WindowFullScreen);
 
 
 
     //无边框
-    mainwindow->setWindowFlags(Qt::FramelessWindowHint);
+    // mainwindow->setWindowFlags(Qt::FramelessWindowHint);
 
 
 

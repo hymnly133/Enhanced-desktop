@@ -17,10 +17,14 @@ public:
     explicit ED_BLOCK(QWidget *parent = nullptr);
 protected:
     void mousePressEvent(QMouseEvent *event) override;
+    void double_click_action();
+    void single_click_action();
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 signals:
     void sendSelf(ED_BLOCK *self);
 public slots:
-    void getformGV();
+    void getaClick();
+    void getaDoubleClick();
 };
 
 

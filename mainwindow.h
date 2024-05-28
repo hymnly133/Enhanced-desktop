@@ -33,7 +33,7 @@ private:
     ED_BLOCK *temp;
     QPoint startP;
     QPoint yuanP;
-    bool moving;
+    bool moving = false;
 protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
