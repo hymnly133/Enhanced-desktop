@@ -12,8 +12,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-
+    //设置无边框窗口
     Init(this);
+
     int maxrow = 5;
     int nowicon = 0;
     int allicons = 22;
@@ -25,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
         nowicon++;
     }
 
-     ui->groupBox->setStyleSheet("QGroupBox {border: 0;}");
+    ui->groupBox->setStyleSheet("QGroupBox {border: 0;}");
 
     // 设置边框颜色和宽度为0，相当于隐藏边框：
     ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
@@ -50,6 +51,7 @@ void MainWindow::on_test_pushButton_clicked()
 }
 void MainWindow::getObject(ED_BLOCK *w)
 {
+    //收到小部件的点击信号，移动初始化
     moving = true;
     temp = w;
     startP = cursor().pos()-this->pos();
@@ -59,6 +61,7 @@ void MainWindow::getObject(ED_BLOCK *w)
 }
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    // 小部件移动
     qDebug("mw-moving");
     if(moving)
             if(temp)
