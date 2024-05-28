@@ -5,12 +5,11 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include"mousehook.h"
 
 
 int main(int argc, char *argv[])
 {
-
-
     QApplication a(argc, argv);
 
     QTranslator translator;
@@ -23,9 +22,8 @@ int main(int argc, char *argv[])
         }
     }
 
-    MainWindow w;
-    Init(&w);
-    inplace(&w);
-    w.show();
+    MainWindow mw ;
+    inplace(&mw);
+    mw.show();
     return a.exec();
 }

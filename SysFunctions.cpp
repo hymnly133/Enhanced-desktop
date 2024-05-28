@@ -1,16 +1,35 @@
 #include<windows.h>
 #include"mainwindow.h"
+#include"mousehook.h"
 #include <QJsonObject>
+MainWindow* pmw;
+
+void mouse_move(int x,int y){
+    qDebug()<<"move"<<x<<y;
+    pmw->move(x,y);
+}
+void mouse_on(int x,int y){
+    qDebug()<<"on"<<x<<y;
+}
+void mouse_off(int x,int y){
+    qDebug()<<"off"<<x<<y;
+}
 
 void Init(MainWindow* mainwindow){
 
 
     // mainwindow->setWindowState(Qt::WindowFullScreen);
-mainwindow->setWindowFlags(Qt::FramelessWindowHint);
-    qDebug()<<"showing";
+        qDebug()<<"Initing";
+    mainwindow->setWindowFlags(Qt::FramelessWindowHint);
+    mainwindow->mh.SetMouseMoveCallBack(mouse_move);
+    mainwindow->mh.SetMouseOffCallBack(mouse_off);
+    mainwindow->mh.SetMouseOnCallBack(mouse_on);
+    qDebug()<<"Initing done";
+    pmw = mainwindow;
 }
 
 void inplace(MainWindow* mainwindow){
+    //接入到层
     HWND background = NULL;
     HWND hwnd = FindWindowA("progman","Program Manager");
     HWND worker = NULL;
@@ -32,22 +51,7 @@ void inplace(MainWindow* mainwindow){
     }while(worker !=NULL);
     SetParent((HWND)mainwindow->winId(),background);
 }
-// mouseHook =SetWindowsHookEx( WH_MOUSE_LL,mouseProc,GetModuleHandle(NULL),NULL);//注册鼠标钩子
 
-// LRESULT CALLBACK mouseProc(int nCode,WPARAM wParam,LPARAM lParam )
-// {
-//     if(nCode == HC_ACTION) //当nCode等于HC_ACTION时，要求得到处理
-//     {
-//         if(wParam==WM_MOUSEMOVE)//鼠标的移动
-//         {
-//             POINT p;
-//             GetCursorPos(&p);//获取鼠标坐标
-//             CMask* mask = w->getMask();
-//             mask->setMask(p.x,p.y);
-//             //双薪壁纸
-//             mask->update();
-//         }
-//     }
-//     //qDebug()<<nCode<<","<<wParam<<","<<lParam;
-//     return CallNextHookEx(mouseHook,nCode,wParam,lParam);//返回给下一个钩子子程处理
-// }
+
+
+

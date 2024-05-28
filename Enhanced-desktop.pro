@@ -1,5 +1,9 @@
 QT       += core gui
 
+win32 {
+LIBS+= -luser32    # 使用WindowsAPI需要链接库
+}
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17

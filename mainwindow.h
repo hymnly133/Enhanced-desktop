@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
 #include <QMainWindow>
+#include <mousehook.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -16,17 +16,19 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    MouseHook mh;
+    // virtual void mousePressEvent(QMouseEvent *event);
+    // virtual void mouseReleaseEvent(QMouseEvent *event);
+    // virtual void mouseDoubleClickEvent(QMouseEvent *event);
+    // virtual void mouseMoveEvent(QMouseEvent *event);
 
 private slots:
     void on_test_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
+     //m_pt=差值=鼠标当前位置-窗口左上角点
 
-protected:
-    void mouseMoveEvent(QMouseEvent *event);  //鼠标移动
-    void mousePressEvent(QMouseEvent *ev);    //鼠标单击
-private:
-    QPoint m_pt;         //m_pt=差值=鼠标当前位置-窗口左上角点
 };
+
 #endif // MAINWINDOW_H
