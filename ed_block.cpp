@@ -13,9 +13,10 @@ ED_BLOCK::ED_BLOCK(QWidget *parent)
     vl = new QVBoxLayout();
     gv = new PictureBox();
     lb = new QLabel();
-    cmd = "C:\\Users\\ASUS\\Desktop\\智谱清言.lnk";
-    cmd = Unicode2GBK(cmd);
+    QByteArray qb ="file::C:\\Users\\Public\\Desktop\\LocalSend.lnk";
+    cmd = GetCorrectUnicode(qb);
     // 显示图标
+    cmd = "file::D:\\Program Files\\LocalSend\\localsend_app.exe";
     QImage image;
     image.load(":/images/testicon");
 
@@ -49,7 +50,7 @@ void ED_BLOCK::double_click_action(){
 
 
     QProcess process(this);
-    process.startDetached(cmd);
+    process.start(cmd);
     qDebug("BLOCK-double_click_action");
 }
 

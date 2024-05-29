@@ -104,3 +104,20 @@ QString Unicode2Utf(QString c){
     return QString(encodedString);
 }
 
+QString GetCorrectUnicode(const QByteArray &ba)
+{
+    QTextCodec::ConverterState state;
+    QTextCodec *codec = utf8;
+    QString text = codec->toUnicode(ba.constData(), ba.size(), &state);
+    if (state.invalidChars > 0)
+    {
+        qDebug()<<"GBK";
+        text = gbk->toUnicode(ba);
+    }
+    else
+    {
+        qDebug()<<"utf-8";
+        text = ba;
+    }
+    return text;
+}
