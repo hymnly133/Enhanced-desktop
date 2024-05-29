@@ -2,6 +2,11 @@
 #include"mainwindow.h"
 #include"mousehook.h"
 #include <QJsonObject>
+#include<QDir>
+#include<QFileInfo>
+#include<QStandardPaths>
+#include<QFileIconProvider>
+#include<QIcon>
 MainWindow* pmw;
 MouseHook* pmh;
 //主窗口指针
@@ -88,4 +93,45 @@ void inplace() {
     }
 }
 
+struct FileInfo
+{
+    QString name;
+    QString filePath;
+    QIcon icon;
+};
+//定义返回的结构体
 
+QList<FileInfo> scandesktopfiles(const QString &desktopPath)
+{
+    QList<FileInfo> files;
+    QDir desktopDir(desktopPath);
+    desktopDir.setFilter(QDir::Files|QDir::Dirs|QDir::NoDotAndDotDot);
+    QFileInfoList fileInfoList=desktopDir.entryInfoList();
+    foreach(const QFileInfo &x,fileInfoList)
+    {
+        FileInfo file;
+        file.filePath=x.absoluteFilePath();
+        file.name=x.fileName();
+        QFileIconProvider a;
+        file.icon=a.icon(x);
+        files.append(file);
+    }
+    return files;
+}
+//对于指定桌面路径，返还桌面路径中的文件信息的列表
+
+QList<FileInfo> scanalldesktopfiles()
+{
+    QList<FileInfo> files;
+    QString userdesktoppath=QDir::homePath()+"/Desktop";
+    files.append(scandesktopfiles(userdesktoppath));
+    QStringList desktoppaths=QStandardPaths::standardLocations(QStandardPaths::DesktopLocation);
+    QString publicdesktoppath;
+    if(desktoppaths.count()>1)
+    {
+        publicdesktoppath=desktoppaths.at(1);
+        files.append(scandesktopfiles(publicdesktoppath));
+    }
+    return files;
+}
+//寻找桌面路径，并返回两个桌面中所有文件信息的列表
