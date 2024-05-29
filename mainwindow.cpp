@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug()<<icons[i].filePath;
         cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(32).toImage(),icons[i].name,icons[i].filePath);
         connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
-        cd[i]->move(i % 4 * 200, i / 4 * 400 + 20);
+        cd[i]->move(i % 8 * 80, i / 8 * 120 + 20);
 
     }
 }

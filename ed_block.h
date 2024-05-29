@@ -14,6 +14,7 @@ class ED_BLOCK : public QWidget
     QLabel* lb ;
     QString cmd;
     QString name;
+    int size = 150;
 public:
     explicit ED_BLOCK(QWidget *parent,QImage image,QString name,QString cmd);
 protected:

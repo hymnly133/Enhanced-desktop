@@ -6,7 +6,6 @@
 #include"QDebug"
 #include"QUrl"
 #include"QDesktopServices""
-#include<iostream>
 #include"QTextCodec"
 #include"SysFunctions.h"
 
@@ -14,6 +13,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
     : QWidget{parent}
 {
     cmd = _cmd;
+    cmd = QString("file:///")+cmd;
     name = _name;
     // 初始化内部组件
     vl = new QVBoxLayout();
@@ -39,8 +39,8 @@ ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
     vl->addWidget(lb);
     lb->setAlignment(Qt::AlignCenter);
     lb->setText(name);
-    setMinimumSize(100 ,100);
-    setMaximumSize(100,100);
+    setMinimumSize(size ,size);
+    setMaximumSize(size,size);
     setLayout(vl);
 }
 void ED_BLOCK::single_click_action(){
