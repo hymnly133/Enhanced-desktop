@@ -1,7 +1,10 @@
 #include "ed_block.h"
 #include "QWidget"
+#include"QProcess"
 #include "qboxlayout.h"
 #include "qlabel.h"
+#include"QTextCodec"
+#include"SysFunctions.h"
 
 ED_BLOCK::ED_BLOCK(QWidget *parent)
     : QWidget{parent}
@@ -10,7 +13,8 @@ ED_BLOCK::ED_BLOCK(QWidget *parent)
     vl = new QVBoxLayout();
     gv = new PictureBox();
     lb = new QLabel();
-
+    cmd = "C:\\Users\\ASUS\\Desktop\\智谱清言.lnk";
+    cmd = Unicode2GBK(cmd);
     // 显示图标
     QImage image;
     image.load(":/images/testicon");
@@ -41,7 +45,11 @@ void ED_BLOCK::single_click_action(){
 
 void ED_BLOCK::double_click_action(){
     //最终双击执行
+    qDebug("cmd = %s",qPrintable(cmd));
 
+
+    QProcess process(this);
+    process.startDetached(cmd);
     qDebug("BLOCK-double_click_action");
 }
 

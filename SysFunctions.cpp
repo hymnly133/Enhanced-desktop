@@ -2,8 +2,13 @@
 #include"mainwindow.h"
 #include"mousehook.h"
 #include <QJsonObject>
+#include"QTextCodec.h"
 MainWindow* pmw;
 MouseHook* pmh;
+QTextCodec *utf8 = QTextCodec::codecForName("UTF-8");
+QTextCodec* gbk = QTextCodec::codecForName("gbk");
+
+
 //主窗口指针
 
 void mouse_move(int x,int y){
@@ -19,6 +24,7 @@ void mouse_off(int x,int y){
 
     qDebug()<<"off"<<x<<y;
 }
+
 void InitMouseHook(){
     pmh = new MouseHook();
     pmh->SetMouseMoveCallBack(mouse_move);
@@ -28,6 +34,7 @@ void InitMouseHook(){
 
 
 void Init(MainWindow* mainwindow){
+    QTextCodec::setCodecForLocale(gbk);
     //初始化
     qDebug()<<"Initing";
 
@@ -88,4 +95,12 @@ void inplace() {
     }
 }
 
+QString Unicode2GBK(QString c){
+    QByteArray encodedString = gbk->fromUnicode(c);
+    return QString(encodedString);
+}
+QString Unicode2Utf(QString c){
+    QByteArray encodedString = utf8->fromUnicode(c);
+    return QString(encodedString);
+}
 
