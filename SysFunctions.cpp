@@ -1,6 +1,7 @@
 #include<windows.h>
 #include"mainwindow.h"
 #include"mousehook.h"
+#include"QTextCodec"
 #include <QJsonObject>
 #include<QDir>
 #include<QFileInfo>
@@ -9,7 +10,8 @@
 #include<QIcon>
 MainWindow* pmw;
 MouseHook* pmh;
-
+QTextCodec* utf8 = QTextCodec::codecForName("utf-8");
+QTextCodec* gbk = QTextCodec::codecForName("GBK");
 
 
 //主窗口指针
@@ -37,7 +39,7 @@ void InitMouseHook(){
 
 
 void Init(MainWindow* mainwindow){
-    QTextCodec::setCodecForLocale(gbk);
+    // QTextCodec::setCodecForLocale(gbk);
     //初始化
     qDebug()<<"Initing";
 
@@ -100,14 +102,16 @@ void inplace() {
 
 struct FileInfo
 {
+    //定义返回的结构体
     QString name;
     QString filePath;
     QIcon icon;
 };
-//定义返回的结构体
+
 
 QList<FileInfo> scandesktopfiles(const QString &desktopPath)
 {
+    //对于指定桌面路径，返还桌面路径中的文件信息的列表
     QList<FileInfo> files;
     QDir desktopDir(desktopPath);
     desktopDir.setFilter(QDir::Files|QDir::Dirs|QDir::NoDotAndDotDot);
@@ -123,10 +127,11 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
     }
     return files;
 }
-//对于指定桌面路径，返还桌面路径中的文件信息的列表
+
 
 QList<FileInfo> scanalldesktopfiles()
 {
+    //寻找桌面路径，并返回两个桌面中所有文件信息的列表
     QList<FileInfo> files;
     QString userdesktoppath=QDir::homePath()+"/Desktop";
     files.append(scandesktopfiles(userdesktoppath));
@@ -139,9 +144,10 @@ QList<FileInfo> scanalldesktopfiles()
     }
     return files;
 }
-//寻找桌面路径，并返回两个桌面中所有文件信息的列表
+
 QString GetCorrectUnicode(const QByteArray &ba)
 {
+
     QTextCodec::ConverterState state;
     QTextCodec *codec = utf8;
     QString text = codec->toUnicode(ba.constData(), ba.size(), &state);

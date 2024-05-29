@@ -13,8 +13,9 @@ class ED_BLOCK : public QWidget
     PictureBox* gv ;
     QLabel* lb ;
     QString cmd;
+    QString name;
 public:
-    explicit ED_BLOCK(QWidget *parent = nullptr);
+    explicit ED_BLOCK(QWidget *parent,QImage image,QString name,QString cmd);
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void double_click_action();

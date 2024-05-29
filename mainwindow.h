@@ -28,7 +28,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    ED_BLOCK* cd[8];
+    ED_BLOCK* cd[200];
     ED_BLOCK *temp;
     QPoint startP;
     QPoint yuanP;

@@ -20,23 +20,31 @@ MainWindow::MainWindow(QWidget *parent)
     int allicons = 22;
     // ui->Icons_layout->addWidget(mled);
 
-    for (int i = 0; i < allicons; i++)
-    {
-        ED_BLOCK *tem = new ED_BLOCK();
-        ui->Icons_layout->addWidget(tem, nowicon % maxrow, nowicon / maxrow);
-        nowicon++;
-    }
+    // for (int i = 0; i < allicons; i++)
+    // {
+    //     ED_BLOCK *tem = new ED_BLOCK();
+    //     ui->Icons_layout->addWidget(tem, nowicon % maxrow, nowicon / maxrow);
+    //     nowicon++;
+    // }
 
     ui->groupBox->setStyleSheet("QGroupBox {border: 0;}");
 
     // 设置边框颜色和宽度为0，相当于隐藏边框：
     ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
 
-    for (int i = 0; i < 8; i++)
-    {
-        cd[i] = new ED_BLOCK(this);
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     cd[i] = new ED_BLOCK(this);
+    //     connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
+    //     cd[i]->move(i % 4 * 200, i / 4 * 400 + 20);
+    // }
+    QList<FileInfo> icons = scanalldesktopfiles();
+    for(int i=0;i<icons.size();i++){
+        qDebug()<<icons[i].filePath;
+        cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(32).toImage(),icons[i].name,icons[i].filePath);
         connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
         cd[i]->move(i % 4 * 200, i / 4 * 400 + 20);
+
     }
 }
 
@@ -106,16 +114,4 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     }
 
 }
-// void MainWindow::mousePressEvent(QMouseEvent *event)
-// {
-//     // 如果是鼠标左键按下
-//     if(event->button() == Qt::LeftButton)
-//     {
-//         qDebug("left");
-//     }
-//     // 如果是鼠标右键按下
-//     else if(event->button() == Qt::RightButton)
-//     {
-//                qDebug("right");
-//     }
-// }
+

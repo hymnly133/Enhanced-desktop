@@ -3,22 +3,28 @@
 #include"QProcess"
 #include "qboxlayout.h"
 #include "qlabel.h"
+#include"QDebug"
+#include"QUrl"
+#include"QDesktopServices""
+#include<iostream>
 #include"QTextCodec"
 #include"SysFunctions.h"
 
-ED_BLOCK::ED_BLOCK(QWidget *parent)
+ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
     : QWidget{parent}
 {
+    cmd = _cmd;
+    name = _name;
     // 初始化内部组件
     vl = new QVBoxLayout();
     gv = new PictureBox();
     lb = new QLabel();
-    QByteArray qb ="file::C:\\Users\\Public\\Desktop\\LocalSend.lnk";
-    cmd = GetCorrectUnicode(qb);
-    // 显示图标
-    cmd = "file::D:\\Program Files\\LocalSend\\localsend_app.exe";
-    QImage image;
-    image.load(":/images/testicon");
+
+    // QByteArray qb ="file::C:\\Users\\Public\\Desktop\\LocalSend.lnk";
+    // cmd = GetCorrectUnicode(qb);
+    // // 显示图标
+    // cmd = "file::D:\\Program Files\\LocalSend\\localsend_app.exe";
+
 
     gv->setImage(image,0.5);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
@@ -32,7 +38,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent)
     vl->addWidget(gv);
     vl->addWidget(lb);
     lb->setAlignment(Qt::AlignCenter);
-    lb->setText("Icon");
+    lb->setText(name);
     setMinimumSize(100 ,100);
     setMaximumSize(100,100);
     setLayout(vl);
@@ -50,7 +56,12 @@ void ED_BLOCK::double_click_action(){
 
 
     QProcess process(this);
-    process.start(cmd);
+    QDesktopServices::openUrl(QUrl(cmd));
+    bool result = process.startDetached(cmd);
+    qDebug()<<"result: "<<result;
+    // std::string str = cmd.toStdString();
+    // const char* ch = str.c_str();
+    // qDebug()<<"ch: "<<ch;
     qDebug("BLOCK-double_click_action");
 }
 
