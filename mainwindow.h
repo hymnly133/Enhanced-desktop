@@ -1,6 +1,5 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "card.h"
 #include "ed_block.h"
 #include <QMainWindow>
 #include <mousehook.h>

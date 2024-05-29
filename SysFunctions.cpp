@@ -9,6 +9,9 @@
 #include<QIcon>
 MainWindow* pmw;
 MouseHook* pmh;
+
+
+
 //主窗口指针
 
 void mouse_move(int x,int y){
@@ -24,6 +27,7 @@ void mouse_off(int x,int y){
 
     qDebug()<<"off"<<x<<y;
 }
+
 void InitMouseHook(){
     pmh = new MouseHook();
     pmh->SetMouseMoveCallBack(mouse_move);
@@ -33,6 +37,7 @@ void InitMouseHook(){
 
 
 void Init(MainWindow* mainwindow){
+    QTextCodec::setCodecForLocale(gbk);
     //初始化
     qDebug()<<"Initing";
 

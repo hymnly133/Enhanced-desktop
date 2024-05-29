@@ -3,7 +3,6 @@
 
 #include "picturebox.h"
 #include "qboxlayout.h"
-#include "qgraphicsview.h"
 #include "qlabel.h"
 #include <QWidget>
 
@@ -13,6 +12,7 @@ class ED_BLOCK : public QWidget
     QVBoxLayout* vl;
     PictureBox* gv ;
     QLabel* lb ;
+    QString cmd;
 public:
     explicit ED_BLOCK(QWidget *parent = nullptr);
 protected:
