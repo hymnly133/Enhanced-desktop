@@ -18,7 +18,6 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mousehook.cpp \
-    mylineedit.cpp \
     picturebox.cpp
 
 HEADERS += \
@@ -26,7 +25,6 @@ HEADERS += \
     ed_block.h \
     mainwindow.h \
     mousehook.h \
-    mylineedit.h \
     picturebox.h
 
 FORMS += \

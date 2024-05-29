@@ -52,7 +52,7 @@ void Init(MainWindow* mainwindow){
     pmw = mainwindow;
 }
 
-void inplace(MainWindow* mainwindow) {
+void inplace() {
     // 接入到壁纸层
     HWND background = NULL;
     HWND hwnd = FindWindowA("Progman", "Program Manager");
@@ -78,10 +78,10 @@ void inplace(MainWindow* mainwindow) {
 
     // 如果找到了正确的WorkerW窗口，设置父窗口
     if (background != NULL) {
-        SetParent((HWND)mainwindow->winId(), background);
-        SetWindowPos((HWND)mainwindow->winId(), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-        SetWindowPos((HWND)mainwindow->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-        SetFocus((HWND)mainwindow->winId());
+        SetParent((HWND)pmw->winId(), background);
+        SetWindowPos((HWND)pmw->winId(), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        SetWindowPos((HWND)pmw->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        SetFocus((HWND)pmw->winId());
     } else {
         // 如果没有找到合适的WorkerW窗口，可以在这里处理错误
         qDebug() << "未能找到合适的WorkerW窗口";
