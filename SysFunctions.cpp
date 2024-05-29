@@ -140,3 +140,20 @@ QList<FileInfo> scanalldesktopfiles()
     return files;
 }
 //寻找桌面路径，并返回两个桌面中所有文件信息的列表
+QString GetCorrectUnicode(const QByteArray &ba)
+{
+    QTextCodec::ConverterState state;
+    QTextCodec *codec = utf8;
+    QString text = codec->toUnicode(ba.constData(), ba.size(), &state);
+    if (state.invalidChars > 0)
+    {
+        qDebug()<<"GBK";
+        text = gbk->toUnicode(ba);
+    }
+    else
+    {
+        qDebug()<<"utf-8";
+        text = ba;
+    }
+    return text;
+}
