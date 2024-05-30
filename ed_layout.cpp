@@ -1,4 +1,5 @@
 #include "ed_layout.h"
+#include<cmath>
 
 ED_Layout::ED_Layout( QWidget *father,int row, int col,int space) {
     this->row = row;
@@ -72,7 +73,7 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     }
     aim->LayoutBlockX = xind;
     aim->LayoutBlockY = yind;
-    aim->move(xind*115,yind*144);
+    aim->move(xind*W_Block,yind*H_Block);
     aim->raise();
 }
 
@@ -118,4 +119,27 @@ void ED_Layout::add_ED_Unit(ED_Unit* aim)
             }
         }
     }
+}
+
+QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
+{
+    int mindeltaw=W_Father;
+    int mindeltah=H_Father;
+    int bpw,bph;
+    for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<col;j++)
+        {
+            int deltaw=abs(posx-i*W_Block);
+            int deltah=abs(posy-j*H_Block);
+            if((deltaw+deltah<mindeltaw+mindeltah)&&(OKForUnit(aim,i,j)))
+            {
+                mindeltaw=deltaw;
+                mindeltah=deltah;
+                bpw=i;
+                bph=j;
+            }
+        }
+    }
+    return QPoint(bpw,bph);
 }
