@@ -20,10 +20,10 @@ public:
         QVBoxLayout* vl;
     explicit ED_BLOCK(QWidget *parent,QImage image,QString name,QString cmd);
 protected:
-    void mousePressEvent(QMouseEvent *event) override;
-    void double_click_action();
-    void single_click_action();
-    void mouseDoubleClickEvent(QMouseEvent *event) override;
+    // void mousePressEvent(QMouseEvent *event) override;
+    void double_click_action() override;
+    void single_click_action() override;
+    // void mouseDoubleClickEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
 public slots:
     void getaClick();
