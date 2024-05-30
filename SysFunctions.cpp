@@ -7,6 +7,7 @@
 #include<QFileInfo>
 #include<QStandardPaths>
 #include<QFileIconProvider>
+#include<QSettings>
 #include<QIcon>
 MainWindow* pmw;
 MouseHook* pmh;
@@ -129,6 +130,33 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
         file.name=fileName;
         QFileIconProvider a;
         file.icon=a.icon(x);
+        //针对steam游戏
+        QSettings shortcut(x.filePath(), QSettings::IniFormat);
+        QString target = shortcut.value("InternetShortcut/URL").toString();
+        QRegularExpression re("steam://rungameid/(\\d+)");
+        QRegularExpressionMatch match = re.match(target);
+        if (match.hasMatch())
+        {
+            QString gameId = match.captured(1);
+            QString steamPath = "C:/Program Files (x86)/Steam/appcache/librarycache"; // 你的Steam安装路径
+            QStringList result;
+            QDir directory(steamPath);
+            QRegularExpression regex(gameId+"_icon");
+            //小图标版本
+            //QRegularExpression regex(gameId+"_library");
+            //大图标版本
+            QStringList steamfileList=directory.entryList(QDir::Files);
+            foreach(const QString& steamfilename,steamfileList)
+            {
+                if(regex.match(steamfilename).hasMatch())
+                {
+                    result.append(directory.absoluteFilePath(steamfilename));
+                }
+            }
+            file.icon=QIcon(result[0]);
+
+        }
+        //以上为针对steam游戏
         files.append(file);
     }
     return files;
