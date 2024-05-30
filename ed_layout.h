@@ -33,7 +33,7 @@ class ED_Layout
     int space;
     little_Block* blocks[30][30];
 public:
-    ED_Layout(int row, int col, QWidget *father);
+    ED_Layout(int row, int col,int space, QWidget *father);
 /*
  *
  *

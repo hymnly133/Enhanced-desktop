@@ -1,8 +1,9 @@
 #include "ed_layout.h"
 
-ED_Layout::ED_Layout(int row, int col, QWidget *father) {
+ED_Layout::ED_Layout(int row, int col,int space, QWidget *father) {
     this->row = row;
     this->col = col;
+    this->space = space;
     W_Father = father->width();
     H_Father = father->height();
     W_Block = W_Father/row;
