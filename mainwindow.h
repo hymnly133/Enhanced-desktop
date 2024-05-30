@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "ed_block.h"
+#include "block_container.h"
+#include "ed_layout.h"
 #include <QMainWindow>
 #include <mousehook.h>
 
@@ -17,14 +18,12 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    // virtual void mousePressEvent(QMouseEvent *event);
-    // virtual void mouseReleaseEvent(QMouseEvent *event);
-    // virtual void mouseDoubleClickEvent(QMouseEvent *event);
-    // virtual void mouseMoveEvent(QMouseEvent *event);
+    ED_Layout* layout;
+
 
 private slots:
     void on_test_pushButton_clicked();
-    void getObject(ED_BLOCK *w);
+    void getObject(ED_Unit *w);
     void customContextMenu(QPoint const& point);
     void setIconScale(double Scale);
     void on_verticalSlider_valueChanged(int value);
@@ -34,9 +33,10 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    ED_BLOCK* cd[200];
+    ED_Unit* cd[200];
     int iconNum = 0;
-    ED_BLOCK *temp;
+    ED_Unit *temp;
+    Block_Container* bc;
     QPoint startP;
     QPoint yuanP;
     bool moving = false;

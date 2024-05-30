@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "block_container.h"
 #include "ed_block.h"
 #include "qpainter.h"
 #include "ui_mainwindow.h"
@@ -30,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
         iconNum++;
 
     }
+    bc = new Block_Container(this);
+    connect(bc, &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
 }
 
 MainWindow::~MainWindow()
@@ -41,7 +44,8 @@ void MainWindow::on_test_pushButton_clicked()
 {
     qDebug() << "clicked";
 }
-void MainWindow::getObject(ED_BLOCK *w)
+
+void MainWindow::getObject(ED_Unit *w)
 {
     // 收到小部件的点击信号，移动初始化
     moving = true;
@@ -55,8 +59,14 @@ void MainWindow::getObject(ED_BLOCK *w)
     if(row>=0&&row<10&&col>=0&&col<22)
     {
         positionoccupied[row][col]=false;
+        if(temp->type == ED_Unit::Container){
+            positionoccupied[row+1][col]=false;
+            positionoccupied[row+1][col+1]=false;
+            positionoccupied[row][col+1]=false;
+        }
     }
 }
+
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     // 小部件移动
@@ -77,24 +87,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         int mindeltaY = dtheight;
         int bpx, bpy;
         // 遍历各个点位寻找最小差异的位置
-        /*for (int j = 0; j < 10; j++)
-        {
-            int deltaY = abs(temp->pos().y() - 144 * j);
-            if (deltaY < mindeltaY)
-            {
-                mindeltaY = deltaY;
-                bpy = 144 * j;
-            }
-        }
-        for (int j = 0; j < 22; j++)
-        {
-            int deltaX = abs(temp->pos().x() - 115 * j);
-            if (deltaX < mindeltaX)
-            {
-                mindeltaX = deltaX;
-                bpx = 115 * j;
-            }
-        }*/
+
         for(int j=0;j<10;j++)
         {
             for(int k=0;k<22;k++)
@@ -113,12 +106,18 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 
         temp->move(bpx, bpy);
         positionoccupied[bpy/144][bpx/115]=true;
+        if(temp->type == ED_Unit::Container){
+            positionoccupied[bpy/144+1][bpx/115]=true;
+            positionoccupied[bpy/144+1][bpx/115+1]=true;
+            positionoccupied[bpy/144][bpx/115+1]=true;
+        }
         temp->raise();
         moving = false;
 
     }
 
 }
+
 void MainWindow::customContextMenu(QPoint const&)
 {
     // ContextMenu::show(QStringList() << "D:/", (void *)winId(), QCursor::pos());
@@ -126,16 +125,18 @@ void MainWindow::customContextMenu(QPoint const&)
 
 void MainWindow::setIconScale(double scale){
     for(int i=0;i<iconNum;i++){
-        if(cd[i]){
-            cd[i]->gv->setScale(scale);
+        if(cd[i]->type == ED_Unit::Block){
+            ED_BLOCK* p = (ED_BLOCK*)cd[i];
+            p->gv->setScale(scale);
         }
     }
 }
 
 void MainWindow::setIconHight(int val){
     for(int i=0;i<iconNum;i++){
-        if(cd[i]){
-            cd[i]->vl->setSpacing(val);
+        if(cd[i]->type == ED_Unit::Block){
+            ED_BLOCK* p = (ED_BLOCK*)cd[i];
+            p->vl->setSpacing(val);
         }
     }
 }
