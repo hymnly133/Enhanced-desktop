@@ -138,7 +138,10 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
         if (match.hasMatch())
         {
             QString gameId = match.captured(1);
-            QString steamPath = "C:/Program Files (x86)/Steam/appcache/librarycache"; // 你的Steam安装路径
+            //QString steamPath = "C:/Program Files (x86)/Steam/appcache/librarycache"; // 你的Steam安装路径
+            QString steamPath;
+            QSettings reg("HKEY_CURRENT_USER\\Software\\Valve\\Steam", QSettings::NativeFormat);
+            steamPath = reg.value("SteamPath").toString()+"/appcache/librarycache";
             QStringList result;
             QDir directory(steamPath);
             QRegularExpression regex(gameId+"_icon");
