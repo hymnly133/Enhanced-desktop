@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <cmath>
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -22,7 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug()<<icons[i].filePath;
         cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(256).toImage(),icons[i].name,icons[i].filePath);
         connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
-        cd[i]->move(i % 8 * 80, i / 8 * 120 + 20);
+        cd[i]->move(i % 8 * 115, i / 8 * 144);
+        positionoccupied[i/8][i%8]=true;
         iconNum++;
 
     }
@@ -46,6 +48,12 @@ void MainWindow::getObject(ED_BLOCK *w)
     yuanP = temp->pos();
     /*将此小部件提升到父小部件堆栈的顶部*/
     temp->raise();
+    int row=yuanP.y()/144;
+    int col=yuanP.x()/115;
+    if(row>=0&&row<10&&col>=0&&col<22)
+    {
+        positionoccupied[row][col]=false;
+    }
 }
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
@@ -68,7 +76,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         int mindeltaY = dtheight;
         int bpx, bpy;
         // 遍历各个点位寻找最小差异的位置
-        for (int j = 0; j < 10; j++)
+        /*for (int j = 0; j < 10; j++)
         {
             int deltaY = abs(temp->pos().y() - 144 * j);
             if (deltaY < mindeltaY)
@@ -85,9 +93,25 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
                 mindeltaX = deltaX;
                 bpx = 115 * j;
             }
+        }*/
+        for(int j=0;j<10;j++)
+        {
+            for(int k=0;k<22;k++)
+            {
+                int deltaY = abs(temp->pos().y() - 144 * j);
+                int deltaX = abs(temp->pos().x() - 115 * k);
+                if((deltaX+deltaY<mindeltaX+mindeltaY)&&(positionoccupied[j][k]==false))
+                {
+                    mindeltaX=deltaX;
+                    mindeltaY=deltaY;
+                    bpy=144*j;
+                    bpx=115*k;
+                }
+            }
         }
 
         temp->move(bpx, bpy);
+        positionoccupied[bpy/144][bpx/115]=true;
         temp->raise();
         moving = false;
 
@@ -126,3 +150,16 @@ void MainWindow::on_verticalSlider_2_valueChanged(int value)
     setIconHight(value);
 }
 
+bool MainWindow::isPositionEmpty(const QPoint& position) const
+{
+    //在MainWindow类中使用这个数组来检查位置是否为空
+    int row=position.y()/144;
+    int col=position.x()/115;
+    if(row>=0&&row<10&&col>=0&&col<22)
+    {
+        return !positionoccupied[row][col];
+        //位置没有被占据时返回true；
+    }
+    return false;
+    //位置超出窗口返回false；
+}
