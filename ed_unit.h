@@ -1,6 +1,7 @@
 #ifndef ED_UNIT_H
 #define ED_UNIT_H
 
+#include "ed_layout.h"
 #include <QWidget>
 
 class ED_Unit : public QWidget
@@ -11,9 +12,9 @@ public:
     ED_TYPE type = Unit;
     int sizeX;
     int sizeY;
-    int LayoutBlockX;
-    int LayoutBlockY;
-    explicit ED_Unit(QWidget *parent = nullptr);
+    int LayoutBlockX = -1;
+    int LayoutBlockY = -1;
+    explicit ED_Unit(QWidget *parent, ED_Layout layout);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

@@ -25,14 +25,32 @@ MainWindow::MainWindow(QWidget *parent)
     for(int i=0;i<icons.size();i++){
         qDebug()<<icons[i].filePath;
         cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(256).toImage(),icons[i].name,icons[i].filePath);
-        connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
-        cd[i]->move(i % 22 * 115, i / 22 * 144);
-        positionoccupied[i/22][i%22]=true;
+        InitAUnit(cd[i]);
+        // connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
+        // cd[i]->move(i % 22 * 115, i / 22 * 144);
+        // positionoccupied[i/22][i%22]=true;
         iconNum++;
-
     }
+
+
     bc = new Block_Container(this);
-    connect(bc, &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
+    InitAUnit(bc);
+
+}
+void MainWindow::InitAUnit(ED_Unit* aim){
+    switch(aim->type){
+    case ED_Unit::Block:
+        connect(aim, &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
+        break;
+    case ED_Unit::Unit:
+        connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
+    case ED_Unit::Container:
+        connect(aim, &Block_Container::sendSelf, this, &MainWindow::getObject);
+    }
+    int w= aim->sizeX*layout->W_Block-2*layout->space;
+    int h= aim->sizeY*layout->H_Block-2*layout->space;
+    aim->setFixedSize(w,h);
+    layout->add_ED_Unit(aim);
 }
 
 MainWindow::~MainWindow()
@@ -74,49 +92,14 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if(moving){
-
-        // qDebug("mw-releasse");
-        int dtwidth = 2560;
-        int dtheight = 1440;
-        int mindeltaX = dtwidth;
-        int mindeltaY = dtheight;
-        int bpx, bpy;
         // 遍历各个点位寻找最小差异的位置
-
-        for(int j=0;j<10;j++)
-        {
-            for(int k=0;k<22;k++)
-            {
-                int deltaY = abs(temp->pos().y() - 144 * j);
-                int deltaX = abs(temp->pos().x() - 115 * k);
-                if((deltaX+deltaY<mindeltaX+mindeltaY)&&(positionoccupied[j][k]==false))
-                {
-                    mindeltaX=deltaX;
-                    mindeltaY=deltaY;
-                    bpy=144*j;
-                    bpx=115*k;
-                }
-            }
-        }
-
-        temp->move(bpx, bpy);
-        positionoccupied[bpy/144][bpx/115]=true;
-        if(temp->type == ED_Unit::Container){
-            positionoccupied[bpy/144+1][bpx/115]=true;
-            positionoccupied[bpy/144+1][bpx/115+1]=true;
-            positionoccupied[bpy/144][bpx/115+1]=true;
-        }
+        QPoint block = layout->NearestEmptyBlockInd(temp,temp->pos().x(),temp->pos().y());
+        layout->put_ED_Unit(temp,block.x(),block.y());
         temp->raise();
         moving = false;
-
     }
-
 }
 
-void MainWindow::customContextMenu(QPoint const&)
-{
-    // ContextMenu::show(QStringList() << "D:/", (void *)winId(), QCursor::pos());
-}
 
 void MainWindow::setIconScale(double scale){
     for(int i=0;i<iconNum;i++){
@@ -147,19 +130,6 @@ void MainWindow::on_verticalSlider_2_valueChanged(int value)
     setIconHight(value);
 }
 
-bool MainWindow::isPositionEmpty(const QPoint& position) const
-{
-    //在MainWindow类中使用这个数组来检查位置是否为空
-    int row=position.y()/144;
-    int col=position.x()/115;
-    if(row>=0&&row<10&&col>=0&&col<22)
-    {
-        return !positionoccupied[row][col];
-        //位置没有被占据时返回true；
-    }
-    return false;
-    //位置超出窗口返回false；
-}
 
 void MainWindow::paintEvent(QPaintEvent * ev)
 {
