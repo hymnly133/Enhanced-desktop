@@ -23,12 +23,10 @@ public:
 
 private slots:
     void getObject(ED_Unit *w);
-    void customContextMenu(QPoint const& point);
     void setIconScale(double Scale);
     void on_verticalSlider_valueChanged(int value);
     void setIconHight(int val);
     void on_verticalSlider_2_valueChanged(int value);
-    bool isPositionEmpty(const QPoint& position) const;
 
 
 private:

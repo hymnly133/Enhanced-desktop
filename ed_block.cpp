@@ -81,17 +81,17 @@ void ED_BLOCK::double_click_action(){
 
 
 //以下为鼠标事件传递
-void ED_BLOCK::mousePressEvent(QMouseEvent *event)
-{
-    Q_UNUSED(event);
+// void ED_BLOCK::mousePressEvent(QMouseEvent *event)
+// {
+//     Q_UNUSED(event);
 
-    single_click_action();
-}
-void ED_BLOCK::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    Q_UNUSED(event);
-    // double_click_action();
-}
+//     single_click_action();
+// }
+// void ED_BLOCK::mouseDoubleClickEvent(QMouseEvent *event)
+// {
+//     Q_UNUSED(event);
+//     // double_click_action();
+// }
 
 void ED_BLOCK::getaClick( ){
     single_click_action();

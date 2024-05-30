@@ -10,7 +10,6 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 void ED_Unit::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
-
     single_click_action();
 }
 

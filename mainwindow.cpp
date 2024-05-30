@@ -44,7 +44,6 @@ void MainWindow::InitAUnit(ED_Unit* aim){
     case ED_Unit::Container:
         connect(aim, &Block_Container::sendSelf, this, &MainWindow::getObject);
     }
-
     int w= aim->sizeX*layout->W_Block-2*layout->space;
     int h= aim->sizeY*layout->H_Block-2*layout->space;
     setFixedSize(w,h);

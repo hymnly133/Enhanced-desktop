@@ -1,13 +1,10 @@
 #include "block_container.h"
-#include"ed_block.h"
 #include "qpainter.h"
 
 Block_Container::Block_Container(QWidget *parent)
     : ED_Unit(parent,2,2)
 {
     type = Container;
-    setFixedSize(300,300);
-    move(300,300);
 }
 void Block_Container::paintEvent(QPaintEvent *event){
 
