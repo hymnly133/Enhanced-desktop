@@ -18,7 +18,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    ED_Layout* layout;
+    ED_Layout* edlayout;
 
 
 private slots:

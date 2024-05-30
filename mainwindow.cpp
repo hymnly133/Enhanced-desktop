@@ -15,10 +15,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    Init(this);
     // ui->groupBox->setStyleSheet("QGroupBox {border: 0;}");
 
     // // 设置边框颜色和宽度为0，相当于隐藏边框：
     // ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
+
+    edlayout = new ED_Layout(this,20,20,5);
 
     QList<FileInfo> icons = scanalldesktopfiles();
 
@@ -44,10 +47,11 @@ void MainWindow::InitAUnit(ED_Unit* aim){
     case ED_Unit::Container:
         connect(aim, &Block_Container::sendSelf, this, &MainWindow::getObject);
     }
-    int w= aim->sizeX*layout->W_Block-2*layout->space;
-    int h= aim->sizeY*layout->H_Block-2*layout->space;
+    int w= aim->sizeX*edlayout->W_Block-2*edlayout->space;
+    int h= aim->sizeY*edlayout->H_Block-2*edlayout->space;
     setFixedSize(w,h);
-    layout->add_ED_Unit(aim);
+    edlayout->add_ED_Unit(aim);
+
 }
 
 MainWindow::~MainWindow()
@@ -60,7 +64,7 @@ void MainWindow::getObject(ED_Unit *w)
     // 收到小部件的点击信号，移动初始化
     moving = true;
     temp = w;
-    layout->RemoveAUnit(w);
+    edlayout->RemoveAUnit(w);
     startP = cursor().pos() - this->pos();
     yuanP = temp->pos();
     /*将此小部件提升到父小部件堆栈的顶部*/
@@ -82,8 +86,8 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if(moving){
         // 遍历各个点位寻找最小差异的位置
-        QPoint block = layout->NearestEmptyBlockInd(temp,temp->pos().x(),temp->pos().y());
-        layout->put_ED_Unit(temp,block.x(),block.y());
+        QPoint block = edlayout->NearestEmptyBlockInd(temp,temp->pos().x(),temp->pos().y());
+        edlayout->put_ED_Unit(temp,block.x(),block.y());
         temp->raise();
         moving = false;
     }

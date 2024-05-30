@@ -43,23 +43,8 @@ void Init(MainWindow* mainwindow){
     // QTextCodec::setCodecForLocale(gbk);
     //初始化
     qDebug()<<"Initing";
-
     //无边框全屏
     mainwindow->setWindowState(Qt::WindowFullScreen);
-
-
-
-    //无边框
-    // mainwindow->setWindowFlags(Qt::FramelessWindowHint);
-
-
-
-    //把窗口背景设置为透明
-    // mainwindow->  setAttribute(Qt::WA_TranslucentBackground);
-
-
-    //绑定函数
-
 
     qDebug()<<"Initing done";
     pmw = mainwindow;
