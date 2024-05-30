@@ -3,7 +3,7 @@
 #include "qpainter.h"
 
 Block_Container::Block_Container(QWidget *parent)
-    : ED_Unit{parent}
+    : ED_Unit(parent,2,2)
 {
     type = Container;
     setFixedSize(300,300);

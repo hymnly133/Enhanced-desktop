@@ -11,11 +11,9 @@
 #include "qpainter.h"
 #include"QGraphicsDropShadowEffect"
 
-ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
-    : ED_Unit{parent}
+ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
+    : ED_Unit(parent,1,1)
 {
-    sizeX =1;
-    sizeY =1;
     type =Block;
     cmd = _cmd;
     cmd = QString("file:///")+cmd;

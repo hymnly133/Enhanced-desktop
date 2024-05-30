@@ -26,9 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug()<<icons[i].filePath;
         cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(256).toImage(),icons[i].name,icons[i].filePath);
         InitAUnit(cd[i]);
-        // connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
-        // cd[i]->move(i % 22 * 115, i / 22 * 144);
-        // positionoccupied[i/22][i%22]=true;
         iconNum++;
     }
 
@@ -47,9 +44,10 @@ void MainWindow::InitAUnit(ED_Unit* aim){
     case ED_Unit::Container:
         connect(aim, &Block_Container::sendSelf, this, &MainWindow::getObject);
     }
+
     int w= aim->sizeX*layout->W_Block-2*layout->space;
     int h= aim->sizeY*layout->H_Block-2*layout->space;
-    aim->setFixedSize(w,h);
+    setFixedSize(w,h);
     layout->add_ED_Unit(aim);
 }
 
@@ -63,21 +61,13 @@ void MainWindow::getObject(ED_Unit *w)
     // 收到小部件的点击信号，移动初始化
     moving = true;
     temp = w;
+    layout->RemoveAUnit(w);
     startP = cursor().pos() - this->pos();
     yuanP = temp->pos();
     /*将此小部件提升到父小部件堆栈的顶部*/
     temp->raise();
-    int row=yuanP.y()/144;
-    int col=yuanP.x()/115;
-    if(row>=0&&row<10&&col>=0&&col<22)
-    {
-        positionoccupied[row][col]=false;
-        if(temp->type == ED_Unit::Container){
-            positionoccupied[row+1][col]=false;
-            positionoccupied[row+1][col+1]=false;
-            positionoccupied[row][col+1]=false;
-        }
-    }
+
+
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)

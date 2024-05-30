@@ -1,10 +1,10 @@
 #include "ed_unit.h"
-#include "ed_layout.h"
 #include "qpainter.h"
 
-ED_Unit::ED_Unit(QWidget *parent, ED_Layout layout): QWidget{parent}
+ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
-
+    sizeX =sizex;
+    sizeY = sizey;
 }
 
 void ED_Unit::mousePressEvent(QMouseEvent *event)
