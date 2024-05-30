@@ -25,10 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug()<<icons[i].filePath;
         cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(256).toImage(),icons[i].name,icons[i].filePath);
         connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
-
-        cd[i]->move(i % 8 * 115, i / 8 * 144);
-
-        positionoccupied[i/8][i%8]=true;
+        cd[i]->move(i % 22 * 115, i / 22 * 144);
+        positionoccupied[i/22][i%22]=true;
         iconNum++;
 
     }
