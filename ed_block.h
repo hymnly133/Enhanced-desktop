@@ -9,13 +9,14 @@
 class ED_BLOCK : public QWidget
 {
     Q_OBJECT;
-    QVBoxLayout* vl;
+
     QLabel* lb ;
     QString cmd;
     QString name;
     int size = 200;
 public:
         PictureBox* gv ;
+        QVBoxLayout* vl;
     explicit ED_BLOCK(QWidget *parent,QImage image,QString name,QString cmd);
 protected:
     void mousePressEvent(QMouseEvent *event) override;

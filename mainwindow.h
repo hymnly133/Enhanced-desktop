@@ -40,10 +40,11 @@ private:
     QPoint startP;
     QPoint yuanP;
     bool moving = false;
-    bool positionoccupied[10][22]={false};
+    bool positionoccupied[10][22]={};
 protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void paintEvent(QPaintEvent * ev) override;
 
 };
 

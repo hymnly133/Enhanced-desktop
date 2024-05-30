@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ed_block.h"
+#include "qpainter.h"
 #include "ui_mainwindow.h"
 #include "SysFunctions.h"
 #include <QMouseEvent>
@@ -19,11 +20,14 @@ MainWindow::MainWindow(QWidget *parent)
     // ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
 
     QList<FileInfo> icons = scanalldesktopfiles();
+
     for(int i=0;i<icons.size();i++){
         qDebug()<<icons[i].filePath;
         cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(256).toImage(),icons[i].name,icons[i].filePath);
         connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
+
         cd[i]->move(i % 8 * 115, i / 8 * 144);
+
         positionoccupied[i/8][i%8]=true;
         iconNum++;
 
@@ -133,7 +137,7 @@ void MainWindow::setIconScale(double scale){
 void MainWindow::setIconHight(int val){
     for(int i=0;i<iconNum;i++){
         if(cd[i]){
-            cd[i]->gv->setFixedHeight(val);
+            cd[i]->vl->setSpacing(val);
         }
     }
 }
@@ -161,4 +165,10 @@ bool MainWindow::isPositionEmpty(const QPoint& position) const
     }
     return false;
     //位置超出窗口返回false；
+}
+
+void MainWindow::paintEvent(QPaintEvent * ev)
+{
+    QPainter painter(this);
+    painter.drawPixmap(rect(),QPixmap(":/images/background"),QRect());
 }

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/images">
         <file alias="testicon">bizum_payment_method_logo_icon_263128.png</file>
+        <file alias="background">testBackgroud.jpg</file>
     </qresource>
 </RCC>

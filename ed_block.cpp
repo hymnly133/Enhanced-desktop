@@ -9,6 +9,7 @@
 #include"QDesktopServices"
 #include"QTextCodec"
 #include "qpainter.h"
+#include"QGraphicsDropShadowEffect"
 
 ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
     : QWidget{parent}
@@ -32,6 +33,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
     gv->setImage(image,1.0);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
+
     // gv->QWidget::setAlignment(Qt::AlignVCenter);
 
 
@@ -45,15 +47,18 @@ ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
     vl->addWidget(lb);
     vl->setAlignment(lb,Qt::AlignHCenter);
 
-
+    // 显示名字
     lb->setAlignment(Qt::AlignHCenter);
     lb->setFont(QFont("MiSans",10,40));
-    lb->setFixedWidth(width()-10);
-    qDebug("doing");
+    lb->setFixedWidth(size-5);
     lb->setText(elidedLineText(lb,3,name));
-    qDebug("done");
-    // 显示名字
-    // lb->setText(name);
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+    effect->setColor(QColor(100,100,100,100));
+    effect->setBlurRadius(2);   //模糊半径
+    effect->setOffset(10);      //偏移量
+    lb->setGraphicsEffect(effect);
+
+    gv->setGraphicsEffect(effect);
     setMinimumSize(size ,size);
     setMaximumWidth(size);
     setLayout(vl);
