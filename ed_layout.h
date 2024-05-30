@@ -52,7 +52,6 @@ public:
     QPoint NearestBlockInd(int posx,int posy);
 
 
-
     //从Block序号获取中心坐标
     QPoint BlockInd2CenterPoint(QPoint ind);
     QPoint BlockInd2CenterPoint(int x,int y);

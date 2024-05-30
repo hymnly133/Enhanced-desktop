@@ -7,7 +7,6 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QWidget>
-#include <cmath>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -21,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     // // 设置边框颜色和宽度为0，相当于隐藏边框：
     // ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
 
-    edlayout = new ED_Layout(this,20,20,5);
+    edlayout = new ED_Layout(this,15,10,5);
 
     QList<FileInfo> icons = scanalldesktopfiles();
 
@@ -40,17 +39,20 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::InitAUnit(ED_Unit* aim){
     switch(aim->type){
     case ED_Unit::Block:
-        connect(aim, &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
+        connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
         break;
     case ED_Unit::Unit:
         connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
+        break;
     case ED_Unit::Container:
-        connect(aim, &Block_Container::sendSelf, this, &MainWindow::getObject);
+        connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
+        break;
     }
     int w= aim->sizeX*edlayout->W_Block-2*edlayout->space;
     int h= aim->sizeY*edlayout->H_Block-2*edlayout->space;
-    setFixedSize(w,h);
+    aim->setFixedSize(w,h);
     edlayout->add_ED_Unit(aim);
+    aim->update_after_resize();
 
 }
 

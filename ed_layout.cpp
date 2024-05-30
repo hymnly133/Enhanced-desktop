@@ -73,7 +73,7 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     }
     aim->LayoutBlockX = xind;
     aim->LayoutBlockY = yind;
-    aim->move(xind*W_Block,yind*H_Block);
+    aim->move(xind*W_Block+space,yind*H_Block+space);
     aim->raise();
 }
 

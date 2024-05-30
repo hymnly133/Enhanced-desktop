@@ -14,11 +14,13 @@ public:
     int LayoutBlockX = -1;
     int LayoutBlockY = -1;
     explicit ED_Unit(QWidget *parent,int sizex,int sizey);
+        virtual void update_after_resize();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     virtual void double_click_action();
     virtual void single_click_action();
+
     void mouseDoubleClickEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
 signals:

@@ -14,15 +14,18 @@ class ED_BLOCK : public ED_Unit
     QLabel* lb ;
     QString cmd;
     QString name;
-    int size = 200;
+    static int default_size;
 public:
         PictureBox* gv ;
         QVBoxLayout* vl;
     explicit ED_BLOCK(QWidget *parent,QImage image,QString name,QString cmd);
+
+        void update_after_resize() override;
 protected:
     // void mousePressEvent(QMouseEvent *event) override;
     void double_click_action() override;
     void single_click_action() override;
+
     // void mouseDoubleClickEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
 public slots:

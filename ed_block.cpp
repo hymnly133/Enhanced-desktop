@@ -10,7 +10,7 @@
 #include"QTextCodec"
 #include "qpainter.h"
 #include"QGraphicsDropShadowEffect"
-
+int ED_BLOCK::default_size = 48;
 ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
     : ED_Unit(parent,1,1)
 {
@@ -32,7 +32,9 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
 
     // 显示图标
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
-    gv->setImage(image,1.0);
+    double defaultRatio = (double)default_size/image.size().width();
+    qDebug()<<defaultRatio;
+    gv->setImage(image,1.0,defaultRatio);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
 
     // gv->QWidget::setAlignment(Qt::AlignVCenter);
@@ -51,7 +53,8 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
     // 显示名字
     lb->setAlignment(Qt::AlignHCenter);
     lb->setFont(QFont("MiSans",10,40));
-    lb->setFixedWidth(size-5);
+    lb->setFixedWidth(width()-5);
+
     lb->setText(elidedLineText(lb,3,name));
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
     effect->setColor(QColor(100,100,100,100));
@@ -60,8 +63,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
     lb->setGraphicsEffect(effect);
 
     gv->setGraphicsEffect(effect);
-    setMinimumSize(size ,size);
-    setMaximumWidth(size);
+
     setLayout(vl);
 }
 void ED_BLOCK::single_click_action(){
@@ -77,6 +79,7 @@ void ED_BLOCK::double_click_action(){
     QDesktopServices::openUrl(QUrl(cmd));
     qDebug("BLOCK-double_click_action");
 }
+
 
 
 
@@ -100,7 +103,10 @@ void ED_BLOCK::getaClick( ){
 void ED_BLOCK::getaDoubleClick( ){
     double_click_action();
 }
-
+void ED_BLOCK::update_after_resize(){
+    lb->setFixedWidth(width()-5);
+    lb->setText(elidedLineText(lb,3,name));
+}
 
 void ED_BLOCK::paintEvent(QPaintEvent *event)
 {
