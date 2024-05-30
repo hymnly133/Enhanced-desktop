@@ -72,6 +72,8 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     }
     aim->LayoutBlockX = xind;
     aim->LayoutBlockY = yind;
+    aim->move(xind*115,yind*144);
+    aim->raise();
 }
 
 
@@ -90,7 +92,30 @@ void ED_Layout::RemoveAUnit(ED_Unit* aim){
     aim->LayoutBlockY = -1;
 }
 //根据一个Block索引获取对应的ED_Unit指针
-ED_Unit* ED_Layout::getUnitFromBlock(int xind,int yind);
-
+ED_Unit* ED_Layout::getUnitFromBlock(int xind,int yind)
+{
+    if(Occupied(xind,yind))
+    {
+        return blocks[xind][yind]->content;
+    }
+    else
+    {
+        return nullptr;
+    }
+    //若无返回空指针
+}
 //将一个ED_Unit按序号最下且可放置的位置放置
-void ED_Layout::add_ED_Unit(ED_Unit* aim);
+void ED_Layout::add_ED_Unit(ED_Unit* aim)
+{
+    for(int j=0;j<col;j++)
+    {
+        for(int i=0;i<row;i++)
+        {
+            if(OKForUnit(aim,i,j))
+            {
+                put_ED_Unit(aim,i,j);
+                return;
+            }
+        }
+    }
+}
