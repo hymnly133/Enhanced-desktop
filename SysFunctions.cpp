@@ -163,3 +163,62 @@ QString GetCorrectUnicode(const QByteArray &ba)
     }
     return text;
 }
+
+QString elidedLineText(QWidget *pWidget, int nLine, QString strText)
+{
+    if (nLine == 0)
+        return "";
+
+    QFontMetrics fontMetrics(pWidget->font());
+
+    if (nLine == 1) {
+        return fontMetrics.elidedText(strText, Qt::ElideRight, pWidget->width());
+    }
+
+    QStringList strListLine;
+
+    for (int i = 0; i < strText.size(); i++)
+    {
+        if (fontMetrics.width(strText.left(i)) >= pWidget->width())
+        {
+            strListLine.append(strText.left(i));
+            if (strListLine.size() == nLine)
+            {
+                break;
+            }
+            strText = strText.right(strText.size() - i);
+            i = 0;
+        }
+    }
+
+    if (strListLine.size() < nLine)
+    {
+        if (!strText.isEmpty()) {
+            strListLine.append(strText);
+        }
+    }
+
+    bool bHasElided = true;
+    if (fontMetrics.width(strText) < pWidget->width())
+    {
+        bHasElided = false;
+    }
+
+    if (bHasElided && !strListLine.isEmpty())
+    {
+        QString strLast = strListLine.last();
+        QString strElided = "...";
+        strLast.insert(strLast.length(), strElided);
+        while (fontMetrics.width(strLast) >= pWidget->width())
+        {
+            strLast = strLast.replace(0, 1, "");
+        }
+
+        strListLine.replace(strListLine.count() - 1, strLast);
+    }
+    QString strResult = strListLine.join("\n");
+
+    return strResult;
+}
+
+

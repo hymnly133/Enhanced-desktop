@@ -12,10 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->groupBox->setStyleSheet("QGroupBox {border: 0;}");
+    // ui->groupBox->setStyleSheet("QGroupBox {border: 0;}");
 
-    // 设置边框颜色和宽度为0，相当于隐藏边框：
-    ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
+    // // 设置边框颜色和宽度为0，相当于隐藏边框：
+    // ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
 
     QList<FileInfo> icons = scanalldesktopfiles();
     for(int i=0;i<icons.size();i++){
@@ -50,7 +50,6 @@ void MainWindow::getObject(ED_BLOCK *w)
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     // 小部件移动
-    // qDebug("mw-moving");
     if (moving)
         if (temp)
             temp->move(yuanP.x() + event->x() - startP.x(), yuanP.y() + event->y() - startP.y());

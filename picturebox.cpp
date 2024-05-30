@@ -38,6 +38,9 @@ void PictureBox::setMode(PB_MODE mode)
 
 void PictureBox::setScale(double scale){
         m_scale = qBound(0.01, scale, 100.0);
+    int image_width = m_pixmap.width();
+    int image_height = m_pixmap.height();
+    setFixedSize(image_width * m_scale, image_height *m_scale);
     update();
 }
 
@@ -48,6 +51,7 @@ bool PictureBox::setImage(QImage &image, double scale)
         return false;
     }
     m_pixmap = QPixmap::fromImage(image);
+    setScale(scale);
 
     if(m_mode == AUTO_SIZE)
     {
@@ -68,6 +72,7 @@ void PictureBox::paintEvent(QPaintEvent * event)
     double image_width, image_height;
     double r1, r2, r;
     int offset_x, offset_y;
+    QPixmap m_logopix;
     switch (m_mode)
     {
     case FIXED_SIZE:
@@ -75,6 +80,7 @@ void PictureBox::paintEvent(QPaintEvent * event)
         painter.scale(m_scale, m_scale);
         painter.drawPixmap(0, 0, m_pixmap);
         break;
+
     case FIX_SIZE_CENTRED:
         window_width = width();
         window_height = height();
@@ -83,9 +89,17 @@ void PictureBox::paintEvent(QPaintEvent * event)
         offset_x = (window_width - m_scale * image_width) / 2;
         offset_y = (window_height - m_scale * image_height) / 2;
         painter.translate(offset_x, offset_y);
-        painter.scale(m_scale, m_scale);
-        painter.drawPixmap(0, 0, m_pixmap);
+
+        m_logopix = m_pixmap.scaled(QSize(image_width * m_scale, image_height *m_scale)
+                                            , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        // painter.scale(m_scale, m_scale);
+        painter.drawPixmap(0, 0, m_logopix);
+
+
+        // painter.scale(m_scale, m_scale);
+        // painter.drawPixmap(0, 0, m_pixmap);
         break;
+
     case AUTO_ZOOM:
         window_width = width();
         window_height = height();
@@ -97,8 +111,11 @@ void PictureBox::paintEvent(QPaintEvent * event)
         offset_x = (window_width - r * image_width) / 2;
         offset_y = (window_height - r * image_height) / 2;
         painter.translate(offset_x, offset_y);
+
+        m_logopix = m_pixmap.scaled(QSize(width() * r, height() *r)
+                                     , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         painter.scale(r, r);
-        painter.drawPixmap(0, 0, m_pixmap);
+        painter.drawPixmap(0, 0, m_logopix);
         break;
     }
     QPainter p(this);

@@ -8,6 +8,7 @@ void InitMouseHook();
 QString Unicode2GBK(QString c);
 QString Unicode2Utf(QString c);
 QString GetCorrectUnicode(const QByteArray &ba);
+QString elidedLineText(QWidget *pWidget, int nLine, QString strText);
 struct FileInfo
 {
     //定义返回的结构体

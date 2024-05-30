@@ -2,6 +2,7 @@
 #include "QWidget"
 #include"QProcess"
 #include "qboxlayout.h"
+#include"SysFunctions.h"
 #include "qlabel.h"
 #include"QDebug"
 #include"QUrl"
@@ -19,15 +20,19 @@ ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
     vl = new QVBoxLayout();
     vl->setContentsMargins(5,0,5,0);
     vl->addSpacing(0);
-    // vl->setAlignment(Qt::AlignVCenter);
+
+
     gv = new PictureBox(this,1.0);
+
     lb = new QLabel();
+    lb->adjustSize();
     // lb->setMaximumHeight(20);
 
     // 显示图标
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
     gv->setImage(image,1.0);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
+    // gv->QWidget::setAlignment(Qt::AlignVCenter);
 
 
     // 绑定事件
@@ -36,14 +41,19 @@ ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
 
     // 添加布局
     vl->addWidget(gv);
-
+    vl->setAlignment(gv,Qt::AlignHCenter);
     vl->addWidget(lb);
+    vl->setAlignment(lb,Qt::AlignHCenter);
 
 
     lb->setAlignment(Qt::AlignHCenter);
-    lb->setWordWrap(true);
+    lb->setFont(QFont("MiSans",10,40));
+    lb->setFixedWidth(width()-10);
+    qDebug("doing");
+    lb->setText(elidedLineText(lb,3,name));
+    qDebug("done");
     // 显示名字
-    lb->setText(name);
+    // lb->setText(name);
     setMinimumSize(size ,size);
     setMaximumWidth(size);
     setLayout(vl);
@@ -74,8 +84,7 @@ void ED_BLOCK::mousePressEvent(QMouseEvent *event)
 void ED_BLOCK::mouseDoubleClickEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
-
-    double_click_action();
+    // double_click_action();
 }
 
 void ED_BLOCK::getaClick( ){
