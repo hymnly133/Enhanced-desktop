@@ -14,7 +14,8 @@ public:
     int sizeY;
     int LayoutBlockX = -1;
     int LayoutBlockY = -1;
-    explicit ED_Unit(QWidget *parent, ED_Layout layout);
+    ED_Layout* playout;
+    explicit ED_Unit(QWidget *parent, ED_Layout* layout);
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
