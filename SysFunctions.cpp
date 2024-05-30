@@ -120,7 +120,13 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
     {
         FileInfo file;
         file.filePath=x.absoluteFilePath();
-        file.name=x.fileName();
+        QString fileName = x.fileName();
+        int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex != -1)
+        {
+            fileName.remove(lastDotIndex, fileName.length() - lastDotIndex);
+        }
+        file.name=fileName;
         QFileIconProvider a;
         file.icon=a.icon(x);
         files.append(file);
@@ -135,13 +141,8 @@ QList<FileInfo> scanalldesktopfiles()
     QList<FileInfo> files;
     QString userdesktoppath=QDir::homePath()+"/Desktop";
     files.append(scandesktopfiles(userdesktoppath));
-    QStringList desktoppaths=QStandardPaths::standardLocations(QStandardPaths::DesktopLocation);
-    QString publicdesktoppath;
-    if(desktoppaths.count()>1)
-    {
-        publicdesktoppath=desktoppaths.at(1);
-        files.append(scandesktopfiles(publicdesktoppath));
-    }
+    QString publicdesktoppath=QDir::toNativeSeparators("C:/Users/Public/Desktop");
+    files.append(scandesktopfiles(publicdesktoppath));
     return files;
 }
 
