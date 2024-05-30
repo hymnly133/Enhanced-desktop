@@ -1,9 +1,12 @@
 #include "ed_unit.h"
+#include "ed_layout.h"
 #include "qpainter.h"
 
-ED_Unit::ED_Unit(QWidget *parent)
-    : QWidget{parent}
-{}
+ED_Unit::ED_Unit(QWidget *parent, ED_Layout layout): QWidget{parent}
+{
+
+}
+
 void ED_Unit::mousePressEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);

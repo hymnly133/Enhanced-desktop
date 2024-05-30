@@ -30,6 +30,7 @@ private slots:
     void on_verticalSlider_2_valueChanged(int value);
     bool isPositionEmpty(const QPoint& position) const;
 
+
 private:
     Ui::MainWindow *ui;
     ED_Unit* cd[200];
@@ -39,7 +40,7 @@ private:
     QPoint startP;
     QPoint yuanP;
     bool moving = false;
-    bool positionoccupied[10][22]={};
+    void InitAUnit(ED_Unit* aim);
 protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;

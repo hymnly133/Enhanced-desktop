@@ -1,6 +1,6 @@
 #include "ed_layout.h"
 
-ED_Layout::ED_Layout(int row, int col,int space, QWidget *father) {
+ED_Layout::ED_Layout( QWidget *father,int row, int col,int space) {
     this->row = row;
     this->col = col;
     this->space = space;
@@ -28,7 +28,7 @@ QPoint ED_Layout::NearestBlockInd(QPoint point){
 
 }
 QPoint ED_Layout::NearestBlockInd(int posx,int posy){
-return QPoint(posx/W_Block,posx/H_Block);
+return QPoint(posx/W_Block,posy/H_Block);
 }
 
 //从Block序号获取中心坐标
@@ -72,12 +72,25 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     }
     aim->LayoutBlockX = xind;
     aim->LayoutBlockY = yind;
-
-
 }
 
+
+void ED_Layout::RemoveAUnit(ED_Unit* aim){
+    int x = aim->sizeX;
+    int y = aim->sizeY;
+    int xind = aim->LayoutBlockX;
+    int yind = aim->LayoutBlockY ;
+    for(int i=0;i<x;i++){
+        for(int k=0;k<y;k++){
+            Occupied(xind+i,yind+k) = false;
+            blocks[xind+i][yind+k]->content = NULL;
+        }
+    }
+    aim->LayoutBlockX = -1;
+    aim->LayoutBlockY = -1;
+}
 //根据一个Block索引获取对应的ED_Unit指针
 ED_Unit* ED_Layout::getUnitFromBlock(int xind,int yind);
 
 //将一个ED_Unit按序号最下且可放置的位置放置
-void ED_Layout::add_ED_Unit(ED_Unit* aim,int xind,int yind);
+void ED_Layout::add_ED_Unit(ED_Unit* aim);
