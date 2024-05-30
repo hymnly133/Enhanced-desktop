@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     }
 
     MainWindow mw ;
+    Init(&mw);
     //鼠标钩子
     // InitMouseHook();
 

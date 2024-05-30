@@ -12,38 +12,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // 设置无边框窗口
-    Init(this);
-
-    int maxrow = 5;
-    int nowicon = 0;
-    int allicons = 22;
-    // ui->Icons_layout->addWidget(mled);
-
-    // for (int i = 0; i < allicons; i++)
-    // {
-    //     ED_BLOCK *tem = new ED_BLOCK();
-    //     ui->Icons_layout->addWidget(tem, nowicon % maxrow, nowicon / maxrow);
-    //     nowicon++;
-    // }
-
     ui->groupBox->setStyleSheet("QGroupBox {border: 0;}");
 
     // 设置边框颜色和宽度为0，相当于隐藏边框：
     ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
 
-    // for (int i = 0; i < 8; i++)
-    // {
-    //     cd[i] = new ED_BLOCK(this);
-    //     connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
-    //     cd[i]->move(i % 4 * 200, i / 4 * 400 + 20);
-    // }
     QList<FileInfo> icons = scanalldesktopfiles();
     for(int i=0;i<icons.size();i++){
         qDebug()<<icons[i].filePath;
-        cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(32).toImage(),icons[i].name,icons[i].filePath);
+        cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(256).toImage(),icons[i].name,icons[i].filePath);
         connect(cd[i], &ED_BLOCK::sendSelf, this, &MainWindow::getObject);
         cd[i]->move(i % 8 * 80, i / 8 * 120 + 20);
+        iconNum++;
 
     }
 }
@@ -70,7 +50,7 @@ void MainWindow::getObject(ED_BLOCK *w)
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     // 小部件移动
-    qDebug("mw-moving");
+    // qDebug("mw-moving");
     if (moving)
         if (temp)
             temp->move(yuanP.x() + event->x() - startP.x(), yuanP.y() + event->y() - startP.y());
@@ -81,7 +61,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if(moving){
 
-        qDebug("mw-releasse");
+        // qDebug("mw-releasse");
         int dtwidth = 2560;
         int dtheight = 1440;
         int mindeltaX = dtwidth;
@@ -113,5 +93,36 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 
     }
 
+}
+void MainWindow::customContextMenu(QPoint const&)
+{
+    // ContextMenu::show(QStringList() << "D:/", (void *)winId(), QCursor::pos());
+}
+
+void MainWindow::setIconScale(double scale){
+    for(int i=0;i<iconNum;i++){
+        if(cd[i]){
+            cd[i]->gv->setScale(scale);
+        }
+    }
+}
+
+void MainWindow::setIconHight(int val){
+    for(int i=0;i<iconNum;i++){
+        if(cd[i]){
+            cd[i]->gv->setFixedHeight(val);
+        }
+    }
+}
+
+void MainWindow::on_verticalSlider_valueChanged(int value)
+{
+    setIconScale((double)value/50);
+}
+
+
+void MainWindow::on_verticalSlider_2_valueChanged(int value)
+{
+    setIconHight(value);
 }
 

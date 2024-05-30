@@ -5,9 +5,9 @@
 #include "qlabel.h"
 #include"QDebug"
 #include"QUrl"
-#include"QDesktopServices""
+#include"QDesktopServices"
 #include"QTextCodec"
-#include"SysFunctions.h"
+#include "qpainter.h"
 
 ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
     : QWidget{parent}
@@ -17,18 +17,18 @@ ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
     name = _name;
     // 初始化内部组件
     vl = new QVBoxLayout();
-    gv = new PictureBox();
+    vl->setContentsMargins(5,0,5,0);
+    vl->addSpacing(0);
+    // vl->setAlignment(Qt::AlignVCenter);
+    gv = new PictureBox(this,1.0);
     lb = new QLabel();
+    // lb->setMaximumHeight(20);
 
-    // QByteArray qb ="file::C:\\Users\\Public\\Desktop\\LocalSend.lnk";
-    // cmd = GetCorrectUnicode(qb);
-    // // 显示图标
-    // cmd = "file::D:\\Program Files\\LocalSend\\localsend_app.exe";
-
-
-    gv->setImage(image,0.5);
+    // 显示图标
+    gv->setMode(PictureBox::FIX_SIZE_CENTRED);
+    gv->setImage(image,1.0);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
-    gv->setMode(PictureBox::AUTO_ZOOM);
+
 
     // 绑定事件
     connect(gv,SIGNAL(sendaClick()),this,SLOT(getaClick()));
@@ -36,11 +36,16 @@ ED_BLOCK::ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd)
 
     // 添加布局
     vl->addWidget(gv);
+
     vl->addWidget(lb);
-    lb->setAlignment(Qt::AlignCenter);
+
+
+    lb->setAlignment(Qt::AlignHCenter);
+    lb->setWordWrap(true);
+    // 显示名字
     lb->setText(name);
     setMinimumSize(size ,size);
-    setMaximumSize(size,size);
+    setMaximumWidth(size);
     setLayout(vl);
 }
 void ED_BLOCK::single_click_action(){
@@ -53,15 +58,7 @@ void ED_BLOCK::single_click_action(){
 void ED_BLOCK::double_click_action(){
     //最终双击执行
     qDebug("cmd = %s",qPrintable(cmd));
-
-
-    QProcess process(this);
     QDesktopServices::openUrl(QUrl(cmd));
-    bool result = process.startDetached(cmd);
-    qDebug()<<"result: "<<result;
-    // std::string str = cmd.toStdString();
-    // const char* ch = str.c_str();
-    // qDebug()<<"ch: "<<ch;
     qDebug("BLOCK-double_click_action");
 }
 
@@ -87,4 +84,12 @@ void ED_BLOCK::getaClick( ){
 
 void ED_BLOCK::getaDoubleClick( ){
     double_click_action();
+}
+
+
+void ED_BLOCK::paintEvent(QPaintEvent *event)
+{
+    QPainter p(this);
+    p.setPen(QColor("green")); //设置画笔记颜色
+    p.drawRect(0, 0, width() -1, height() -1); //绘制边框
 }

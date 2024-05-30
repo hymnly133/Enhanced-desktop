@@ -25,10 +25,16 @@ public:
 private slots:
     void on_test_pushButton_clicked();
     void getObject(ED_BLOCK *w);
+    void customContextMenu(QPoint const& point);
+    void setIconScale(double Scale);
+    void on_verticalSlider_valueChanged(int value);
+    void setIconHight(int val);
+    void on_verticalSlider_2_valueChanged(int value);
 
 private:
     Ui::MainWindow *ui;
     ED_BLOCK* cd[200];
+    int iconNum = 0;
     ED_BLOCK *temp;
     QPoint startP;
     QPoint yuanP;

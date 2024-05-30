@@ -11,8 +11,9 @@ class PictureBox : public QWidget
     Q_OBJECT
 public:
     enum PB_MODE {FIXED_SIZE, FIX_SIZE_CENTRED, AUTO_ZOOM, AUTO_SIZE};
-    explicit PictureBox(QWidget *parent = 0);
+    explicit PictureBox(QWidget *parent=0,double m_scale =1.0);
     void setMode(PB_MODE mode);
+    void setScale(double scale);
     ~PictureBox();
 private:
     QPixmap m_pixmap;

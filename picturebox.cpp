@@ -1,15 +1,16 @@
 #include "picturebox.h"
 #include <QPainter>
 #include <QDebug>
-static const int IMAGE_WIDTH = 160;
-static const int IMAGE_HEIGHT = 120;
+static const int IMAGE_WIDTH = 300;
+static const int IMAGE_HEIGHT = 300;
 static const QSize IMAGE_SIZE = QSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 
-PictureBox::PictureBox(QWidget *parent) : QWidget(parent)
+
+PictureBox::PictureBox(QWidget *parent,double m_scale) : QWidget(parent)
 {
     m_pixmap = QPixmap(IMAGE_SIZE);
     m_pixmap.fill();
-    m_scale = 1.0;
+    this->m_scale = m_scale;
     m_mode = FIXED_SIZE;
     m_brush = QBrush(Qt::white);
 }
@@ -35,15 +36,19 @@ void PictureBox::setMode(PB_MODE mode)
     update();
 }
 
+void PictureBox::setScale(double scale){
+        m_scale = qBound(0.01, scale, 100.0);
+    update();
+}
+
 bool PictureBox::setImage(QImage &image, double scale)
 {
     if(image.isNull())
     {
-        qDebug("NONE");
         return false;
     }
     m_pixmap = QPixmap::fromImage(image);
-    m_scale = qBound(0.01, scale, 100.0);
+
     if(m_mode == AUTO_SIZE)
     {
         setFixedSize(m_pixmap.size() * m_scale);
@@ -96,7 +101,11 @@ void PictureBox::paintEvent(QPaintEvent * event)
         painter.drawPixmap(0, 0, m_pixmap);
         break;
     }
+    QPainter p(this);
+    p.setPen(QColor("green")); //设置画笔记颜色
+    p.drawRect(0, 0, width() -1, height() -1); //绘制边框
 }
+
 void PictureBox::mousePressEvent(QMouseEvent *event){
         Q_UNUSED(event);
     qDebug("pc-1click");
