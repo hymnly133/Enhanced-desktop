@@ -40,11 +40,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_test_pushButton_clicked()
-{
-    qDebug() << "clicked";
-}
-
 void MainWindow::getObject(ED_Unit *w)
 {
     // 收到小部件的点击信号，移动初始化

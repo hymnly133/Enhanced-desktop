@@ -22,7 +22,6 @@ public:
 
 
 private slots:
-    void on_test_pushButton_clicked();
     void getObject(ED_Unit *w);
     void customContextMenu(QPoint const& point);
     void setIconScale(double Scale);

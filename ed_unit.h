@@ -11,6 +11,8 @@ public:
     ED_TYPE type = Unit;
     int sizeX;
     int sizeY;
+    int LayoutBlockX;
+    int LayoutBlockY;
     explicit ED_Unit(QWidget *parent = nullptr);
 
 protected:
