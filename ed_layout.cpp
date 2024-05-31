@@ -169,11 +169,27 @@ QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,QPoint pos)
 {
     return NearestEmptyBlockInd(aim,pos.x(),pos.y());
 }
+
+bool ED_Layout::OKforput(ED_Unit*aim)
+{
+    bool flag=false;
+    for(int i=0;i<row;i++)
+    {
+        for(int j=0;j<col;j++)
+        {
+            if(OKForUnit(aim,i,j))
+                flag=true;
+        }
+    }
+    return flag;
+}
+
 QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
 {
     int mindeltaw=W_Father;
     int mindeltah=H_Father;
     int bpw,bph;
+    bpw=bph=-1;
     for(int i=0;i<row;i++)
     {
         for(int j=0;j<col;j++)

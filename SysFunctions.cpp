@@ -132,7 +132,9 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
             QRegularExpression regex(gameId+"_icon");
             //小图标版本
             //QRegularExpression regex(gameId+"_library");
-            //大图标版本
+            //长竖图标版本
+            //QRegularExpression regex(gameId+"_header");
+            //长横图标版本
             QStringList steamfileList=directory.entryList(QDir::Files);
             foreach(const QString& steamfilename,steamfileList)
             {
