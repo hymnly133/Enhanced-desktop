@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     // // 设置边框颜色和宽度为0，相当于隐藏边框：
     // ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
 
-    edlayout = new ED_Layout(this,20,20,5);
+    //edlayout = new ED_Layout(this,20,20,5);
 
     QList<FileInfo> icons = scanalldesktopfiles();
 
