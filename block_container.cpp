@@ -11,7 +11,7 @@ void Block_Container::paintEvent(QPaintEvent *event){
 
     QPainter paint(this);
     paint.setPen(Qt::blue);
-    paint.fillRect(rect(), QBrush(QColor(10,10,10,100)));
+    paint.fillRect(rect(), QBrush(QColor(10,10,10,50)));
 }
 void Block_Container::double_click_action(){
     ED_Unit::double_click_action();

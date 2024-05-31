@@ -78,7 +78,9 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
                 qDebug()<<"Container";
                 Block_Container*  c = (Block_Container*)edlayout->getUnitFromBlock(point);
                 c->edlayout->InplaceAUnit(temp);
+                c->raise();
                 temp->raise();
+                qDebug()<<temp->pos()<<temp->mapToGlobal(temp->pos())<<temp->size();
                 moving = false;
                 return;
             }

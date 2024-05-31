@@ -120,6 +120,7 @@ void ED_Layout::InplaceAUnit(ED_Unit* aim){
     put_ED_Unit(aim,dis);
     aim->update_after_resize();
     contents->push_back(aim);
+    aim->raise();
 }
 
 void ED_Layout::InitAUnit(ED_Unit* aim){
@@ -127,6 +128,8 @@ void ED_Layout::InitAUnit(ED_Unit* aim){
     default_Put_ED_Unit(aim);
     aim->update_after_resize();
     qDebug()<<"Init Done";
+    aim->raise();
+    contents->push_back(aim);
 }
 
 //根据一个Block索引获取对应的ED_Unit指针
