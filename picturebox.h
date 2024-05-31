@@ -29,7 +29,7 @@ signals:
     void sendaDoubleClick();
 
 public slots:
-    bool setImage(QImage &image, double scale = 1.0);
+    bool setImage(QImage &image, double scale =1.0,double pixresize =1.0);
     void setBackground(QBrush brush);
 };
 #endif

@@ -17,6 +17,7 @@ SOURCES += \
     SysFunctions.cpp \
     block_container.cpp \
     ed_block.cpp \
+    ed_hidetextblock.cpp \
     ed_layout.cpp \
     ed_unit.cpp \
     main.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     SysFunctions.h \
     block_container.h \
     ed_block.h \
+    ed_hidetextblock.h \
     ed_layout.h \
     ed_unit.h \
     mainwindow.h \

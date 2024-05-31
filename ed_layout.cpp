@@ -62,6 +62,10 @@ bool ED_Layout::OKForUnit(ED_Unit* aim,int xind,int yind){
 }
 
 //将一个ED_Unit放置在Block中，并在双方的变量中纪律以便之后识别
+void ED_Layout::put_ED_Unit(ED_Unit* aim,QPoint ind){
+    return put_ED_Unit(aim,ind.x(),ind.y());
+}
+
 void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     int x = aim->sizeX;
     int y = aim->sizeY;
@@ -73,7 +77,10 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     }
     aim->LayoutBlockX = xind;
     aim->LayoutBlockY = yind;
-    aim->move(xind*W_Block,yind*H_Block);
+    int w= aim->sizeX*W_Block-2*space;
+    int h= aim->sizeY*H_Block-2*space;
+    aim->setFixedSize(w,h);
+    aim->move(xind*W_Block+space,yind*H_Block+space);
     aim->raise();
 }
 
@@ -104,6 +111,10 @@ ED_Unit* ED_Layout::getUnitFromBlock(int xind,int yind)
         return nullptr;
     }
     //若无返回空指针
+}
+ED_Unit* ED_Layout::getUnitFromBlock(QPoint ind)
+{
+    return getUnitFromBlock(ind.x(),ind.y());
 }
 //将一个ED_Unit按序号最下且可放置的位置放置
 void ED_Layout::add_ED_Unit(ED_Unit* aim)

@@ -44,13 +44,16 @@ void PictureBox::setScale(double scale){
     update();
 }
 
-bool PictureBox::setImage(QImage &image, double scale)
+bool PictureBox::setImage(QImage &image, double scale,double pixresize)
 {
     if(image.isNull())
     {
         return false;
     }
     m_pixmap = QPixmap::fromImage(image);
+    m_pixmap =m_pixmap.scaled(QSize(image.width() * pixresize, image.height() *pixresize)
+                               , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
     setScale(scale);
 
     if(m_mode == AUTO_SIZE)

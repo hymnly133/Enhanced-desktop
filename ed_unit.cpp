@@ -3,7 +3,7 @@
 
 ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
-    sizeX =sizex;
+    sizeX = sizex;
     sizeY = sizey;
 }
 
@@ -39,7 +39,7 @@ void ED_Unit::getaDoubleClick( ){
     double_click_action();
 }
 
-
+void ED_Unit::update_after_resize(){}
 void ED_Unit::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);

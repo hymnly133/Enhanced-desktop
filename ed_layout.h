@@ -52,7 +52,6 @@ public:
     QPoint NearestBlockInd(int posx,int posy);
 
 
-
     //从Block序号获取中心坐标
     QPoint BlockInd2CenterPoint(QPoint ind);
     QPoint BlockInd2CenterPoint(int x,int y);
@@ -63,6 +62,7 @@ public:
 
     //将一个ED_Unit放置在Block中，并在双方的变量中纪律以便之后识别
     void put_ED_Unit(ED_Unit* aim,int xind,int yind);
+    void put_ED_Unit(ED_Unit* aim,QPoint ind);
 
     // 从坐标获得最近的可放置Block序号
     QPoint NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy);
@@ -75,6 +75,7 @@ public:
 
     //根据一个Block索引获取对应的ED_Unit指针
     ED_Unit* getUnitFromBlock(int xind,int yind);
+    ED_Unit* getUnitFromBlock(QPoint ind);
 
     //将一个ED_Unit按序号最下且可放置的位置放置
     void add_ED_Unit(ED_Unit* aim);

@@ -1,20 +1,16 @@
-#include "ed_block.h"
-#include "QWidget"
-#include"QProcess"
-#include "qboxlayout.h"
-#include"SysFunctions.h"
-#include "qlabel.h"
-#include"QDebug"
-#include"QUrl"
-#include"QDesktopServices"
-#include"QTextCodec"
+#include "ed_hidetextblock.h"
+#include "qdebug.h"
+#include "qgraphicseffect.h"
+#include "SysFunctions.h"
 #include "qpainter.h"
-#include"QGraphicsDropShadowEffect"
-int ED_BLOCK::default_size = 48;
-ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
-    : ED_Unit(parent,1,1)
+#include "qurl.h"
+#include"QDesktopServices"
+
+int ED_HideTextBlock::default_size = 48;
+ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QImage image,QString _name,QString _cmd,int sizex,int sizey)
+    :ED_Unit(parent,sizex,sizey)
 {
-    type =Block;
+    type =H_Block;
     cmd = _cmd;
     cmd = QString("file:///")+cmd;
     name = _name;
@@ -33,7 +29,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
     // 显示图标
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
     double defaultRatio = (double)default_size/image.size().width();
-    // qDebug()<<defaultRatio;
+    qDebug()<<defaultRatio;
     gv->setImage(image,1.0,defaultRatio);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
 
@@ -66,13 +62,13 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
 
     setLayout(vl);
 }
-void ED_BLOCK::single_click_action(){
+void ED_HideTextBlock::single_click_action(){
     //最终单击执行
     ED_Unit::single_click_action();
-        qDebug("BLOCK-single_click_action");
+    qDebug("BLOCK-single_click_action");
 }
 
-void ED_BLOCK::double_click_action(){
+void ED_HideTextBlock::double_click_action(){
     //最终双击执行
     ED_Unit::double_click_action();
     qDebug("cmd = %s",qPrintable(cmd));
@@ -82,19 +78,19 @@ void ED_BLOCK::double_click_action(){
 
 
 
-void ED_BLOCK::getaClick( ){
+void ED_HideTextBlock::getaClick( ){
     single_click_action();
 }
 
-void ED_BLOCK::getaDoubleClick( ){
+void ED_HideTextBlock::getaDoubleClick( ){
     double_click_action();
 }
-void ED_BLOCK::update_after_resize(){
+void ED_HideTextBlock::update_after_resize(){
     lb->setFixedWidth(width()-5);
     lb->setText(elidedLineText(lb,3,name));
 }
 
-void ED_BLOCK::paintEvent(QPaintEvent *event)
+void ED_HideTextBlock::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
     p.setPen(QColor("green")); //设置画笔记颜色
