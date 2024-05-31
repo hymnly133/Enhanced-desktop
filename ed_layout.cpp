@@ -84,6 +84,8 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     aim->setFixedSize(w,h);
     aim->move(xind*W_Block+space,yind*H_Block+space);
     aim->raise();
+    aim->edlayout = this;
+    aim->setVisible(true);
 }
 
 void ED_Layout::RemoveAUnit(ED_Unit* aim){
@@ -108,6 +110,7 @@ void ED_Layout::RemoveAUnit(ED_Unit* aim){
     {
         qDebug() << "not find!";
     }
+    qDebug()<<"Removed";
 
 }
 
@@ -115,21 +118,21 @@ void ED_Layout::InplaceAUnit(ED_Unit* aim){
     QPoint absolutePos =  aim->mapToGlobal(QPoint(0, 0));
     QPoint relativePos = absolutePos-father->pos();
     QPoint dis = NearestEmptyBlockInd(aim,relativePos);
-    qDebug()<<"Aim Block Is"<<dis;
     aim->setParent(father);
     put_ED_Unit(aim,dis);
     aim->update_after_resize();
     contents->push_back(aim);
     aim->raise();
+    qDebug()<<"Put_Done";
 }
 
 void ED_Layout::InitAUnit(ED_Unit* aim){
     aim->setParent(father);
     default_Put_ED_Unit(aim);
     aim->update_after_resize();
-    qDebug()<<"Init Done";
     aim->raise();
     contents->push_back(aim);
+    qDebug()<<"Put_Done";
 }
 
 //根据一个Block索引获取对应的ED_Unit指针

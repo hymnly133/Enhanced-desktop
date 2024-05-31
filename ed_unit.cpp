@@ -1,5 +1,6 @@
 #include "ed_unit.h"
 #include "qpainter.h"
+#include"ed_layout.h"
 
 ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
@@ -12,17 +13,19 @@ void ED_Unit::mousePressEvent(QMouseEvent *event)
     Q_UNUSED(event);
     single_click_action();
 }
-
+void ED_Unit::removeFromLayout(){
+    edlayout->RemoveAUnit(this);
+}
 void ED_Unit::single_click_action(){
     //最终单击执行
 
-    qDebug("Unit-single_click_action");
+    // qDebug("Unit-single_click_action");
     emit sendSelf(this);
 }
 
 void ED_Unit::double_click_action(){
 
-    qDebug("Unit-double_click_action");
+    // qDebug("Unit-double_click_action");
 }
 
 void ED_Unit::mouseDoubleClickEvent(QMouseEvent *event)

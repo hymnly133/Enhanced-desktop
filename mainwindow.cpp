@@ -18,26 +18,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     edlayout = new ED_Layout(this,15,10,5);
 
+
     QList<FileInfo> iconns = scanalldesktopfiles();
 
     for(int i=0;i<iconns.size();i++){
         qDebug()<<iconns[i].filePath;
         auto tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256).toImage(),iconns[i].name,iconns[i].filePath);
         InitAUnit(tem);
-        qDebug()<<iconns[i].name<<tem->pos();
         tem->raise();
     }
 
-    auto bc = new Block_Container(this);
+    auto bc = new Block_Container(this,6,6);
     InitAUnit(bc);
-    bc->InitLayout(3,3,3);
+    bc->InitLayout(5,5,3);
 
 }
 void MainWindow::InitAUnit(ED_Unit* aim){
     connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
     edlayout->InitAUnit(aim);
     aim->ind = iconNum;
-    cds[iconNum]=aim;
     iconNum++;
 
 }
@@ -52,7 +51,9 @@ void MainWindow::getObject(ED_Unit *w)
     // 收到小部件的点击信号，移动初始化
     moving = true;
     temp = w;
-    edlayout->RemoveAUnit(w);
+    w->removeFromLayout();
+    w->setParent(this);
+    w->setVisible(true);
     startP = cursor().pos() - this->pos();
     yuanP = temp->pos();
     /*将此小部件提升到父小部件堆栈的顶部*/
@@ -77,17 +78,16 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
             if(edlayout->getUnitFromBlock(point)->type == ED_Unit::Container){
                 qDebug()<<"Container";
                 Block_Container*  c = (Block_Container*)edlayout->getUnitFromBlock(point);
-                c->edlayout->InplaceAUnit(temp);
-                c->raise();
-                temp->raise();
-                qDebug()<<temp->pos()<<temp->mapToGlobal(temp->pos())<<temp->size();
-                moving = false;
-                return;
+                if(c->edlayout->OKforput(temp)){
+                    c->edlayout->InplaceAUnit(temp);
+                    c->raise();
+                    temp->raise();
+                    moving = false;
+                    return;
+                }
             }
         }
         // 放置
-        // QPoint block = edlayout->NearestEmptyBlockInd(temp,temp->pos().x(),temp->pos().y());
-        // edlayout->put_ED_Unit(temp,block.x(),block.y());
         edlayout->InplaceAUnit(temp);
         temp->raise();
         moving = false;
