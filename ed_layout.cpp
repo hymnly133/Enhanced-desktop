@@ -171,6 +171,7 @@ QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
     int mindeltaw=W_Father;
     int mindeltah=H_Father;
     int bpw,bph;
+    bpw=bph=-1;
     for(int i=0;i<row;i++)
     {
         for(int j=0;j<col;j++)
