@@ -5,7 +5,7 @@ Block_Container::Block_Container(QWidget *parent)
     : ED_Unit(parent,2,2)
 {
     type = Container;
-    edlayout = new ED_Layout(this,3,3,3);
+
 }
 void Block_Container::paintEvent(QPaintEvent *event){
 
@@ -20,4 +20,6 @@ void Block_Container::double_click_action(){
 void Block_Container::single_click_action(){
     ED_Unit::single_click_action();
 }
-
+void Block_Container::InitLayout(int row,int cal,int space){
+        edlayout = new ED_Layout(this,row,cal,space);
+}

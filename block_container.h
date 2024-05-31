@@ -11,11 +11,13 @@ class Block_Container : public ED_Unit
 public:
     explicit Block_Container(QWidget *parent = nullptr);
     ED_Layout* edlayout;
+    void InitLayout(int row,int cal,int space);
 
 protected:
     void double_click_action();
     void single_click_action();
     void paintEvent(QPaintEvent *event) override;
+
 
 // signals:
 //     void sendSelf(ED_BLOCK *self);

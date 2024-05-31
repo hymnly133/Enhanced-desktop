@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto bc = new Block_Container(this);
     InitAUnit(bc);
+    bc->InitLayout(3,3,3);
 
 }
 void MainWindow::InitAUnit(ED_Unit* aim){
