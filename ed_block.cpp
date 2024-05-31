@@ -33,7 +33,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
     // 显示图标
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
     double defaultRatio = (double)default_size/image.size().width();
-    qDebug()<<defaultRatio;
+    // qDebug()<<defaultRatio;
     gv->setImage(image,1.0,defaultRatio);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
 
@@ -81,20 +81,6 @@ void ED_BLOCK::double_click_action(){
 }
 
 
-
-
-//以下为鼠标事件传递
-// void ED_BLOCK::mousePressEvent(QMouseEvent *event)
-// {
-//     Q_UNUSED(event);
-
-//     single_click_action();
-// }
-// void ED_BLOCK::mouseDoubleClickEvent(QMouseEvent *event)
-// {
-//     Q_UNUSED(event);
-//     // double_click_action();
-// }
 
 void ED_BLOCK::getaClick( ){
     single_click_action();

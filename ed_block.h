@@ -18,7 +18,7 @@ class ED_BLOCK : public ED_Unit
 public:
         PictureBox* gv ;
         QVBoxLayout* vl;
-    explicit ED_BLOCK(QWidget *parent,QImage image,QString name,QString cmd);
+    explicit ED_BLOCK(QWidget *parent,QImage image,QString _name,QString _cmd);
 
         void update_after_resize() override;
 protected:

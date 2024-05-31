@@ -22,15 +22,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     edlayout = new ED_Layout(this,15,10,5);
 
-    QList<FileInfo> icons = scanalldesktopfiles();
+    QList<FileInfo> iconns = scanalldesktopfiles();
 
-    for(int i=0;i<icons.size();i++){
-        qDebug()<<icons[i].filePath;
-        cd[i] = new ED_BLOCK(this,icons[i].icon.pixmap(256).toImage(),icons[i].name,icons[i].filePath);
+    for(int i=0;i<iconns.size();i++){
+        qDebug()<<iconns[i].filePath;
+        cd[i] = new ED_BLOCK(this,iconns[i].icon.pixmap(256).toImage(),iconns[i].name,iconns[i].filePath);
         InitAUnit(cd[i]);
-        iconNum++;
     }
-
 
     bc = new Block_Container(this);
     InitAUnit(bc);
@@ -39,20 +37,20 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::InitAUnit(ED_Unit* aim){
     switch(aim->type){
     case ED_Unit::Block:
-        connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
+
         break;
     case ED_Unit::Unit:
-        connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
+
         break;
     case ED_Unit::Container:
-        connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
+
         break;
     }
-    int w= aim->sizeX*edlayout->W_Block-2*edlayout->space;
-    int h= aim->sizeY*edlayout->H_Block-2*edlayout->space;
-    aim->setFixedSize(w,h);
+    connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
     edlayout->add_ED_Unit(aim);
     aim->update_after_resize();
+    aim->ind = iconNum;
+    iconNum++;
 
 }
 
@@ -87,7 +85,26 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if(moving){
-        // 遍历各个点位寻找最小差异的位置
+        //首先检查是否拖到文件夹
+        QPoint point = edlayout->NearestBlockInd(temp->pos().x(),temp->pos().y());
+        if(edlayout->Occupied(point)){
+            if(edlayout->getUnitFromBlock(point)->type == ED_Unit::Container){
+                qDebug()<<"Container";
+                Block_Container*  c = (Block_Container*)edlayout->getUnitFromBlock(point);
+                int x=  temp->pos().x()-c->pos().x();
+                int y = temp->pos().y()-c -> pos().y();
+                cd[temp->ind]=NULL;
+                QPoint dis = c->inside_layout->NearestEmptyBlockInd(temp,x,y);
+                c->AddAUnit(temp,dis);
+                c->inside_layout->put_ED_Unit(temp,dis.x(),dis.y());
+                temp->update_after_resize();
+                return;
+            }
+        }
+
+
+        // 放置
+
         QPoint block = edlayout->NearestEmptyBlockInd(temp,temp->pos().x(),temp->pos().y());
         edlayout->put_ED_Unit(temp,block.x(),block.y());
         temp->raise();
@@ -98,6 +115,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 
 void MainWindow::setIconScale(double scale){
     for(int i=0;i<iconNum;i++){
+        if(cd[i])
         if(cd[i]->type == ED_Unit::Block){
             ED_BLOCK* p = (ED_BLOCK*)cd[i];
             p->gv->setScale(scale);

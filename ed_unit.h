@@ -7,14 +7,15 @@ class ED_Unit : public QWidget
 {
     Q_OBJECT
 public:
-    enum ED_TYPE {Unit,Block,Container};
+    enum ED_TYPE {Unit,Block,Container,H_Block};
     ED_TYPE type = Unit;
     int sizeX;
     int sizeY;
+    int ind;
     int LayoutBlockX = -1;
     int LayoutBlockY = -1;
     explicit ED_Unit(QWidget *parent,int sizex,int sizey);
-        virtual void update_after_resize();
+    virtual void update_after_resize();
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
