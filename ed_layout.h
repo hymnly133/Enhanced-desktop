@@ -31,8 +31,9 @@ public:
     int H_Father;
     int W_Block;
     int H_Block;
-
     int space;
+    QWidget* father;
+    QVector<ED_Unit*>* contents = new QVector<ED_Unit*>;
     little_Block* blocks[30][30];
 public:
     ED_Layout(QWidget *father,int row, int col,int space);
@@ -43,14 +44,12 @@ public:
  *     ED_Unit中有如下参数，以便调用和识别在布局中的位置和大小
  *     int sizeX;//横向Block大小
  *    int sizeY;//竖向Block大小
-
-    int LayoutBlockX;//Block XY索引
-    int LayoutBlockY;
+        int LayoutBlockX;//Block XY索引
+        int LayoutBlockY;
 */
     // 从坐标获得最近的Block序号
     QPoint NearestBlockInd(QPoint point);
     QPoint NearestBlockInd(int posx,int posy);
-
 
     //从Block序号获取中心坐标
     QPoint BlockInd2CenterPoint(QPoint ind);
@@ -66,9 +65,13 @@ public:
 
     // 从坐标获得最近的可放置Block序号
     QPoint NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy);
+    QPoint NearestEmptyBlockInd(ED_Unit* aim,QPoint pos);
 
     //将一个Unit从坐标体系中脱离
     void RemoveAUnit(ED_Unit* aim);
+    //将一个Unit加入到坐标体系中
+    void InplaceAUnit(ED_Unit* aim);
+    void InitAUnit(ED_Unit* aim);
 
     //判断一个ED_Unit的左上角放置在该Block中是否合法
     bool OKForUnit(ED_Unit* aim,int xind,int yind);
@@ -78,7 +81,7 @@ public:
     ED_Unit* getUnitFromBlock(QPoint ind);
 
     //将一个ED_Unit按序号最下且可放置的位置放置
-    void add_ED_Unit(ED_Unit* aim);
+    void default_Put_ED_Unit(ED_Unit* aim);
 };
 
 #endif // ED_LAYOUT_H

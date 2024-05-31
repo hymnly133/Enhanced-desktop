@@ -15,10 +15,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     Init(this);
-    // ui->groupBox->setStyleSheet("QGroupBox {border: 0;}");
-
-    // // 设置边框颜色和宽度为0，相当于隐藏边框：
-    // ui->groupBox->setStyleSheet("QGroupBox {border: 0px solid transparent;}");
 
     edlayout = new ED_Layout(this,15,10,5);
 
@@ -26,30 +22,21 @@ MainWindow::MainWindow(QWidget *parent)
 
     for(int i=0;i<iconns.size();i++){
         qDebug()<<iconns[i].filePath;
-        cd[i] = new ED_BLOCK(this,iconns[i].icon.pixmap(256).toImage(),iconns[i].name,iconns[i].filePath);
-        InitAUnit(cd[i]);
+        auto tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256).toImage(),iconns[i].name,iconns[i].filePath);
+        InitAUnit(tem);
+        qDebug()<<iconns[i].name<<tem->pos();
+        tem->raise();
     }
 
-    bc = new Block_Container(this);
+    auto bc = new Block_Container(this);
     InitAUnit(bc);
 
 }
 void MainWindow::InitAUnit(ED_Unit* aim){
-    switch(aim->type){
-    case ED_Unit::Block:
-
-        break;
-    case ED_Unit::Unit:
-
-        break;
-    case ED_Unit::Container:
-
-        break;
-    }
     connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
-    edlayout->add_ED_Unit(aim);
-    aim->update_after_resize();
+    edlayout->InitAUnit(aim);
     aim->ind = iconNum;
+    cds[iconNum]=aim;
     iconNum++;
 
 }
@@ -69,8 +56,6 @@ void MainWindow::getObject(ED_Unit *w)
     yuanP = temp->pos();
     /*将此小部件提升到父小部件堆栈的顶部*/
     temp->raise();
-
-
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
@@ -91,22 +76,16 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
             if(edlayout->getUnitFromBlock(point)->type == ED_Unit::Container){
                 qDebug()<<"Container";
                 Block_Container*  c = (Block_Container*)edlayout->getUnitFromBlock(point);
-                int x=  temp->pos().x()-c->pos().x();
-                int y = temp->pos().y()-c -> pos().y();
-                cd[temp->ind]=NULL;
-                QPoint dis = c->inside_layout->NearestEmptyBlockInd(temp,x,y);
-                c->AddAUnit(temp,dis);
-                c->inside_layout->put_ED_Unit(temp,dis.x(),dis.y());
-                temp->update_after_resize();
+                c->edlayout->InplaceAUnit(temp);
+                temp->raise();
+                moving = false;
                 return;
             }
         }
-
-
         // 放置
-
-        QPoint block = edlayout->NearestEmptyBlockInd(temp,temp->pos().x(),temp->pos().y());
-        edlayout->put_ED_Unit(temp,block.x(),block.y());
+        // QPoint block = edlayout->NearestEmptyBlockInd(temp,temp->pos().x(),temp->pos().y());
+        // edlayout->put_ED_Unit(temp,block.x(),block.y());
+        edlayout->InplaceAUnit(temp);
         temp->raise();
         moving = false;
     }
@@ -114,20 +93,19 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 
 
 void MainWindow::setIconScale(double scale){
-    for(int i=0;i<iconNum;i++){
-        if(cd[i])
-        if(cd[i]->type == ED_Unit::Block){
-            ED_BLOCK* p = (ED_BLOCK*)cd[i];
+    for(ED_Unit* content:*(edlayout->contents)){
+        if(content->type == ED_Unit::Block){
+            ED_BLOCK* p = (ED_BLOCK*)content;
             p->gv->setScale(scale);
         }
     }
 }
 
 void MainWindow::setIconHight(int val){
-    for(int i=0;i<iconNum;i++){
-        if(cd[i]->type == ED_Unit::Block){
-            ED_BLOCK* p = (ED_BLOCK*)cd[i];
-            p->vl->setSpacing(val);
+    for(ED_Unit* content:*(edlayout->contents)){
+        if(content->type == ED_Unit::Block){
+            ED_BLOCK* p = (ED_BLOCK*)content;
+             p->vl->setSpacing(val);
         }
     }
 }

@@ -19,7 +19,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     ED_Layout* edlayout;
-
+    ED_Unit* cds[200];
 
 private slots:
     void getObject(ED_Unit *w);
@@ -31,10 +31,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    ED_Unit* cd[200];
     int iconNum = 0;
     ED_Unit *temp;
-    Block_Container* bc;
     QPoint startP;
     QPoint yuanP;
     bool moving = false;
