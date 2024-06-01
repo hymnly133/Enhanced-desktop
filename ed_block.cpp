@@ -11,8 +11,8 @@
 #include "qpainter.h"
 #include"QGraphicsDropShadowEffect"
 int ED_BLOCK::default_size = 48;
-ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
-    : ED_Unit(parent,1,1)
+ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, int sizex, int sizey)
+    : ED_Unit(parent,sizex,sizey)
 {
     type =Block;
     cmd = _cmd;

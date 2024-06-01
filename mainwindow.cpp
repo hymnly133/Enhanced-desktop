@@ -16,21 +16,34 @@ MainWindow::MainWindow(QWidget *parent)
 
     Init(this);
 
-    edlayout = new ED_Layout(this,15,10,5);
+    edlayout = new ED_Layout(this,20,15,5);
 
 
     QList<FileInfo> iconns = scanalldesktopfiles();
 
     for(int i=0;i<iconns.size();i++){
         qDebug()<<iconns[i].filePath;
-        auto tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256).toImage(),iconns[i].name,iconns[i].filePath);
+        int sizex=1;
+        int sizey=1;
+        if(i%2==0){
+            sizex = 2;
+        }
+        if(i%3==0){
+            sizey=2;
+        }
+        auto tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256).toImage(),iconns[i].name,iconns[i].filePath,sizex,sizey);
         InitAUnit(tem);
         tem->raise();
     }
 
-    auto bc = new Block_Container(this,6,6);
+    auto bc = new Block_Container(this,4,4);
     InitAUnit(bc);
-    bc->InitLayout(5,5,3);
+    bc->InitLayout(3,3,3);
+
+    auto bc_ = new Block_Container(this,3,3);
+    InitAUnit(bc_);
+    bc_->InitLayout(5,5,3);
+
 
 }
 void MainWindow::InitAUnit(ED_Unit* aim){
@@ -51,6 +64,7 @@ void MainWindow::getObject(ED_Unit *w)
     // 收到小部件的点击信号，移动初始化
     moving = true;
     temp = w;
+    if(w->edlayout)
     w->removeFromLayout();
     w->setParent(this);
     w->setVisible(true);
@@ -64,8 +78,17 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     // 小部件移动
     if (moving)
-        if (temp)
+        if (temp){
+
             temp->move(yuanP.x() + event->x() - startP.x(), yuanP.y() + event->y() - startP.y());
+            qDebug("NormalMove");
+        }
+        else{
+            qDebug("NoTemp");
+        }
+    else{
+        qDebug("NoMoving");
+    }
 }
 
 // 拖拽对象置顶，卡牌积压的时候，拖动的那张卡牌置顶
@@ -113,16 +136,6 @@ void MainWindow::setIconHight(int val){
     }
 }
 
-void MainWindow::on_verticalSlider_valueChanged(int value)
-{
-    setIconScale((double)value/50);
-}
-
-
-void MainWindow::on_verticalSlider_2_valueChanged(int value)
-{
-    setIconHight(value);
-}
 
 
 void MainWindow::paintEvent(QPaintEvent * ev)
@@ -130,3 +143,15 @@ void MainWindow::paintEvent(QPaintEvent * ev)
     QPainter painter(this);
     painter.drawPixmap(rect(),QPixmap(":/images/background"),QRect());
 }
+
+void MainWindow::on_horizontalSlider_2_valueChanged(int value)
+{
+    setIconHight(value);
+}
+
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    setIconScale((double)value/50);
+}
+

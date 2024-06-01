@@ -83,9 +83,11 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     int h= aim->sizeY*H_Block-2*space;
     aim->setFixedSize(w,h);
     aim->move(xind*W_Block+space,yind*H_Block+space);
-    aim->raise();
+
     aim->edlayout = this;
     aim->setVisible(true);
+    father->raise();
+    aim->raise();
 }
 
 void ED_Layout::RemoveAUnit(ED_Unit* aim){
