@@ -9,14 +9,16 @@ class Block_Container : public ED_Unit
 {
     Q_OBJECT
 public:
-    explicit Block_Container(QWidget *parent = nullptr);
+    explicit Block_Container(QWidget *parent,int sizex,int sizey);
     ED_Layout* edlayout;
     void InitLayout(int row,int cal,int space);
+    void Say();
 
 protected:
     void double_click_action();
     void single_click_action();
     void paintEvent(QPaintEvent *event) override;
+
 
 
 // signals:

@@ -6,38 +6,38 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>944</width>
-    <height>641</height>
+    <width>1599</width>
+    <height>1185</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow_ED</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QSlider" name="verticalSlider">
+   <widget class="QSlider" name="horizontalSlider">
     <property name="geometry">
      <rect>
-      <x>880</x>
-      <y>20</y>
-      <width>16</width>
-      <height>381</height>
+      <x>10</x>
+      <y>1120</y>
+      <width>531</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="orientation">
-     <enum>Qt::Vertical</enum>
+     <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QSlider" name="verticalSlider_2">
+   <widget class="QSlider" name="horizontalSlider_2">
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>20</y>
-      <width>21</width>
-      <height>381</height>
+      <x>10</x>
+      <y>1090</y>
+      <width>531</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="orientation">
-     <enum>Qt::Vertical</enum>
+     <enum>Qt::Horizontal</enum>
     </property>
    </widget>
   </widget>

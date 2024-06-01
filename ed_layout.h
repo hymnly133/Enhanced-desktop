@@ -34,7 +34,7 @@ public:
     int space;
     QWidget* father;
     QVector<ED_Unit*>* contents = new QVector<ED_Unit*>;
-    little_Block* blocks[30][30];
+    little_Block* blocks[50][50];
 public:
     ED_Layout(QWidget *father,int row, int col,int space);
 /*

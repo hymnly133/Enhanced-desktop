@@ -11,8 +11,8 @@
 #include "qpainter.h"
 #include"QGraphicsDropShadowEffect"
 int ED_BLOCK::default_size = 48;
-ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
-    : ED_Unit(parent,1,1)
+ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, int sizex, int sizey)
+    : ED_Unit(parent,sizex,sizey)
 {
     type =Block;
     cmd = _cmd;
@@ -69,7 +69,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd)
 void ED_BLOCK::single_click_action(){
     //最终单击执行
     ED_Unit::single_click_action();
-        qDebug("BLOCK-single_click_action");
+        // qDebug("BLOCK-single_click_action");
 }
 
 void ED_BLOCK::double_click_action(){
@@ -77,10 +77,8 @@ void ED_BLOCK::double_click_action(){
     ED_Unit::double_click_action();
     qDebug("cmd = %s",qPrintable(cmd));
     QDesktopServices::openUrl(QUrl(cmd));
-    qDebug("BLOCK-double_click_action");
+    // qDebug("BLOCK-double_click_action");
 }
-
-
 
 void ED_BLOCK::getaClick( ){
     single_click_action();
