@@ -69,6 +69,7 @@ void MainWindow::getObject(ED_Unit *w)
     w->setParent(this);
     w->setVisible(true);
     startP = cursor().pos() - this->pos();
+    w->move(startP);
     yuanP = temp->pos();
     /*将此小部件提升到父小部件堆栈的顶部*/
     temp->raise();
