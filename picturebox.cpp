@@ -125,18 +125,6 @@ void PictureBox::paintEvent(QPaintEvent * event)
     p.setPen(QColor("green")); //设置画笔记颜色
     p.drawRect(0, 0, width() -1, height() -1); //绘制边框
 }
-
-void PictureBox::mousePressEvent(QMouseEvent *event){
-        Q_UNUSED(event);
-    qDebug("pc-1click");
-    emit sendaClick();
-
-}
-void PictureBox::mouseDoubleClickEvent(QMouseEvent *event){
-        Q_UNUSED(event);
-        qDebug("pc-2click");
-    emit sendaDoubleClick();
-}
 PictureBox::~PictureBox()
 {
 

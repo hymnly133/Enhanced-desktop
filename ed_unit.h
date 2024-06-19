@@ -7,9 +7,11 @@ class ED_Unit : public QWidget
 {
     Q_OBJECT
 public:
-    enum ED_TYPE {Unit,Block,Container,H_Block};
+    enum ED_TYPE {Unit,Block,Container};
     ED_TYPE type = Unit;
     ED_Layout* edlayout;
+    bool moving;
+    QPoint relativeP;
     int sizeX;
     int sizeY;
     int ind;
@@ -19,15 +21,20 @@ public:
     virtual void update_after_resize();
     void removeFromLayout();
 
-protected:
-    void mousePressEvent(QMouseEvent *event) override;
+
+public:
     virtual void double_click_action();
     virtual void single_click_action();
+    virtual void mouse_move_action();
+    virtual void mouse_release_action();
 
+
+
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
     void mouseDoubleClickEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
-signals:
-    void sendSelf(ED_Unit *self);
 public slots:
     void getaClick();
     void getaDoubleClick();

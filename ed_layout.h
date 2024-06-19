@@ -27,12 +27,12 @@ class ED_Layout
 public:
     int row;
     int col;
-    int W_Father;
-    int H_Father;
+    int W_Container;
+    int H_Container;
     int W_Block;
     int H_Block;
     int space;
-    QWidget* father;
+    QWidget* pContainer;
     QVector<ED_Unit*>* contents = new QVector<ED_Unit*>;
     little_Block* blocks[50][50];
 public:

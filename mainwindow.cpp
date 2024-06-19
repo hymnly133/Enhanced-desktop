@@ -21,6 +21,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     QList<FileInfo> iconns = scanalldesktopfiles();
 
+    auto bc = new Block_Container(this,4,4);
+    InitAUnit(bc);
+    bc->InitLayout(3,3,3);
+
+    auto bc_ = new Block_Container(this,3,3);
+    InitAUnit(bc_);
+    bc_->InitLayout(5,5,3);
+
     for(int i=0;i<iconns.size();i++){
         qDebug()<<iconns[i].filePath;
         int sizex=1;
@@ -32,26 +40,24 @@ MainWindow::MainWindow(QWidget *parent)
             sizey=2;
         }
         auto tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256).toImage(),iconns[i].name,iconns[i].filePath,sizex,sizey);
-        InitAUnit(tem);
+
+        if(i <=2){
+            bc->edlayout->InitAUnit(tem);
+        }
+        else{
+            InitAUnit(tem);
+        }
+
+
         tem->raise();
     }
-
-    auto bc = new Block_Container(this,4,4);
-    InitAUnit(bc);
-    bc->InitLayout(3,3,3);
-
-    auto bc_ = new Block_Container(this,3,3);
-    InitAUnit(bc_);
-    bc_->InitLayout(5,5,3);
-
-
+    pmw = this;
 }
 void MainWindow::InitAUnit(ED_Unit* aim){
-    connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
+    // connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
     edlayout->InitAUnit(aim);
     aim->ind = iconNum;
     iconNum++;
-
 }
 
 MainWindow::~MainWindow()
@@ -59,63 +65,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::getObject(ED_Unit *w)
-{
-    // 收到小部件的点击信号，移动初始化
-    moving = true;
-    temp = w;
-    if(w->edlayout)
-    w->removeFromLayout();
-    w->setParent(this);
-    w->setVisible(true);
-    startP = cursor().pos() - this->pos();
-    yuanP = temp->pos();
-    /*将此小部件提升到父小部件堆栈的顶部*/
-    temp->raise();
-}
-
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    // 小部件移动
-    if (moving)
-        if (temp){
-
-            temp->move(yuanP.x() + event->x() - startP.x(), yuanP.y() + event->y() - startP.y());
-            qDebug("NormalMove");
-        }
-        else{
-            qDebug("NoTemp");
-        }
-    else{
-        qDebug("NoMoving");
-    }
-}
-
-// 拖拽对象置顶，卡牌积压的时候，拖动的那张卡牌置顶
-void MainWindow::mouseReleaseEvent(QMouseEvent *event)
-{
-    if(moving){
-        //首先检查是否拖到文件夹
-        QPoint point = edlayout->NearestBlockInd(temp->pos().x(),temp->pos().y());
-        if(edlayout->Occupied(point)){
-            if(edlayout->getUnitFromBlock(point)->type == ED_Unit::Container){
-                qDebug()<<"Container";
-                Block_Container*  c = (Block_Container*)edlayout->getUnitFromBlock(point);
-                if(c->edlayout->OKforput(temp)){
-                    c->edlayout->InplaceAUnit(temp);
-                    c->raise();
-                    temp->raise();
-                    moving = false;
-                    return;
-                }
-            }
-        }
-        // 放置
-        edlayout->InplaceAUnit(temp);
-        temp->raise();
-        moving = false;
-    }
-}
 
 
 void MainWindow::setIconScale(double scale){

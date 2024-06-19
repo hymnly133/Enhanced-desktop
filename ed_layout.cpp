@@ -1,16 +1,17 @@
 #include "ed_layout.h"
+#include "mainwindow.h"
 #include "qdebug.h"
 #include<cmath>
 
-ED_Layout::ED_Layout( QWidget *father,int row, int col,int space) {
+ED_Layout::ED_Layout(QWidget *father, int row, int col, int space) {
     this->row = row;
     this->col = col;
     this->space = space;
-    this->father = father;
-    W_Father = father->width();
-    H_Father = father->height();
-    W_Block = W_Father/row;
-    H_Block = H_Father/col;
+    this->pContainer = father;
+    W_Container = father->width();
+    H_Container = father->height();
+    W_Block = W_Container/row;
+    H_Block = H_Container/col;
     for(int i=0;i<row;i++){
         for(int k=0;k<col;k++){
             blocks[i][k] = new little_Block();
@@ -86,7 +87,7 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
 
     aim->edlayout = this;
     aim->setVisible(true);
-    father->raise();
+    pContainer->raise();
     aim->raise();
 }
 
@@ -103,6 +104,10 @@ void ED_Layout::RemoveAUnit(ED_Unit* aim){
     }
     aim->LayoutBlockX = -1;
     aim->LayoutBlockY = -1;
+    aim->edlayout = nullptr;
+    aim->setParent(pmw);
+    aim->setVisible(true);
+    aim->raise();
     auto s = std::find(contents->begin(), contents->end(), aim);//第一个参数是array的起始地址，第二个参数是array的结束地址，第三个参数是需要查找的值
     if (s != contents->end())//如果找到，就输出这个元素
     {
@@ -118,9 +123,9 @@ void ED_Layout::RemoveAUnit(ED_Unit* aim){
 
 void ED_Layout::InplaceAUnit(ED_Unit* aim){
     QPoint absolutePos =  aim->mapToGlobal(QPoint(0, 0));
-    QPoint relativePos = absolutePos-father->pos();
+    QPoint relativePos = absolutePos-pContainer->pos();
     QPoint dis = NearestEmptyBlockInd(aim,relativePos);
-    aim->setParent(father);
+    aim->setParent(pContainer);
     put_ED_Unit(aim,dis);
     aim->update_after_resize();
     contents->push_back(aim);
@@ -129,7 +134,7 @@ void ED_Layout::InplaceAUnit(ED_Unit* aim){
 }
 
 void ED_Layout::InitAUnit(ED_Unit* aim){
-    aim->setParent(father);
+    aim->setParent(pContainer);
     default_Put_ED_Unit(aim);
     aim->update_after_resize();
     aim->raise();
@@ -191,8 +196,8 @@ bool ED_Layout::OKforput(ED_Unit*aim)
 
 QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
 {
-    int mindeltaw=W_Father;
-    int mindeltah=H_Father;
+    int mindeltaw=W_Container;
+    int mindeltah=H_Container;
     int bpw,bph;
     bpw=bph=-1;
     for(int i=0;i<row;i++)

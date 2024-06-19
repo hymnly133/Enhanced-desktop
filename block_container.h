@@ -1,7 +1,6 @@
 #ifndef BLOCK_CONTAINER_H
 #define BLOCK_CONTAINER_H
 
-#include "ed_block.h"
 #include <QWidget>
 #include"ed_layout.h"
 
@@ -17,15 +16,9 @@ public:
 protected:
     void double_click_action();
     void single_click_action();
-    void paintEvent(QPaintEvent *event) override;
+    void paintEvent(QPaintEvent *event);
+    // void mouseMoveEvent(QMouseEvent *event) override;
 
-
-
-// signals:
-//     void sendSelf(ED_BLOCK *self);
-// public slots:
-//     void getaClick();
-//     void getaDoubleClick();
 };
 
 
