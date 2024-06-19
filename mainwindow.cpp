@@ -66,7 +66,6 @@ MainWindow::~MainWindow()
 }
 
 
-
 void MainWindow::setIconScale(double scale){
     for(ED_Unit* content:*(edlayout->contents)){
         if(content->type == ED_Unit::Block){
