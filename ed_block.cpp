@@ -77,6 +77,6 @@ void ED_BLOCK::paintEvent(QPaintEvent *event)
     p.drawRect(0, 0, width() -1, height() -1); //绘制边框
     QPainter paint(this);
     paint.setPen(Qt::blue);
-    paint.fillRect(rect(), QBrush(QColor(10,10,10,120)));
+    paint.fillRect(rect(), QBrush(QColor(10,10,150,120)));
 
 }

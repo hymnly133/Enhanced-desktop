@@ -106,8 +106,12 @@ void ED_Layout::RemoveAUnit(ED_Unit* aim){
     aim->LayoutBlockY = -1;
     aim->edlayout = nullptr;
     aim->setParent(pmw);
+    aim->setEnabled(true);
     aim->setVisible(true);
+    aim->setCursor(QCursor());
     aim->raise();
+
+    aim->setFocus();
     auto s = std::find(contents->begin(), contents->end(), aim);//第一个参数是array的起始地址，第二个参数是array的结束地址，第三个参数是需要查找的值
     if (s != contents->end())//如果找到，就输出这个元素
     {

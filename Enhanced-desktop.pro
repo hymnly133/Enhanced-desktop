@@ -3,7 +3,7 @@ QT       += core gui
 win32 {
 LIBS+= -luser32    # 使用WindowsAPI需要链接库
 }
-
+QMAKE_PROJECT_DEPTH = 0
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -40,9 +40,9 @@ FORMS += \
     mainwindow.ui
 
 TRANSLATIONS += \
-    Enhanced-desktop_zh_CN.ts
-CONFIG += lrelease
-CONFIG += embed_translations
+    Enhanced-desktop_zh_CN.ts \
+CONFIG += lrelease \
+CONFIG += embed_translations \
 
 
 # TEMPLATE = subdirs
@@ -55,9 +55,10 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-# DISTFILES += \
-#     ContextMenu/ContextMenu.pro.user
 
 RESOURCES += \
     res.qrc
+
+
+
 
