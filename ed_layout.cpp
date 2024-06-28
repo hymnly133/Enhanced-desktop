@@ -21,11 +21,10 @@ ED_Layout::ED_Layout(QWidget *father, int row, int col, int borad_space,int spac
 
 
 QPoint ED_Layout::NearestBlockInd(QPoint point){
-    return QPoint(point.x()/W_Block(),point.y()/H_Block());
-
+    return QPoint((point.x()-borad_space)/(W_Block_Clean()+space_x),(point.y()-borad_space)/(H_Block_Clean()+space_y));
 }
 QPoint ED_Layout::NearestBlockInd(int posx,int posy){
-    return QPoint(posx/W_Block(),posy/H_Block());
+    return QPoint((posx-borad_space)/(W_Block_Clean()+space_x),(posy-borad_space)/(H_Block_Clean()+space_y));
 }
 
 //从Block序号获取中心坐标
@@ -201,8 +200,8 @@ QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
     {
         for(int j=0;j<col;j++)
         {
-            int deltaw=abs(posx-i*W_Block());
-            int deltah=abs(posy-j*H_Block());
+            int deltaw=abs(posx-borad_space-i*(W_Block_Clean()+space_x));
+            int deltah=abs(posy-borad_space-j*(H_Block_Clean()+space_y));
             if((deltaw+deltah<mindeltaw+mindeltah)&&(OKForUnit(aim,i,j)))
             {
                 mindeltaw=deltaw;
