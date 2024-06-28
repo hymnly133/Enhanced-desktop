@@ -1,10 +1,8 @@
-QT       += core gui
-
+QT       += core gui widgets
 win32 {
 LIBS+= -luser32    # 使用WindowsAPI需要链接库
 }
 QMAKE_PROJECT_DEPTH = 0
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17

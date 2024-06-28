@@ -10,7 +10,7 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
     sizeX = sizex;
     sizeY = sizey;
-    setMouseTracking(true);
+    // setMouseTracking(true);
     moving = false;
 }
 
@@ -76,6 +76,7 @@ void ED_Unit::removeFromLayout(){
 void ED_Unit::mousePressEvent(QMouseEvent *event)
 {
     event->accept();
+    grabMouse();
     single_click_action();
 
 }
@@ -83,6 +84,7 @@ void ED_Unit::mousePressEvent(QMouseEvent *event)
 void ED_Unit::mouseReleaseEvent(QMouseEvent *event)
 {
     event->accept();
+    releaseMouse();
     mouse_release_action();
 
 }
