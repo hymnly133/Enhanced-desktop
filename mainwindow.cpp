@@ -52,6 +52,25 @@ MainWindow::MainWindow(QWidget *parent)
         tem->raise();
     }
     pmw = this;
+
+    // mainwindow.cpp
+
+
+    // 只要将某个QAction添加给对应的窗口, 这个action就是这个窗口右键菜单中的一个菜单项了
+    // 在窗口中点击鼠标右键, 就可以显示这个菜单
+    setContextMenuPolicy(Qt::ActionsContextMenu);
+    // 给当前窗口添加QAction对象
+    QAction* act1  = new QAction("改变可见");
+    QAction* act2 = new QAction("Java");
+    QAction* act3  = new QAction("Python");
+    this->addAction(act1);
+    this->addAction(act2);
+    this->addAction(act3);
+    connect(act1, &QAction::triggered, this, [=]()
+    {
+        edlayout->setVisible(!edlayout->Visible());
+    });
+
 }
 void MainWindow::InitAUnit(ED_Unit* aim){
     // connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
@@ -103,3 +122,6 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
     setIconScale((double)value/50);
 }
 
+void MainWindow::mouseDoubleClickEvent(QMouseEvent* ev) {
+    edlayout->setVisible(!edlayout->Visible());
+}

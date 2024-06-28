@@ -24,6 +24,7 @@ ED_Layout::ED_Layout(QWidget *father, int row, int col, int space) {
             blocks[i][k]->occupied = false;
         }
     }
+    visibal = true;
 }
 
 
@@ -220,4 +221,14 @@ QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
         }
     }
     return QPoint(bpw,bph);
+}
+
+void ED_Layout::setVisible(bool val){
+    for(ED_Unit* unit:*contents){
+        unit->setVisible(val);
+    }
+    visibal = val;
+}
+bool ED_Layout::Visible(){
+    return visibal;
 }

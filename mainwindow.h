@@ -39,6 +39,7 @@ private:
     void InitAUnit(ED_Unit* aim);
 protected:
     void paintEvent(QPaintEvent * ev) override;
+    void mouseDoubleClickEvent(QMouseEvent* ev) override;
 
 };
 extern MainWindow* pmw;

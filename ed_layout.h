@@ -32,6 +32,7 @@ public:
     int W_Block;
     int H_Block;
     int space;
+    bool visibal;
     QWidget* pContainer;
     QVector<ED_Unit*>* contents = new QVector<ED_Unit*>;
     little_Block* blocks[50][50];
@@ -82,6 +83,9 @@ public:
 
     //将一个ED_Unit按序号最下且可放置的位置放置
     void default_Put_ED_Unit(ED_Unit* aim);
+
+    void setVisible(bool val);
+    bool Visible();
 
     //判断放置一个ED_Unit是否合法
     bool OKforput(ED_Unit*aim);

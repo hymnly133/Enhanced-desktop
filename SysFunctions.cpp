@@ -185,6 +185,7 @@ QString GetCorrectUnicode(const QByteArray &ba)
 
 QString elidedLineText(QWidget *pWidget, int nLine, QString strText)
 {
+    //调整输出
     if (nLine == 0)
         return "";
 

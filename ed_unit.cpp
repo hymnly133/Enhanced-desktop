@@ -37,11 +37,11 @@ void ED_Unit::mouse_move_action(){
     if (moving)
     {
         move(cursor().pos()-relativeP);
-        qDebug("NormalMove");
-        qDebug()<<int(type);
+        // qDebug("NormalMove");
+        // qDebug()<<int(type);
     }
     else{
-        qDebug("NoMoving");
+        // qDebug("NoMoving");
     }
 }
 
@@ -76,8 +76,10 @@ void ED_Unit::removeFromLayout(){
 void ED_Unit::mousePressEvent(QMouseEvent *event)
 {
     event->accept();
-    grabMouse();
-    single_click_action();
+    if(event->button() == Qt::LeftButton){
+        grabMouse();
+        single_click_action();
+    }
 
 }
 

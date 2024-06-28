@@ -121,9 +121,9 @@ void PictureBox::paintEvent(QPaintEvent * event)
         painter.drawPixmap(0, 0, m_logopix);
         break;
     }
-    QPainter p(this);
-    p.setPen(QColor("green")); //设置画笔记颜色
-    p.drawRect(0, 0, width() -1, height() -1); //绘制边框
+    // QPainter p(this);
+    // p.setPen(QColor("green")); //设置画笔记颜色
+    // p.drawRect(0, 0, width() -1, height() -1); //绘制边框
 }
 PictureBox::~PictureBox()
 {
