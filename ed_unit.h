@@ -21,7 +21,6 @@ public:
 
     void removeFromLayout();
 
-
     virtual void update_after_resize();
     virtual void double_click_action();
     virtual void single_click_action();

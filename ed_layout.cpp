@@ -76,13 +76,14 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     // int w= aim->sizeX*W_Block()-2*space;
     // int h= aim->sizeY*H_Block()-2*space;
 
-    aim->setFixedSize(W_Block_Clean(),H_Block_Clean());
+    aim->setFixedSize(W_Block_Clean()+(aim->sizeX-1)*space_x,H_Block_Clean()+(aim->sizeY-1)*space_y);
     aim->move(blocks[xind][yind]->posX(),blocks[xind][yind]->posY());
 
     aim->edlayout = this;
     aim->setVisible(true);
     pContainer->raise();
     aim->raise();
+    qDebug()<<"Put Done";
 }
 
 void ED_Layout::RemoveAUnit(ED_Unit* aim){
@@ -128,7 +129,6 @@ void ED_Layout::InplaceAUnit(ED_Unit* aim){
     aim->update_after_resize();
     contents->push_back(aim);
     aim->raise();
-    qDebug()<<"Put_Done";
 }
 
 void ED_Layout::InitAUnit(ED_Unit* aim){
@@ -137,7 +137,6 @@ void ED_Layout::InitAUnit(ED_Unit* aim){
     aim->update_after_resize();
     aim->raise();
     contents->push_back(aim);
-    qDebug()<<"Put_Done";
 }
 
 //根据一个Block索引获取对应的ED_Unit指针

@@ -106,8 +106,25 @@ void ED_Unit::mouseMoveEvent(QMouseEvent *event)
 }
 
 void ED_Unit::setBlockSize(int w,int h){
-    sizeX = w;
-    sizeY = h;
+    ED_Layout* tem = nullptr;
+    if(edlayout){
+        tem = edlayout;
+        removeFromLayout();
+
+        ED_Unit temu(nullptr,w,h);
+        if(tem->OKforput(&temu)){
+            sizeX = w;
+            sizeY = h;
+        }
+        tem->InplaceAUnit(this);
+    }
+    else{
+        sizeX = w;
+        sizeY = h;
+    }
+
+
+
 }
 
 void ED_Unit::getaClick( ){
