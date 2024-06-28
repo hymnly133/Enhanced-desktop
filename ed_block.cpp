@@ -32,15 +32,20 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, i
     // 显示图标
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
     double defaultRatio = (double)default_size/image.size().width();
+    iconmap.convertFromImage(image);
+    mainColor = pixmapMainColor(iconmap,0.5);
 
     gv->setImage(image,1.0,defaultRatio);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
+    vl->setAlignment(Qt::AlignHCenter);
 
     // 添加布局
+        vl->addStretch();
     vl->addWidget(gv);
     vl->setAlignment(gv,Qt::AlignHCenter);
     vl->addWidget(lb);
     vl->setAlignment(lb,Qt::AlignHCenter);
+            vl->addStretch();
 
     // 显示名字
     lb->setAlignment(Qt::AlignHCenter);
@@ -50,13 +55,13 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, i
     lb->setText(elidedLineText(lb,3,name));
     QGraphicsDropShadowEffect* effect0 = new QGraphicsDropShadowEffect;
     effect0->setColor(QColor(100,100,100,100));
-    effect0->setBlurRadius(2);   //模糊半径
+    effect0->setBlurRadius(4);   //模糊半径
     effect0->setOffset(10);      //偏移量
     lb->setGraphicsEffect(effect0);
 
     QGraphicsDropShadowEffect* effect1 = new QGraphicsDropShadowEffect;
     effect1->setColor(QColor(100,100,100,100));
-    effect1->setBlurRadius(2);   //模糊半径
+    effect1->setBlurRadius(4);   //模糊半径
     effect1->setOffset(10);      //偏移量
     gv->setGraphicsEffect(effect1);
 
@@ -70,6 +75,14 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, i
         setBlockSize(sizeX+1,sizeY);
     });
 
+    QAction* act3  = new QAction("减宽");
+    this->addAction(act3);
+    connect(act3, &QAction::triggered, this, [=]()
+            {
+                if(sizeX>=2)
+                    setBlockSize(sizeX-1,sizeY);
+            });
+
     QAction* act2  = new QAction("加高");
     this->addAction(act2);
     connect(act2, &QAction::triggered, this, [=]()
@@ -77,13 +90,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, i
         setBlockSize(sizeX,sizeY+1);
     });
 
-    QAction* act3  = new QAction("减宽");
-    this->addAction(act3);
-    connect(act3, &QAction::triggered, this, [=]()
-    {
-        if(sizeX>=2)
-        setBlockSize(sizeX-1,sizeY);
-    });
+
 
     QAction* act4  = new QAction("减高");
     this->addAction(act4);
@@ -93,6 +100,12 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, i
         setBlockSize(sizeX,sizeY-1);
     });
 
+    QAction* act5  = new QAction("切换显示名字");
+    this->addAction(act5);
+connect(act5, &QAction::triggered, this, [=]()
+    {
+        lb->setVisible(!lb->isVisible());
+    });
 }
 
 void ED_BLOCK::double_click_action(){
@@ -107,10 +120,18 @@ void ED_BLOCK::update_after_resize(){
     lb->setFixedWidth(width()-5);
     lb->setText(elidedLineText(lb,4,name));
 }
-
+void ED_BLOCK::mouse_enter_action(){
+    ED_Unit::mouse_enter_action();
+    mainColor = pixmapMainColor(iconmap,0.9);
+}
+void ED_BLOCK::mouse_leave_action(){
+    //最终移动执行
+    ED_Unit::mouse_leave_action();
+    mainColor = pixmapMainColor(iconmap,0.5);
+}
 void ED_BLOCK::paintEvent(QPaintEvent *event)
 {
     ED_Unit::paintEvent(event);
-    paintRect(this,QColor(10,10,10,50));
+    paintRect(this,QColor(mainColor.red(),mainColor.green(),mainColor.blue(),aim_Alpha));
 
 }

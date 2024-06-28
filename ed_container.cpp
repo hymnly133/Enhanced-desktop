@@ -19,7 +19,7 @@ ED_Container::ED_Container(QWidget *parent, int sizex, int sizey,int row,int cal
     edlayout = new ED_Layout(this,row,cal,space,temx,temy);
 }
 void ED_Container::paintEvent(QPaintEvent *event){
-    paintRect(this,QColor(255,255,255,100));
+    paintRect(this,QColor(255,255,255,aim_Alpha));
 
 }
 void ED_Container::double_click_action(){

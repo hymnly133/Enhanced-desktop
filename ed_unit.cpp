@@ -12,15 +12,8 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
     alwaysShow = false;
     sizeX = sizex;
     sizeY = sizey;
-    // setMouseTracking(true);
     moving = false;
-    bgshower = new QLabel(this);
-    // 创建QBlurEffect并设置模糊半径
-    // 将模糊效果应用于QLabel上
 }
-
-
-
 
 void ED_Unit::single_click_action(){
     //最终单击执行
@@ -41,16 +34,23 @@ void ED_Unit::double_click_action(){
     //最终双击执行
 }
 
+void ED_Unit::mouse_enter_action(){
+    //最终移动执行
+    aim_Alpha = 255;
+}
+void ED_Unit::mouse_leave_action(){
+    //最终移动执行
+    aim_Alpha = 200;
+}
+
+
 void ED_Unit::mouse_move_action(){
     //最终移动执行
     if (moving)
     {
         move(cursor().pos()-relativeP);
-        // qDebug("NormalMove");
-        // qDebug()<<int(type);
     }
     else{
-        // qDebug("NoMoving");
     }
 }
 
@@ -67,17 +67,16 @@ void ED_Unit::mouse_release_action(){
                 if(c->OKforput(this)){
                     c->InplaceAUnit(this);
                     c->raise();
-                    this->raise();
                     moving = false;
                     return;
                 }
             }
         }
         // 放置
+                pMovingUnit = nullptr;
         mwlayout->InplaceAUnit(this);
-        this->raise();
         moving = false;
-        pMovingUnit = nullptr;
+
     }
 }
 
@@ -91,7 +90,7 @@ void ED_Unit::mousePressEvent(QMouseEvent *event)
         grabMouse();
         single_click_action();
     }
-
+    repaintAround(this);
 }
 
 void ED_Unit::mouseReleaseEvent(QMouseEvent *event)
@@ -99,7 +98,7 @@ void ED_Unit::mouseReleaseEvent(QMouseEvent *event)
     event->accept();
     releaseMouse();
     mouse_release_action();
-
+    repaintAround(this);
 }
 
 void ED_Unit::mouseDoubleClickEvent(QMouseEvent *event)
@@ -112,7 +111,22 @@ void ED_Unit::mouseMoveEvent(QMouseEvent *event)
 {
     event->accept();
     mouse_move_action();
+    repaintAround(this);
 }
+
+void ED_Unit::enterEvent(QEvent *event){
+    event->ignore();
+    mouse_enter_action();
+    repaintAround(this);
+}                      //进入QWidget瞬间事件
+void ED_Unit::leaveEvent(QEvent *event){
+    event->ignore();
+    mouse_leave_action();
+    repaintAround(this);
+}
+
+
+
 
 void ED_Unit::setBlockSize(int w,int h){
     ED_Layout* tem = nullptr;
@@ -148,7 +162,6 @@ void ED_Unit::getaDoubleClick( ){
 }
 
 void ED_Unit::update_after_resize(){
-    bgshower->setFixedSize(width(),height());
 }
 void ED_Unit::paintEvent(QPaintEvent *event)
 {

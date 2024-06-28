@@ -8,8 +8,8 @@ class ed_bgShower : public QWidget
     Q_OBJECT
 public:
     explicit ed_bgShower(QWidget *parent = nullptr);
-
-protected:
+    QRegion updateMask();
+public:
     void paintEvent(QPaintEvent * ev) override;
 signals:
 };

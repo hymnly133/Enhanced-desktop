@@ -20,6 +20,7 @@ struct FileInfo
 };
 QList<FileInfo> scanalldesktopfiles();
 void paintRect(QWidget* aim,QColor color);
-
+void repaintAround(QWidget* aim);
+QColor pixmapMainColor(QPixmap p, double bright);
 void paintside(QWidget* aim,QColor color);
 #endif // SYSFUNCTIONS_H

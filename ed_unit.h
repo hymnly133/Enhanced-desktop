@@ -13,10 +13,10 @@ public:
     ED_Layout* edlayout;
     bool moving;
     QPoint relativeP;
-    QLabel* bgshower;
     int sizeX;
     int sizeY;
     int ind;
+    int aim_Alpha = 60;
     bool alwaysShow;
     int LayoutBlockX = -1;
     int LayoutBlockY = -1;
@@ -29,12 +29,16 @@ public:
     virtual void single_click_action();
     virtual void mouse_move_action();
     virtual void mouse_release_action();
+    virtual void mouse_enter_action();
+    virtual void mouse_leave_action();
     virtual void setBlockSize(int w,int h);
 
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseDoubleClickEvent(QMouseEvent *event) override;
+    void enterEvent(QEvent *) override;                      //进入QWidget瞬间事件
+    void leaveEvent(QEvent *) override;                      //离开QWidget瞬间事件
     void paintEvent(QPaintEvent *event) override;
 
 public slots:

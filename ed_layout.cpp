@@ -78,20 +78,35 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     aim->setFixedSize(W_Block_Clean()*aim->sizeX+(aim->sizeX-1)*space_x,H_Block_Clean()*aim->sizeY+(aim->sizeY-1)*space_y);
     aim->move(blocks[xind][yind]->posX(),blocks[xind][yind]->posY());
 
+    aim->update_after_resize();
     aim->edlayout = this;
     aim->setVisible(true);
+
     pContainer->raise();
     aim->raise();
+
     contents->push_back(aim);
-    qDebug()<<"Put Done";
+
+    qDebug()<<"Put Done,Container Pos:"<<pContainer->pos()<<"Aim geometry "<<aim->geometry()<<"Pos: "<<aim->pos();
+
     Update_Region();
+    pmw->repaint();
 }
 
 void ED_Layout::Update_Region(){
+    int countt =0;
     region = QRegion();
     for(ED_Unit* content:*(contents)){
-        region = region.united(QRegion( content->geometry()));
+        // qDebug()<< content->isVisible();
+        if(content->isVisible()){
+            auto tem = content->mapToGlobal(QPoint(0,0));
+            region = region.united(QRegion(tem.x(),tem.y(),content->width(),content->height()));
+            // qDebug()<<content->geometry();
+            countt++;
+        }
+
     }
+    qDebug()<<"Region count"<<countt;
 }
 void ED_Layout::RemoveAUnit(ED_Unit* aim){
     int x = aim->sizeX;
@@ -129,13 +144,11 @@ void ED_Layout::RemoveAUnit(ED_Unit* aim){
 void ED_Layout::InplaceAUnit(ED_Unit* aim){
     QPoint absolutePos =  aim->mapToGlobal(QPoint(0, 0));
     QPoint relativePos = absolutePos-pContainer->pos();
-
     QPoint dis = NearestEmptyBlockInd(aim,relativePos);
-    qDebug()<<absolutePos<<relativePos<<dis;
+    // qDebug()<<absolutePos<<relativePos<<dis;
     aim->setParent(pContainer);
+    aim->move(absolutePos);
     put_ED_Unit(aim,dis);
-    aim->update_after_resize();
-    aim->raise();
 }
 
 void ED_Layout::InitAUnit(ED_Unit* aim){
@@ -222,11 +235,17 @@ QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
 }
 
 void ED_Layout::setVisible(bool val){
+    int countt =0;
     for(ED_Unit* unit:*contents){
-        if(val==true || !unit->alwaysShow)
-        unit->setVisible(val);
+        if(val==true || !unit->alwaysShow){
+            unit->setVisible(val);
+            countt ++;
+        }
     }
     visibal = val;
+    Update_Region();
+    pmw->update();
+    qDebug()<<"setted"<<countt<<" "<<val;
 }
 bool ED_Layout::Visible(){
     return visibal;
