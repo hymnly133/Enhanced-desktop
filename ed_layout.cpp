@@ -75,7 +75,7 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     // int w= aim->sizeX*W_Block()-2*space;
     // int h= aim->sizeY*H_Block()-2*space;
 
-    aim->setFixedSize(W_Block_Clean()+(aim->sizeX-1)*space_x,H_Block_Clean()+(aim->sizeY-1)*space_y);
+    aim->setFixedSize(W_Block_Clean()*aim->sizeX+(aim->sizeX-1)*space_x,H_Block_Clean()*aim->sizeY+(aim->sizeY-1)*space_y);
     aim->move(blocks[xind][yind]->posX(),blocks[xind][yind]->posY());
 
     aim->edlayout = this;
