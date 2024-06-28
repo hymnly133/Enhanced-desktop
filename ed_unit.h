@@ -2,6 +2,7 @@
 #define ED_UNIT_H
 
 #include <QWidget>
+#include<qlabel.h>
 class ED_Layout;
 class ED_Unit : public QWidget
 {
@@ -12,9 +13,11 @@ public:
     ED_Layout* edlayout;
     bool moving;
     QPoint relativeP;
+    QLabel* bgshower;
     int sizeX;
     int sizeY;
     int ind;
+    bool alwaysShow;
     int LayoutBlockX = -1;
     int LayoutBlockY = -1;
     explicit ED_Unit(QWidget *parent,int sizex,int sizey);
@@ -33,6 +36,7 @@ public:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseDoubleClickEvent(QMouseEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
+
 public slots:
     void getaClick();
     void getaDoubleClick();

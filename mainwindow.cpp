@@ -2,24 +2,29 @@
 #include "ed_container.h"
 #include "ed_block.h"
 #include "ed_dock.h"
+#include "qgraphicseffect.h"
 #include "qpainter.h"
 #include "ui_mainwindow.h"
 #include "SysFunctions.h"
 #include <QMouseEvent>
 #include <QDebug>
 #include <QWidget>
-
-
+QPixmap* pbg = nullptr;
+ED_Unit* pMovingUnit = nullptr;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     Init(this);
+    bgshower = new ed_bgShower(this);
+    bgshower->setFixedSize(size());
+    bgshower->setVisible(true);
+
 
 
     edlayout = new ED_Layout(this,20,15,5,10,10);
-    qDebug()<<edlayout->W_Container()<<edlayout->H_Container();
+    // qDebug()<<edlayout->W_Container()<<edlayout->H_Container();
 
 
     QList<FileInfo> iconns = scanalldesktopfiles();
@@ -28,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     InitAUnit(bc);
     // bc->InitLayout();
 
-    auto dock = new ED_Dock(this,6,12);
+    auto dock = new ED_Dock(this,6,4);
     InitAUnit(dock);
     // dock->InitLayout();
 
@@ -55,13 +60,10 @@ MainWindow::MainWindow(QWidget *parent)
             InitAUnit(tem);
         }
 
-
         tem->raise();
     }
     pmw = this;
-
-    // mainwindow.cpp
-
+    pbg = new QPixmap(":/images/background");
 
     // 只要将某个QAction添加给对应的窗口, 这个action就是这个窗口右键菜单中的一个菜单项了
     // 在窗口中点击鼠标右键, 就可以显示这个菜单
@@ -115,10 +117,7 @@ void MainWindow::setIconHight(int val){
 void MainWindow::paintEvent(QPaintEvent * ev)
 {
     QPainter painter(this);
-    painter.drawPixmap(rect(),QPixmap(":/images/background"),QRect());
-    QPainter p(this);
-    p.setPen(QColor("green")); //设置画笔记颜色
-    p.drawRect(0, 0, edlayout->W_Container() -1, edlayout->H_Container() -1); //绘制边框
+    painter.drawPixmap(rect(),*pbg);
 }
 
 void MainWindow::on_horizontalSlider_2_valueChanged(int value)

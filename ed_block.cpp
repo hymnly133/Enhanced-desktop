@@ -103,17 +103,14 @@ void ED_BLOCK::double_click_action(){
 }
 
 void ED_BLOCK::update_after_resize(){
+        ED_Unit::update_after_resize();
     lb->setFixedWidth(width()-5);
     lb->setText(elidedLineText(lb,4,name));
 }
 
 void ED_BLOCK::paintEvent(QPaintEvent *event)
 {
-    QPainter p(this);
-    p.setPen(QColor("green")); //设置画笔记颜色
-    p.drawRect(0, 0, width() -1, height() -1); //绘制边框
-    QPainter paint(this);
-    paint.setPen(Qt::blue);
-    paint.fillRect(rect(), QBrush(QColor(10,10,150,120)));
+    ED_Unit::paintEvent(event);
+    paintRect(this,QColor(10,10,10,50));
 
 }

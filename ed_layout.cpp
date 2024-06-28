@@ -3,6 +3,8 @@
 #include "qdebug.h"
 #include<cmath>
 
+
+
 ED_Layout::ED_Layout(QWidget *father, int row, int col, int borad_space,int space_x,int space_y) {
     this->row = row;
     this->col = col;
@@ -72,8 +74,6 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     }
     aim->LayoutBlockX = xind;
     aim->LayoutBlockY = yind;
-    // int w= aim->sizeX*W_Block()-2*space;
-    // int h= aim->sizeY*H_Block()-2*space;
 
     aim->setFixedSize(W_Block_Clean()*aim->sizeX+(aim->sizeX-1)*space_x,H_Block_Clean()*aim->sizeY+(aim->sizeY-1)*space_y);
     aim->move(blocks[xind][yind]->posX(),blocks[xind][yind]->posY());
@@ -82,14 +82,23 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     aim->setVisible(true);
     pContainer->raise();
     aim->raise();
+    contents->push_back(aim);
     qDebug()<<"Put Done";
+    Update_Region();
 }
 
+void ED_Layout::Update_Region(){
+    region = QRegion();
+    for(ED_Unit* content:*(contents)){
+        region = region.united(QRegion( content->geometry()));
+    }
+}
 void ED_Layout::RemoveAUnit(ED_Unit* aim){
     int x = aim->sizeX;
     int y = aim->sizeY;
     int xind = aim->LayoutBlockX;
     int yind = aim->LayoutBlockY ;
+    QPoint tempos = aim->mapToGlobal(QPoint(0,0));
     for(int i=0;i<x;i++){
         for(int k=0;k<y;k++){
             Occupied(xind+i,yind+k) = false;
@@ -100,12 +109,10 @@ void ED_Layout::RemoveAUnit(ED_Unit* aim){
     aim->LayoutBlockY = -1;
     aim->edlayout = nullptr;
     aim->setParent(pmw);
+    aim->move(tempos);
     aim->setEnabled(true);
     aim->setVisible(true);
-    aim->setCursor(QCursor());
     aim->raise();
-
-    aim->setFocus();
     auto s = std::find(contents->begin(), contents->end(), aim);//第一个参数是array的起始地址，第二个参数是array的结束地址，第三个参数是需要查找的值
     if (s != contents->end())//如果找到，就输出这个元素
     {
@@ -115,18 +122,19 @@ void ED_Layout::RemoveAUnit(ED_Unit* aim){
     {
         qDebug() << "not find!";
     }
+    Update_Region();
     qDebug()<<"Removed";
-
 }
 
 void ED_Layout::InplaceAUnit(ED_Unit* aim){
     QPoint absolutePos =  aim->mapToGlobal(QPoint(0, 0));
     QPoint relativePos = absolutePos-pContainer->pos();
+
     QPoint dis = NearestEmptyBlockInd(aim,relativePos);
+    qDebug()<<absolutePos<<relativePos<<dis;
     aim->setParent(pContainer);
     put_ED_Unit(aim,dis);
     aim->update_after_resize();
-    contents->push_back(aim);
     aim->raise();
 }
 
@@ -135,7 +143,6 @@ void ED_Layout::InitAUnit(ED_Unit* aim){
     default_Put_ED_Unit(aim);
     aim->update_after_resize();
     aim->raise();
-    contents->push_back(aim);
 }
 
 //根据一个Block索引获取对应的ED_Unit指针
@@ -216,6 +223,7 @@ QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
 
 void ED_Layout::setVisible(bool val){
     for(ED_Unit* unit:*contents){
+        if(val==true || !unit->alwaysShow)
         unit->setVisible(val);
     }
     visibal = val;

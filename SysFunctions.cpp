@@ -2,6 +2,7 @@
 #include"mainwindow.h"
 #include"mousehook.h"
 #include"QTextCodec"
+#include "qpainter.h"
 #include <QJsonObject>
 #include<QDir>
 #include<QFileInfo>
@@ -13,9 +14,24 @@ MainWindow* pmw;
 MouseHook* pmh;
 QTextCodec* utf8 = QTextCodec::codecForName("utf-8");
 QTextCodec* gbk = QTextCodec::codecForName("GBK");
-
+bool ShowRect = true;
+bool ShowSide = false;
 
 //主窗口指针
+void paintRect(QWidget* aim,QColor color){
+    if(ShowRect){
+        QPainter paint(aim);
+        paint.fillRect(aim->rect(), QBrush(color));
+    }
+}
+
+void paintside(QWidget* aim,QColor color){
+    if(ShowSide){
+        QPainter p(aim);
+        p.setPen(QColor("green")); //设置画笔记颜色
+        p.drawRect(0, 0, aim->width() -1, aim->height() -1); //绘制边框
+    }
+}
 
 void mouse_move(int x,int y){
 

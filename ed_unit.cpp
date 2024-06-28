@@ -1,19 +1,26 @@
 #include "ed_unit.h"
-#include "ed_dock.h"
 #include "mainwindow.h"
 #include "qdebug.h"
 #include "qevent.h"
-#include "qpainter.h"
+#include"SysFunctions.h"
 #include"ed_layout.h"
 #include"ed_container.h"
+#include<QtWinExtras>
 
 ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
+    alwaysShow = false;
     sizeX = sizex;
     sizeY = sizey;
     // setMouseTracking(true);
     moving = false;
+    bgshower = new QLabel(this);
+    // 创建QBlurEffect并设置模糊半径
+    // 将模糊效果应用于QLabel上
 }
+
+
+
 
 void ED_Unit::single_click_action(){
     //最终单击执行
@@ -25,6 +32,7 @@ void ED_Unit::single_click_action(){
         removeFromLayout();
 
     move(usedp);
+    pMovingUnit = this;
     relativeP =cursor().pos()-pos();
 
 }
@@ -69,6 +77,7 @@ void ED_Unit::mouse_release_action(){
         mwlayout->InplaceAUnit(this);
         this->raise();
         moving = false;
+        pMovingUnit = nullptr;
     }
 }
 
@@ -109,7 +118,9 @@ void ED_Unit::setBlockSize(int w,int h){
     ED_Layout* tem = nullptr;
     if(edlayout){
         tem = edlayout;
+        // qDebug()<<mapToGlobal(QPoint(0,0));
         removeFromLayout();
+        // qDebug()<<mapToGlobal(QPoint(0,0));
 
         ED_Unit temu(nullptr,w,h);
         if(tem->OKforput(&temu)){
@@ -125,6 +136,7 @@ void ED_Unit::setBlockSize(int w,int h){
 
 
 
+
 }
 
 void ED_Unit::getaClick( ){
@@ -135,11 +147,12 @@ void ED_Unit::getaDoubleClick( ){
     double_click_action();
 }
 
-void ED_Unit::update_after_resize(){}
+void ED_Unit::update_after_resize(){
+    bgshower->setFixedSize(width(),height());
+}
 void ED_Unit::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-    QPainter p(this);
-    p.setPen(QColor("green")); //设置画笔记颜色
-    p.drawRect(0, 0, width() -1, height() -1); //绘制边框
+        // 创建QLabel并设置背景图片
+    paintside(this,QColor("green"));
 }

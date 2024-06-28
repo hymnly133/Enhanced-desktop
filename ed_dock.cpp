@@ -2,10 +2,11 @@
 #include"ed_unit.h"
 #include "qdebug.h"
 #include "qpainter.h"
-
+#include "SysFunctions.h"
 ED_Dock::ED_Dock(QWidget *parent,int outSize,int inSize)
-    : ED_Container(parent,outSize,1,inSize,1,3)
+    : ED_Container(parent,outSize,1,inSize,1,3,20,20)
 {
+    alwaysShow = true;
     insize = inSize;
 }
 
@@ -25,8 +26,5 @@ bool ED_Dock::OKforput(ED_Unit* aim){
 }
 
 void ED_Dock::paintEvent(QPaintEvent *event){
-    QPainter paint(this);
-    paint.setPen(Qt::red);
-    paint.fillRect(rect(), QBrush(QColor(10,10,10,50)));
-    Q_UNUSED(event);
+    paintRect(this,QColor(0,0,155,20));
 }

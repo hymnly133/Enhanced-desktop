@@ -9,6 +9,8 @@ QString Unicode2GBK(QString c);
 QString Unicode2Utf(QString c);
 QString GetCorrectUnicode(const QByteArray &ba);
 QString elidedLineText(QWidget *pWidget, int nLine, QString strText);
+extern bool ShowRect;
+extern bool ShowSide;
 struct FileInfo
 {
     //定义返回的结构体
@@ -17,5 +19,7 @@ struct FileInfo
     QIcon icon;
 };
 QList<FileInfo> scanalldesktopfiles();
+void paintRect(QWidget* aim,QColor color);
 
+void paintside(QWidget* aim,QColor color);
 #endif // SYSFUNCTIONS_H
