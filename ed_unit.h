@@ -7,7 +7,7 @@ class ED_Unit : public QWidget
 {
     Q_OBJECT
 public:
-    enum ED_TYPE {Unit,Block,Container};
+    enum ED_TYPE {Unit,Block,Container,FixedContainer};
     ED_TYPE type = Unit;
     ED_Layout* edlayout;
     bool moving;
@@ -27,7 +27,7 @@ public:
     virtual void single_click_action();
     virtual void mouse_move_action();
     virtual void mouse_release_action();
-
+    virtual void setBlockSize(int w,int h);
 
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;

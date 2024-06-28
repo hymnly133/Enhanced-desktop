@@ -3,24 +3,16 @@
 #include "qdebug.h"
 #include<cmath>
 
-ED_Layout::ED_Layout(QWidget *father, int row, int col, int space) {
+ED_Layout::ED_Layout(QWidget *father, int row, int col, int borad_space,int space_x,int space_y) {
     this->row = row;
     this->col = col;
-    this->space = space;
+    this->borad_space = borad_space;
+    this->space_x = space_x;
+    this->space_y = space_y;
     this->pContainer = father;
-    W_Container = father->width();
-    H_Container = father->height();
-    W_Block = W_Container/row;
-    H_Block = H_Container/col;
     for(int i=0;i<row;i++){
         for(int k=0;k<col;k++){
-            blocks[i][k] = new little_Block();
-            blocks[i][k]->indX = i;
-            blocks[i][k]->indY = i;
-            blocks[i][k]->w = W_Block;
-            blocks[i][k]->h = H_Block;
-            blocks[i][k]->posX = i*W_Block;
-            blocks[i][k]->posY = k*H_Block;
+            blocks[i][k] = new little_Block(this,i,k);
             blocks[i][k]->occupied = false;
         }
     }
@@ -29,11 +21,11 @@ ED_Layout::ED_Layout(QWidget *father, int row, int col, int space) {
 
 
 QPoint ED_Layout::NearestBlockInd(QPoint point){
-    return QPoint(point.x()/W_Block,point.y()/H_Block);
+    return QPoint(point.x()/W_Block(),point.y()/H_Block());
 
 }
 QPoint ED_Layout::NearestBlockInd(int posx,int posy){
-return QPoint(posx/W_Block,posy/H_Block);
+    return QPoint(posx/W_Block(),posy/H_Block());
 }
 
 //从Block序号获取中心坐标
@@ -81,10 +73,11 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     }
     aim->LayoutBlockX = xind;
     aim->LayoutBlockY = yind;
-    int w= aim->sizeX*W_Block-2*space;
-    int h= aim->sizeY*H_Block-2*space;
-    aim->setFixedSize(w,h);
-    aim->move(xind*W_Block+space,yind*H_Block+space);
+    // int w= aim->sizeX*W_Block()-2*space;
+    // int h= aim->sizeY*H_Block()-2*space;
+
+    aim->setFixedSize(W_Block_Clean(),H_Block_Clean());
+    aim->move(blocks[xind][yind]->posX(),blocks[xind][yind]->posY());
 
     aim->edlayout = this;
     aim->setVisible(true);
@@ -201,16 +194,16 @@ bool ED_Layout::OKforput(ED_Unit*aim)
 
 QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
 {
-    int mindeltaw=W_Container;
-    int mindeltah=H_Container;
+    int mindeltaw=W_Container();
+    int mindeltah=H_Container();
     int bpw,bph;
     bpw=bph=-1;
     for(int i=0;i<row;i++)
     {
         for(int j=0;j<col;j++)
         {
-            int deltaw=abs(posx-i*W_Block);
-            int deltah=abs(posy-j*H_Block);
+            int deltaw=abs(posx-i*W_Block());
+            int deltah=abs(posy-j*H_Block());
             if((deltaw+deltah<mindeltaw+mindeltah)&&(OKForUnit(aim,i,j)))
             {
                 mindeltaw=deltaw;

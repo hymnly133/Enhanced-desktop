@@ -1,6 +1,7 @@
 #include "mainwindow.h"
-#include "block_container.h"
+#include "ed_container.h"
 #include "ed_block.h"
+#include "ed_dock.h"
 #include "qpainter.h"
 #include "ui_mainwindow.h"
 #include "SysFunctions.h"
@@ -16,18 +17,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     Init(this);
 
-    edlayout = new ED_Layout(this,20,15,5);
+
+    edlayout = new ED_Layout(this,20,15,5,10,10);
+    qDebug()<<edlayout->W_Container()<<edlayout->H_Container();
 
 
     QList<FileInfo> iconns = scanalldesktopfiles();
 
-    auto bc = new Block_Container(this,4,4);
+    auto bc = new ED_Container(this,4,4,3,3,5);
     InitAUnit(bc);
-    bc->InitLayout(3,3,3);
+    // bc->InitLayout();
 
-    auto bc_ = new Block_Container(this,3,3);
+    auto dock = new ED_Dock(this,6,12);
+    InitAUnit(dock);
+    // dock->InitLayout();
+
+    auto bc_ = new ED_Container(this,3,3,2,2,4);
     InitAUnit(bc_);
-    bc_->InitLayout(5,5,3);
+    // bc_->InitLayout();
 
     for(int i=0;i<iconns.size();i++){
         qDebug()<<iconns[i].filePath;
@@ -109,6 +116,9 @@ void MainWindow::paintEvent(QPaintEvent * ev)
 {
     QPainter painter(this);
     painter.drawPixmap(rect(),QPixmap(":/images/background"),QRect());
+    QPainter p(this);
+    p.setPen(QColor("green")); //设置画笔记颜色
+    p.drawRect(0, 0, edlayout->W_Container() -1, edlayout->H_Container() -1); //绘制边框
 }
 
 void MainWindow::on_horizontalSlider_2_valueChanged(int value)

@@ -13,8 +13,9 @@ CONFIG += c++17
 
 SOURCES += \
     SysFunctions.cpp \
-    block_container.cpp \
     ed_block.cpp \
+    ed_container.cpp \
+    ed_dock.cpp \
     ed_hidetextblock.cpp \
     ed_layout.cpp \
     ed_unit.cpp \
@@ -25,8 +26,9 @@ SOURCES += \
 
 HEADERS += \
     SysFunctions.h \
-    block_container.h \
     ed_block.h \
+    ed_container.h \
+    ed_dock.h \
     ed_hidetextblock.h \
     ed_layout.h \
     ed_unit.h \

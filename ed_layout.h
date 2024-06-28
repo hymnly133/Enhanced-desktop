@@ -8,36 +8,58 @@ class ED_Layout
     struct little_Block{
         int indX;
         int indY;
-        int posX;
-        int posY;
-        int w;
-        int h;
+        int posX(){
+            return playout->borad_space+indX*(playout->space_x+w());
+        };
+        int posY(){
+            return playout->borad_space+indY*(playout->space_y+h());
+        };
+        int w(){
+            return playout->W_Block_Clean();
+        };
+        int h(){
+            return playout->H_Block_Clean();
+        };
         bool occupied;
+        ED_Layout* playout;
         ED_Unit* content;
         int CenterX(){
-            return posX +w/2;
+            return posX() +w()/2;
         }
         int CenterY(){
-            return posY +h/2;
+            return posY() +h()/2;
         }
         QPoint CenterPoint(){
             return QPoint(CenterX(),CenterY());
+        };
+        little_Block(ED_Layout* playout,int indx,int indy):indX(indx),indY(indy),playout(playout){
+
         }
     };
 public:
     int row;
     int col;
-    int W_Container;
-    int H_Container;
-    int W_Block;
-    int H_Block;
-    int space;
+    int W_Container(){
+        return pContainer->width()-2*borad_space;
+    };
+    int H_Container(){
+        return pContainer->height()-2*borad_space;
+    };
+    int W_Block_Clean(){
+        return (W_Container()-(row-1)*space_x)/row;
+    };
+    int H_Block_Clean(){
+        return (H_Container()-(col-1)*space_y)/col;
+    };
+    int borad_space;
+    int space_x;
+    int space_y;
     bool visibal;
     QWidget* pContainer;
     QVector<ED_Unit*>* contents = new QVector<ED_Unit*>;
     little_Block* blocks[50][50];
 public:
-    ED_Layout(QWidget *father,int row, int col,int space);
+    ED_Layout(QWidget *father,int row, int col,int borad_space,int space_x,int space_y);
 /*
  *
  *

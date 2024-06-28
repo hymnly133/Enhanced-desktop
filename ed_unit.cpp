@@ -1,10 +1,11 @@
 #include "ed_unit.h"
+#include "ed_dock.h"
 #include "mainwindow.h"
 #include "qdebug.h"
 #include "qevent.h"
 #include "qpainter.h"
 #include"ed_layout.h"
-#include"block_container.h"
+#include"ed_container.h"
 
 ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
@@ -54,9 +55,9 @@ void ED_Unit::mouse_release_action(){
         if(mwlayout->Occupied(point)){
             if(mwlayout->getUnitFromBlock(point)->type == ED_Unit::Container){
                 qDebug()<<"Container";
-                Block_Container*  c = (Block_Container*)mwlayout->getUnitFromBlock(point);
-                if(c->edlayout->OKforput(this)){
-                    c->edlayout->InplaceAUnit(this);
+                ED_Container*  c = (ED_Container*)mwlayout->getUnitFromBlock(point);
+                if(c->OKforput(this)){
+                    c->InplaceAUnit(this);
                     c->raise();
                     this->raise();
                     moving = false;
@@ -70,6 +71,7 @@ void ED_Unit::mouse_release_action(){
         moving = false;
     }
 }
+
 void ED_Unit::removeFromLayout(){
     edlayout->RemoveAUnit(this);
 }
@@ -101,6 +103,11 @@ void ED_Unit::mouseMoveEvent(QMouseEvent *event)
 {
     event->accept();
     mouse_move_action();
+}
+
+void ED_Unit::setBlockSize(int w,int h){
+    sizeX = w;
+    sizeY = h;
 }
 
 void ED_Unit::getaClick( ){
