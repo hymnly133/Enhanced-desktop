@@ -12,6 +12,7 @@
 #include<QSettings>
 #include<QIcon>
 MainWindow* pmw;
+QWidget* pmw2;
 MouseHook* pmh;
 QTextCodec* utf8 = QTextCodec::codecForName("utf-8");
 QTextCodec* gbk = QTextCodec::codecForName("GBK");
@@ -112,6 +113,53 @@ void inplace(QWidget* aim) {
         qDebug() << "未能找到合适的WorkerW窗口";
     }
 }
+
+void inplace2() {
+    // 接入到壁纸层
+    HWND background = NULL;
+    HWND hwnd = FindWindowA("Progman", "Program Manager");
+    HWND worker = NULL;
+
+    // 循环查找WorkerW窗口
+    do {
+        worker = FindWindowExA(NULL, worker, "WorkerW", NULL);
+        if (worker != NULL) {
+            // 尝试找到SHELLDLL_DefView窗口
+            HWND shelldlldefview = FindWindowExA(worker, NULL, "SHELLDLL_DefView", NULL);
+            if (shelldlldefview != NULL) {
+                // 检查SHELLDLL_DefView的父窗口是否不是当前的WorkerW窗口
+                HWND parent = GetParent(shelldlldefview);
+                if (parent != worker) {
+                    // 找到了正确的WorkerW窗口
+                    background = worker;
+                    break; // 结束循环
+                }
+            }
+        }
+    } while (worker != NULL);
+
+    // 如果找到了正确的WorkerW窗口，设置父窗口
+    if (background != NULL) {
+        SetParent((HWND)pmw2->winId(), background);
+        SetWindowPos((HWND)pmw2->winId(), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        SetWindowPos((HWND)pmw2->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        SetFocus((HWND)pmw2->winId());
+    } else {
+        // 如果没有找到合适的WorkerW窗口，可以在这里处理错误
+        qDebug() << "未能找到合适的WorkerW窗口";
+    }
+}
+
+
+
+
+struct FileInfo
+{
+    //定义返回的结构体
+    QString name;
+    QString filePath;
+    QIcon icon;
+};
 
 
 QList<FileInfo> scandesktopfiles(const QString &desktopPath)
