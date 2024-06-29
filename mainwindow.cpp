@@ -12,7 +12,7 @@
 #include <QFileDialog>
 ED_Unit* pMovingUnit = nullptr;
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow),weatherwidget(nullptr)
 {
     ui->setupUi(this);
 
@@ -41,6 +41,9 @@ MainWindow::MainWindow(QWidget *parent)
     auto dock = new ED_Dock(this,6,2,4);
     InitAUnit(dock);
     // dock->InitLayout();
+
+    weatherwidget = new WEATHERWIDGET(this,2,1);
+    InitAUnit(weatherwidget);
 
     auto bc_ = new ED_Container(this,3,3,2,2,4);
     InitAUnit(bc_);
