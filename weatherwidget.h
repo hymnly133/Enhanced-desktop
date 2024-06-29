@@ -18,6 +18,8 @@ class WEATHERWIDGET : public ED_Unit
 public:
     explicit WEATHERWIDGET(QWidget *parent = nullptr,int sizex=1,int sizey=1);
     QLabel *temperatureLabel;
+    QLabel *weatherlabel;
+    QLabel *advicelabel;
     QNetworkAccessManager *manager;
     QVBoxLayout *wlayout;
     void addWeatherInfo(QString citycode);

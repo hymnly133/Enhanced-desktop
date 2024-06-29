@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     auto dock = new ED_Dock(this,6,2,4);
     InitAUnit(dock);
 
-    weatherwidget = new WEATHERWIDGET(this,2,1);
+    weatherwidget = new WEATHERWIDGET(this,4,2);
     InitAUnit(weatherwidget);
 
     auto bc_ = new ED_Container(this,3,3,2,2,4);

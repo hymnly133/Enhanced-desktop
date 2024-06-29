@@ -23,6 +23,7 @@ SOURCES += \
     ed_layout.cpp \
     ed_unit.cpp \
     filepreviewwidget.cpp \
+    hitokoto.cpp \
     main.cpp \
     mainwindow.cpp \
     mousehook.cpp \
@@ -42,6 +43,7 @@ HEADERS += \
     ed_layout.h \
     ed_unit.h \
     filepreviewwidget.h \
+    hitokoto.h \
     mainwindow.h \
     mousehook.h \
     picturebox.h \

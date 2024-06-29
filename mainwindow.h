@@ -7,6 +7,7 @@
 #include <mousehook.h>
 #include <QPushButton>  // 添加QPushButton头文件
 #include "weatherwidget.h"
+#include "hitokoto.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,6 +27,7 @@ public:
     ED_Unit* cds[200];
     QPixmap bg;
     WEATHERWIDGET *weatherwidget;
+    Hitokoto *htkt;
 
 private slots:;
     void setIconScale(double Scale);

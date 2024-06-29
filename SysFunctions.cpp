@@ -151,7 +151,7 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
     QFileInfoList fileInfoList=desktopDir.entryInfoList();
     foreach(const QFileInfo &x,fileInfoList)
     {
-        FileInfo file;
+        FileInfo file;;
         file.type = FileInfo::NORM;
         file.filePath=x.absoluteFilePath();
         QString fileName = x.fileName();
@@ -161,8 +161,32 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
             fileName.remove(lastDotIndex, fileName.length() - lastDotIndex);
         }
         file.name=fileName;
-        QFileIconProvider a;
-        file.icon=a.icon(x);
+        qDebug()<<x.suffix().toLower()<<x.symLinkTarget();
+        if (x.suffix().toLower() == "lnk")
+        {
+            // 处理快捷方式（.lnk 文件）
+            QString target = x.symLinkTarget();
+            if (!target.isEmpty())
+            {
+
+                QDir targetDir(QFileInfo(target).absolutePath());
+                QStringList iconFiles = targetDir.entryList(QStringList() << "*.ico", QDir::Files);
+                if (!iconFiles.isEmpty())
+                {
+                    file.icon = QIcon(targetDir.absoluteFilePath(iconFiles.first())); // 或者根据需要设置其他类型
+                }
+                if(file.icon.isNull())
+                {
+                    QFileIconProvider iconProvider;
+                    file.icon =iconProvider.icon(QFileInfo(target));
+                }
+            }
+        }
+        else
+        {
+            QFileIconProvider a;
+            file.icon = a.icon(x);
+        }
         //针对steam游戏
         QSettings shortcut(x.filePath(), QSettings::IniFormat);
         QString target = shortcut.value("InternetShortcut/URL").toString();
@@ -225,6 +249,7 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
     }
     return files;
 }
+
 
 
 QList<FileInfo> scanalldesktopfiles()
