@@ -9,7 +9,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <QWidget>
-QPixmap* pbg = nullptr;
+#include <QFileDialog>
 ED_Unit* pMovingUnit = nullptr;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -24,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
     bgshower->setVisible(true);
     bgshower->lower();
 
+    // 初始化选择背景按钮
+    selectBackgroundButton = new QPushButton("选择背景", this);
+    connect(selectBackgroundButton, &QPushButton::clicked, this, &MainWindow::onSelectBackground);
 
     edlayout = new ED_Layout(this,20,15,5,10,10);
     // qDebug()<<edlayout->W_Container()<<edlayout->H_Container();
@@ -67,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //初始化一些
     pmw = this;
-    pbg = new QPixmap(":/images/background");
+    bg = QPixmap(":/images/background");
 
 
 
@@ -151,7 +154,7 @@ void MainWindow::setIconHight(int val){
 void MainWindow::paintEvent(QPaintEvent * ev)
 {
     QPainter painter(this);
-    painter.drawPixmap(rect(),*pbg);
+    painter.drawPixmap(rect(),bg);
 }
 
 void MainWindow::on_horizontalSlider_2_valueChanged(int value)
@@ -167,4 +170,34 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
 
 void MainWindow::mouseDoubleClickEvent(QMouseEvent* ev) {
     edlayout->setVisible(!edlayout->Visible());
+}
+
+void MainWindow::onSelectBackground() {
+    QString fileName = QFileDialog::getOpenFileName(this, "选择背景文件", "", "Images (*.png *.jpg *.bmp);;Videos (*.mp4 *.avi *.mkv)");
+    qDebug() << "Selected file:" << fileName; // 调试输出文件路径
+    if (!fileName.isEmpty()) {
+        if (fileName.endsWith(".png") || fileName.endsWith(".jpg") || fileName.endsWith(".bmp")) {
+            QPalette palette;
+            QPixmap pixmap(fileName);
+            if (pixmap.isNull()) {
+                qDebug() << "Failed to load image";
+            } else {
+                bg = pixmap;
+                // palette.setBrush(QPalette::Window, QBrush(pixmap));
+                // this->setPalette(palette);
+                qDebug() << "Image set as background";
+            }
+
+            // videoPlayer->stop();
+            // videoPlayer->hide();
+        } else {
+            // if (videoPlayer->loadFile(fileName)) {
+            //     videoPlayer->play();
+            //     videoPlayer->show();
+            //     qDebug() << "Video started";
+            // } else {
+            //     qDebug() << "Failed to load video";
+            // }
+        }
+    }
 }

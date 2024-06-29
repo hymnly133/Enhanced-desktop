@@ -18,7 +18,7 @@ void ed_bgShower::paintEvent(QPaintEvent * ev){
     QPainter painter(this);
     auto tem = updateMask();
     painter.setClipRegion(tem);
-    painter.drawPixmap(rect(),*pbg);
+    painter.drawPixmap(rect(),pmw->bg);
 }
 
 QRegion ed_bgShower::updateMask(){

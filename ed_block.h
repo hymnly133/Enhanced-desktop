@@ -2,6 +2,7 @@
 #define ED_BLOCK_H
 
 #include "ed_unit.h"
+#include "filepreviewwidget.h"
 #include "picturebox.h"
 #include "qboxlayout.h"
 #include "qlabel.h"
@@ -28,7 +29,7 @@ public:
 protected:
     void double_click_action() override;
     void paintEvent(QPaintEvent *event) override;
-
+    FilePreviewWidget *previewWidget;
 };
 
 

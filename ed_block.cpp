@@ -4,6 +4,7 @@
 #include "qaction.h"
 #include "qboxlayout.h"
 #include"SysFunctions.h"
+#include "qfileinfo.h"
 #include "qlabel.h"
 #include"QDebug"
 #include"QUrl"
@@ -13,7 +14,7 @@
 #include"QGraphicsDropShadowEffect"
 int ED_BLOCK::default_size = 48;
 ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, int sizex, int sizey)
-    : ED_Unit(parent,sizex,sizey)
+    : ED_Unit(parent,sizex,sizey),previewWidget(new FilePreviewWidget(this))
 {
     type =Block;
     cmd = _cmd;
@@ -123,11 +124,48 @@ void ED_BLOCK::update_after_resize(){
 void ED_BLOCK::mouse_enter_action(){
     ED_Unit::mouse_enter_action();
     mainColor = pixmapMainColor(iconmap,0.9);
+
+    //文件预览
+    QFileInfo fileInfo(cmd.mid(8)); // 去掉 "file:///"
+    if (fileInfo.isFile() && (fileInfo.suffix() == "txt" || fileInfo.suffix() == "png")) {
+        if (fileInfo.suffix() == "txt") {
+            QFile file(fileInfo.filePath());
+            if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                QTextStream in(&file);
+                in.setCodec("UTF-8"); // 新增：设置为UTF-8编码
+                QString content = in.readAll();
+                file.close();
+
+                // 如果UTF-8读取失败，尝试其他编码
+                if (content.contains(QChar(0xFFFD))) { // 检查是否有替换字符
+                    file.open(QIODevice::ReadOnly | QIODevice::Text);
+                    in.setCodec("GBK"); // 尝试GBK编码
+                    content = in.readAll();
+                    file.close();
+                }
+
+                // 限制预览内容的长度
+                if (content.length() > 1000) {
+                    content = content.left(1000) + "\n...";
+                }
+
+                previewWidget->setText(content);
+            }
+        } else if (fileInfo.suffix() == "png") {
+            QImage image(fileInfo.filePath());
+            previewWidget->setImage(image);
+        }
+        previewWidget->move(mapToGlobal(QPoint(0, height())));
+        previewWidget->show();
+    }
 }
 void ED_BLOCK::mouse_leave_action(){
     //最终移动执行
     ED_Unit::mouse_leave_action();
     mainColor = pixmapMainColor(iconmap,0.5);
+
+    //文件预览
+    previewWidget->hide();
 }
 void ED_BLOCK::paintEvent(QPaintEvent *event)
 {

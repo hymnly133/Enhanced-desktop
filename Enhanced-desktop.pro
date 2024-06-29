@@ -13,6 +13,7 @@ CONFIG += c++17
 
 SOURCES += \
     SysFunctions.cpp \
+    dsvideoplayer.cpp \
     ed_bgshower.cpp \
     ed_block.cpp \
     ed_container.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     ed_hidetextblock.cpp \
     ed_layout.cpp \
     ed_unit.cpp \
+    filepreviewwidget.cpp \
     main.cpp \
     mainwindow.cpp \
     mousehook.cpp \
@@ -27,6 +29,7 @@ SOURCES += \
 
 HEADERS += \
     SysFunctions.h \
+    dsvideoplayer.h \
     ed_bgshower.h \
     ed_block.h \
     ed_container.h \
@@ -34,6 +37,7 @@ HEADERS += \
     ed_hidetextblock.h \
     ed_layout.h \
     ed_unit.h \
+    filepreviewwidget.h \
     mainwindow.h \
     mousehook.h \
     picturebox.h
