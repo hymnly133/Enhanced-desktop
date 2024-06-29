@@ -15,10 +15,6 @@ ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QPixmap image,QString _name,Q
     cmd = QString("file:///")+cmd;
     name = _name;
     // 初始化内部组件
-    vl = new QVBoxLayout();
-    vl->setContentsMargins(5,0,5,0);
-    vl->addSpacing(0);
-
 
     gv = new PictureBox(this,1.0);
 
@@ -35,17 +31,6 @@ ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QPixmap image,QString _name,Q
 
     // gv->QWidget::setAlignment(Qt::AlignVCenter);
 
-
-    // 绑定事件
-    connect(gv,SIGNAL(sendaClick()),this,SLOT(getaClick()));
-    connect(gv,SIGNAL(sendaDoubleClick()),this,SLOT(getaDoubleClick()));
-
-    // 添加布局
-    vl->addWidget(gv);
-    vl->setAlignment(gv,Qt::AlignHCenter);
-    vl->addWidget(lb);
-    vl->setAlignment(lb,Qt::AlignHCenter);
-
     // 显示名字
     lb->setAlignment(Qt::AlignHCenter);
     lb->setFont(QFont("MiSans",10,40));
@@ -59,8 +44,6 @@ ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QPixmap image,QString _name,Q
     lb->setGraphicsEffect(effect);
 
     gv->setGraphicsEffect(effect);
-
-    setLayout(vl);
 }
 void ED_HideTextBlock::single_click_action(){
     //最终单击执行

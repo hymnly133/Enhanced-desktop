@@ -2,6 +2,7 @@
 #include "ed_container.h"
 #include "ed_block.h"
 #include "ed_dock.h"
+#include "ed_hidetextblock.h"
 #include "qgraphicseffect.h"
 #include "ui_mainwindow.h"
 #include "SysFunctions.h"
@@ -9,6 +10,7 @@
 #include <QDebug>
 #include <QWidget>
 #include <QFileDialog>
+#include<qtimer.h>
 ED_Unit* pMovingUnit = nullptr;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -27,6 +29,8 @@ MainWindow::MainWindow(QWidget *parent)
     bgshower->setWindowTitle("BG_Shower");
     inplace2(bgshower);
 
+    setMouseTracking(true);
+
     // 初始化选择背景按钮
     selectBackgroundButton = new QPushButton("选择背景", this);
     connect(selectBackgroundButton, &QPushButton::clicked, this, &MainWindow::onSelectBackground);
@@ -39,39 +43,53 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto bc = new ED_Container(this,4,4,3,3,5);
     InitAUnit(bc);
-    // bc->InitLayout();
 
     auto dock = new ED_Dock(this,6,2,4);
     InitAUnit(dock);
-    // dock->InitLayout();
 
     weatherwidget = new WEATHERWIDGET(this,2,1);
     InitAUnit(weatherwidget);
 
     auto bc_ = new ED_Container(this,3,3,2,2,4);
     InitAUnit(bc_);
-    // bc_->InitLayout();
-
+    QList<QString> nametem;
     for(int i=0;i<iconns.size();i++){
-        qDebug()<<iconns[i].filePath;
+        qDebug()<<iconns[i].name<<iconns[i].type;
         int sizex=1;
         int sizey=1;
-        if(i%2==0){
-            sizex = 2;
-        }
-        if(i%3==0){
-            sizey=2;
-        }
-        auto tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256),iconns[i].name,iconns[i].filePath,sizex,sizey);
 
-        if(i <=2){
-            bc->edlayout->InitAUnit(tem);
+        // if(i%2==0){
+        //     sizex = 2;
+        // }
+        // if(i%3==0){
+        //     sizey=2;
+        // }
+        ED_Unit* tem = nullptr;
+        if(!nametem.contains(iconns[i].name))
+        switch (iconns[i].type) {
+        case FileInfo::HORI:
+            tem = new ED_HideTextBlock(this,iconns[i].icon.pixmap(256),iconns[i].name,iconns[i].filePath,1,2);
+            break;
+        case FileInfo::VERT:
+            tem = new ED_HideTextBlock(this,iconns[i].icon.pixmap(256),iconns[i].name,iconns[i].filePath,2,1);
+            break;
+        default:
+            tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256),iconns[i].name,iconns[i].filePath,sizex,sizey);
+            break;
         }
-        else{
-            InitAUnit(tem);
+        nametem.append(iconns[i].name);
+
+        if(tem){
+            if(i <=2){
+                bc->edlayout->InitAUnit(tem);
+            }
+            else{
+                InitAUnit(tem);
+            }
+                    tem->raise();
         }
 
-        tem->raise();
+
     }
     auto scene = new QGraphicsScene(this);
     scene->addPixmap(iconns[0].icon.pixmap(512));
@@ -141,6 +159,10 @@ MainWindow::MainWindow(QWidget *parent)
         inplace(bgshower);
         // qDebug()<<"shower windowr Pos:"<<bgshower->pos()<<" geometry :"<<bgshower->geometry()<<"rect: "<<bgshower->rect();
     });
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updatePer01second())); // slotCountMessage是我们需要执行的响应函数
+    timer->start(100); // 每隔1s
 }
 void MainWindow::InitAUnit(ED_Unit* aim){
     // connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
@@ -173,7 +195,9 @@ void MainWindow::setIconHight(int val){
     }
 }
 
-
+void MainWindow::updatePer01second(){
+    repaint();
+}
 
 void MainWindow::paintEvent(QPaintEvent * ev)
 {

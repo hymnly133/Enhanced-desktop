@@ -171,9 +171,9 @@ void ED_BLOCK::paintEvent(QPaintEvent *event)
 {
     ED_Unit::paintEvent(event);
     QColor alphaed = QColor(mainColor.red(),mainColor.green(),mainColor.blue(),aim_Alpha);
-    // paintRect(this,alphaed);
-
-    QRadialGradient radialGradient(width()/2 , height()/2, 200, width()/2 , height()/2);
+    paintRect(this,alphaed);
+    auto pos =mapFromGlobal( cursor().pos());
+    QRadialGradient radialGradient(width()/2 , height()/2, 200,pos.x() ,pos.y());
     //创建了一个QRadialGradient对象实例，参数分别为中心坐标，半径长度和焦点坐标,如果需要对称那么中心坐标和焦点坐标要一致
     QPainter painter(this);
     radialGradient.setColorAt(0,alphaed);

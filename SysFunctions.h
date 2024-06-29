@@ -16,6 +16,12 @@ extern bool ShowSide;
 struct FileInfo
 {
     //定义返回的结构体
+    enum TYPE{
+        NORM = 0,
+        HORI = 1,
+        VERT = 2
+    };
+    TYPE type;
     QString name;
     QString filePath;
     QIcon icon;
@@ -27,4 +33,5 @@ void inplace(QWidget* aim);
 void inplace2(QWidget* aim);
 QColor pixmapMainColor(QPixmap p, double bright);
 void paintside(QWidget* aim,QColor color);
+
 #endif // SYSFUNCTIONS_H
