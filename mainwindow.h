@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+#include "ed_bgshower.h"
 #include "ed_layout.h"
 #include <QMainWindow>
 #include <mousehook.h>
@@ -32,17 +33,15 @@ private slots:;
 private:
     Ui::MainWindow *ui;
     int iconNum = 0;
-    ED_Unit *temp;
-    QPoint startP;
-    QPoint fromP;
-    QPoint relativeP;
-    QPoint yuanP;
+    ed_bgShower* bgshower;
     bool moving = false;
     void InitAUnit(ED_Unit* aim);
-protected:
+public:
     void paintEvent(QPaintEvent * ev) override;
     void mouseDoubleClickEvent(QMouseEvent* ev) override;
 
 };
 extern MainWindow* pmw;
+extern QPixmap* pbg;
+extern ED_Unit* pMovingUnit;
 #endif // MAINWINDOW_H

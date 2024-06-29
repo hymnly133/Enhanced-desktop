@@ -55,10 +55,12 @@ public:
     int space_x;
     int space_y;
     bool visibal;
+    QRegion region;
     QWidget* pContainer;
     QVector<ED_Unit*>* contents = new QVector<ED_Unit*>;
     little_Block* blocks[50][50];
-public:
+
+
     ED_Layout(QWidget *father,int row, int col,int borad_space,int space_x,int space_y);
 /*
  *
@@ -111,6 +113,8 @@ public:
 
     //判断放置一个ED_Unit是否合法
     bool OKforput(ED_Unit*aim);
+
+    void Update_Region();
 };
 
 #endif // ED_LAYOUT_H

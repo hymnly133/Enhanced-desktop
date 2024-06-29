@@ -14,6 +14,7 @@ CONFIG += c++17
 
 SOURCES += \
     SysFunctions.cpp \
+    ed_bgshower.cpp \
     ed_block.cpp \
     ed_container.cpp \
     ed_dock.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
 
 HEADERS += \
     SysFunctions.h \
+    ed_bgshower.h \
     ed_block.h \
     ed_container.h \
     ed_dock.h \

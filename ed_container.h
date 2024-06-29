@@ -8,7 +8,7 @@ class ED_Container : public ED_Unit
 {
     Q_OBJECT
 public:
-    explicit ED_Container(QWidget *parent,int sizex,int sizey,int row,int cal,int space);
+    explicit ED_Container(QWidget *parent,int sizex,int sizey,int row,int cal,int space,int space_x =0,int space_y = 0);
     ED_Layout* edlayout;
     int row,cal,space;
     // virtual void InitLayout();
