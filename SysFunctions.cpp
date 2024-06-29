@@ -152,6 +152,7 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
     foreach(const QFileInfo &x,fileInfoList)
     {
         FileInfo file;
+        file.type = FileInfo::NORM;
         file.filePath=x.absoluteFilePath();
         QString fileName = x.fileName();
         int lastDotIndex = fileName.lastIndexOf('.');
@@ -176,22 +177,48 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
             steamPath = reg.value("SteamPath").toString()+"/appcache/librarycache";
             QStringList result;
             QDir directory(steamPath);
-            QRegularExpression regex(gameId+"_icon");
-            //小图标版本
-            //QRegularExpression regex(gameId+"_library");
-            //长竖图标版本
-            //QRegularExpression regex(gameId+"_header");
-            //长横图标版本
             QStringList steamfileList=directory.entryList(QDir::Files);
+
+            QRegularExpression regex(gameId+"_library");
+            //长竖图标版本
+            steamfileList=directory.entryList(QDir::Files);
+            foreach(const QString& steamfilename,steamfileList)
+            {
+                if(regex.match(steamfilename).hasMatch())
+                {
+                    file.icon=QIcon(directory.absoluteFilePath(steamfilename));
+                    file.type = FileInfo::HORI;
+                    files.append(file);
+                }
+            }
+
+
+            regex = QRegularExpression(gameId+"_header");
+            //长横图标版本
+            steamfileList=directory.entryList(QDir::Files);
+            foreach(const QString& steamfilename,steamfileList)
+            {
+                if(regex.match(steamfilename).hasMatch())
+                {
+                    file.icon=QIcon(directory.absoluteFilePath(steamfilename));
+                    file.type = FileInfo::VERT;
+                    files.append(file);
+
+                }
+            }
+
+
+            regex = QRegularExpression(gameId+"_icon");
+            //小图标版本
             foreach(const QString& steamfilename,steamfileList)
             {
                 if(regex.match(steamfilename).hasMatch())
                 {
                     result.append(directory.absoluteFilePath(steamfilename));
+                    file.icon=QIcon(directory.absoluteFilePath(steamfilename));
+                    file.type = FileInfo::NORM;
                 }
             }
-            file.icon=QIcon(result[0]);
-
         }
         //以上为针对steam游戏
         files.append(file);
@@ -314,5 +341,6 @@ QColor pixmapMainColor(QPixmap p, double bright) //p为目标图片 bright为亮
 void repaintAround(QWidget* aim){
     auto tem = aim->geometry();
     auto rrect = QRect(tem.x()-60,tem.y()-60,tem.width()+120,tem.height()+120);
-    pmw->repaint(rrect);
+    pmw->repaint();
+
 }

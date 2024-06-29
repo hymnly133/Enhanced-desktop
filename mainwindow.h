@@ -33,6 +33,7 @@ private slots:;
     void on_horizontalSlider_2_valueChanged(int value);
     void on_horizontalSlider_valueChanged(int value);
     void onSelectBackground();  // 新增：选择背景文件槽函数
+    void updatePer01second();
 private:
     Ui::MainWindow *ui;
     int iconNum = 0;
