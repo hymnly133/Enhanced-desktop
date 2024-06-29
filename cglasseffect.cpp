@@ -42,7 +42,4 @@ void CglasseFfect::paintEvent(QPaintEvent * ev)
     painter.setBrush(*bgColor);
     //painter.drawRoundedRect(rect(), 20, 20);
     painter.drawRect(0, 0, width(), height());
-
-
-
 }

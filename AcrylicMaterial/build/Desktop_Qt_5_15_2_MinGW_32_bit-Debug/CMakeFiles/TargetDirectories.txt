@@ -1,0 +1,3 @@
+D:/Github/Enhanced-desktop/AcrylicMaterial/build/Desktop_Qt_5_15_2_MinGW_32_bit-Debug/CMakeFiles/AcrylicMaterial.dir
+D:/Github/Enhanced-desktop/AcrylicMaterial/build/Desktop_Qt_5_15_2_MinGW_32_bit-Debug/CMakeFiles/edit_cache.dir
+D:/Github/Enhanced-desktop/AcrylicMaterial/build/Desktop_Qt_5_15_2_MinGW_32_bit-Debug/CMakeFiles/rebuild_cache.dir

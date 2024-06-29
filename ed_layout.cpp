@@ -22,6 +22,8 @@ ED_Layout::ED_Layout(QWidget *father, int row, int col, int borad_space,int spac
 }
 
 
+
+
 QPoint ED_Layout::NearestBlockInd(QPoint point){
     return QPoint((point.x()-borad_space)/(W_Block_Clean()+space_x),(point.y()-borad_space)/(H_Block_Clean()+space_y));
 }
@@ -81,6 +83,14 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     aim->update_after_resize();
     aim->edlayout = this;
     aim->setVisible(true);
+    if(isMain){
+        aim->showRect = true;
+        aim->showLight = true;
+    }
+    else{
+        aim->showRect = false;
+        aim->showLight = false;
+    }
 
     pContainer->raise();
     aim->raise();
@@ -234,6 +244,13 @@ QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
     return QPoint(bpw,bph);
 }
 
+void ED_Layout::setwinblur(){
+    for(ED_Unit* unit:*contents){
+        unit->setwinblur();
+    }
+}
+
+
 void ED_Layout::setVisible(bool val){
     int countt =0;
     for(ED_Unit* unit:*contents){
@@ -249,4 +266,10 @@ void ED_Layout::setVisible(bool val){
 }
 bool ED_Layout::Visible(){
     return visibal;
+}
+void ED_Layout::Update_Positon(){
+    for(ED_Unit* aim:*contents){
+        aim->setFixedSize(W_Block_Clean()*aim->sizeX+(aim->sizeX-1)*space_x,H_Block_Clean()*aim->sizeY+(aim->sizeY-1)*space_y);
+        aim->move(blocks[aim->LayoutBlockX][aim->LayoutBlockY]->posX(),blocks[aim->LayoutBlockX][aim->LayoutBlockY]->posY());
+    }
 }

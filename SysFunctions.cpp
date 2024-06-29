@@ -15,8 +15,7 @@ MainWindow* pmw;;
 MouseHook* pmh;
 QTextCodec* utf8 = QTextCodec::codecForName("utf-8");
 QTextCodec* gbk = QTextCodec::codecForName("GBK");
-bool ShowRect = true;
-bool ShowSide = false;
+
 
 QRect AbsoluteRect(QWidget* aim){
     auto tem = aim->geometry();
@@ -25,16 +24,38 @@ QRect AbsoluteRect(QWidget* aim){
 }
 
 void paintRect(QWidget* aim,QColor color){
-    if(ShowRect){
+    bool another = true;
+    if(aim->inherits("ED_Unit")) another = ((ED_Unit*)aim)->showRect;
+    if(ShowRect&another){
         QPainter paint(aim);
         paint.fillRect(aim->rect(),color);
     }
 }
 
-void paintside(QWidget* aim,QColor color){
-    if(ShowSide){
+void paintLight(QWidget* aim,QColor color){
+    bool another = true;
+    if(aim->inherits("ED_Unit")) another = ((ED_Unit*)aim)->showLight;
+    if(ShowLight&another){
+        color.setAlpha(light_alpha_start);
+        auto pos =aim->mapFromGlobal(aim->cursor().pos());
+        QRadialGradient radialGradient(aim->width()/2 , aim->height()/2, qMax(aim->width(),aim->height()),pos.x() ,pos.y());
+        //创建了一个QRadialGradient对象实例，参数分别为中心坐标，半径长度和焦点坐标,如果需要对称那么中心坐标和焦点坐标要一致
+        QPainter painter(aim);
+        painter.setPen(Qt::NoPen);
+        radialGradient.setColorAt(0,color);
+        color.setAlpha(light_alpha_end);
+        radialGradient.setColorAt(1.0,color);
+        painter.setBrush(QBrush(radialGradient));
+        painter.drawRect(aim->rect());//在相应的坐标画出来
+    }
+}
+
+void paintSide(QWidget* aim,QColor color){
+    bool another = true;
+    if(aim->inherits("ED_Unit")) another = ((ED_Unit*)aim)->showSide;
+    if(ShowSide&another){
         QPainter p(aim);
-        p.setPen(QColor("green")); //设置画笔记颜色
+        p.setPen(color); //设置画笔记颜色
         p.drawRect(0, 0, aim->width() -1, aim->height() -1); //绘制边框
     }
 }
@@ -366,6 +387,6 @@ QColor pixmapMainColor(QPixmap p, double bright) //p为目标图片 bright为亮
 void repaintAround(QWidget* aim){
     auto tem = aim->geometry();
     auto rrect = QRect(tem.x()-60,tem.y()-60,tem.width()+120,tem.height()+120);
-    pmw->repaint();
+    pmw->repaint(rrect);
 
 }

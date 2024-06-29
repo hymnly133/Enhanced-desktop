@@ -23,11 +23,26 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    Ui::MainWindow *ui;
+    ed_bgShower* bgshower;
+    bool transparent =true;
+    bool moving = false;
+
     ED_Layout* edlayout;
-    ED_Unit* cds[200];
     QPixmap bg;
     WEATHERWIDGET *weatherwidget;
     Hitokoto *htkt;
+
+    void InitAUnit(ED_Unit* aim);
+    void paintEvent(QPaintEvent * ev) override;
+    void mouseDoubleClickEvent(QMouseEvent* ev) override;
+    QPushButton *selectBackgroundButton;  // 新增：选择背景按钮
+    // DSVideoPlayer *videoPlayer;  // 新增：用于视频播放
+
+private:
+    void setupActions();
+    void setupUnits();
+    void setTransparent(bool val);
 
 private slots:;
     void setIconScale(double Scale);
@@ -36,18 +51,8 @@ private slots:;
     void on_horizontalSlider_valueChanged(int value);
     void onSelectBackground();  // 新增：选择背景文件槽函数
     void updatePer01second();
-private:
-    Ui::MainWindow *ui;
-    int iconNum = 0;
-    ed_bgShower* bgshower;
-    bool moving = false;
-    void InitAUnit(ED_Unit* aim);
 
-public:
-    void paintEvent(QPaintEvent * ev) override;
-    void mouseDoubleClickEvent(QMouseEvent* ev) override;
-    QPushButton *selectBackgroundButton;  // 新增：选择背景按钮
-    // DSVideoPlayer *videoPlayer;  // 新增：用于视频播放
+
 };
 extern MainWindow* pmw;
 extern ED_Unit* pMovingUnit;

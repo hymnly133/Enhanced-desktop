@@ -33,7 +33,6 @@ class ED_Layout
             return QPoint(CenterX(),CenterY());
         };
         little_Block(ED_Layout* playout,int indx,int indy):indX(indx),indY(indy),playout(playout){
-
         }
     };
 public:
@@ -55,6 +54,7 @@ public:
     int space_x;
     int space_y;
     bool visibal;
+    bool isMain = false;
     QRegion region;
     QWidget* pContainer;
     QVector<ED_Unit*>* contents = new QVector<ED_Unit*>;
@@ -107,7 +107,7 @@ public:
 
     //将一个ED_Unit按序号最下且可放置的位置放置
     void default_Put_ED_Unit(ED_Unit* aim);
-
+    void setwinblur();
     void setVisible(bool val);
     bool Visible();
 
@@ -115,6 +115,7 @@ public:
     bool OKforput(ED_Unit*aim);
 
     void Update_Region();
+    void Update_Positon();
 };
 
 #endif // ED_LAYOUT_H

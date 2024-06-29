@@ -34,7 +34,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, 
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
     double defaultRatio = (double)default_size/image.size().width();
     iconmap=image;
-    mainColor = pixmapMainColor(iconmap,0.5);
+    mainColor = pixmapMainColor(iconmap,sleep_color_ratio);
 
     gv->setImage(image,1.0,defaultRatio);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
@@ -55,58 +55,22 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, 
 
     lb->setText(elidedLineText(lb,3,name));
     QGraphicsDropShadowEffect* effect0 = new QGraphicsDropShadowEffect;
-    effect0->setColor(QColor(100,100,100,100));
-    effect0->setBlurRadius(4);   //模糊半径
-    effect0->setOffset(10);      //偏移量
+    auto tem = mainColor;
+    tem.setAlpha(icon_shadow_alpha);
+    effect0->setColor(tem);
+    effect0->setBlurRadius(10);   //模糊半径
+    effect0->setOffset(10);;      //偏移量
     lb->setGraphicsEffect(effect0);
 
     QGraphicsDropShadowEffect* effect1 = new QGraphicsDropShadowEffect;
-    effect1->setColor(QColor(100,100,100,100));
-    effect1->setBlurRadius(4);   //模糊半径
-    effect1->setOffset(10);      //偏移量
+    effect1->setColor(tem);
+    effect1->setBlurRadius(icon_shadow_blur_radius);   //模糊半径
+    effect1->setOffset(0,0);      //偏移量
     gv->setGraphicsEffect(effect1);
 
-    setContextMenuPolicy(Qt::ActionsContextMenu);
+
 
     // 给当前窗口添加QAction对象
-    QAction* act1  = new QAction("加宽");
-    this->addAction(act1);
-    connect(act1, &QAction::triggered, this, [=]()
-    {
-        setBlockSize(sizeX+1,sizeY);
-    });
-
-    QAction* act3  = new QAction("减宽");
-    this->addAction(act3);
-    connect(act3, &QAction::triggered, this, [=]()
-            {
-                if(sizeX>=2)
-                    setBlockSize(sizeX-1,sizeY);
-            });
-
-    QAction* act2  = new QAction("加高");
-    this->addAction(act2);
-    connect(act2, &QAction::triggered, this, [=]()
-    {
-        setBlockSize(sizeX,sizeY+1);
-    });
-
-
-
-    QAction* act4  = new QAction("减高");
-    this->addAction(act4);
-    connect(act4, &QAction::triggered, this, [=]()
-    {
-        if(sizeY>=2)
-        setBlockSize(sizeX,sizeY-1);
-    });
-
-    QAction* act5  = new QAction("切换显示名字");
-    this->addAction(act5);
-connect(act5, &QAction::triggered, this, [=]()
-    {
-        lb->setVisible(!lb->isVisible());
-    });
 }
 
 void ED_BLOCK::double_click_action(){
@@ -172,13 +136,11 @@ void ED_BLOCK::paintEvent(QPaintEvent *event)
     ED_Unit::paintEvent(event);
     QColor alphaed = QColor(mainColor.red(),mainColor.green(),mainColor.blue(),aim_Alpha);
     paintRect(this,alphaed);
-    auto pos =mapFromGlobal( cursor().pos());
-    QRadialGradient radialGradient(width()/2 , height()/2, 200,pos.x() ,pos.y());
-    //创建了一个QRadialGradient对象实例，参数分别为中心坐标，半径长度和焦点坐标,如果需要对称那么中心坐标和焦点坐标要一致
-    QPainter painter(this);
-    radialGradient.setColorAt(0,alphaed);
-    radialGradient.setColorAt(1.0,QColor(mainColor.red(),mainColor.green(),mainColor.blue(),0));
-    painter.setBrush(QBrush(radialGradient));
-    painter.drawRect(rect());//在相应的坐标画出来
-
+    paintLight(this,alphaed);
+}
+void ED_BLOCK::changeToSimpleMode(){
+    lb->setVisible(false);
+}
+void ED_BLOCK::changeToComplexMode(){
+    lb->setVisible(true);
 }

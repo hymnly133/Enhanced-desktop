@@ -18,6 +18,7 @@
 WEATHERWIDGET::WEATHERWIDGET(QWidget *parent, int sizex, int sizey)
     : ED_Unit(parent,sizex,sizey)
 {
+    type = Unit;
     wlayout=new QVBoxLayout(this);
     manager=new QNetworkAccessManager(this);
     temperatureLabel=new QLabel(this);
