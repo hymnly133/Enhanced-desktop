@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     bgshower->raise();
     bgshower->move(0,0);
     bgshower->setWindowTitle("BG_Shower");
+    inplace2(bgshower);
 
     // 初始化选择背景按钮
     selectBackgroundButton = new QPushButton("选择背景", this);

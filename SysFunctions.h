@@ -24,6 +24,7 @@ QList<FileInfo> scanalldesktopfiles();
 void paintRect(QWidget* aim,QColor color);
 void repaintAround(QWidget* aim);
 void inplace(QWidget* aim);
+void inplace2(QWidget* aim);
 QColor pixmapMainColor(QPixmap p, double bright);
 void paintside(QWidget* aim,QColor color);
 #endif // SYSFUNCTIONS_H

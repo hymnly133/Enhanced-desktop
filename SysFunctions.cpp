@@ -11,8 +11,7 @@
 #include<QFileIconProvider>
 #include<QSettings>
 #include<QIcon>
-MainWindow* pmw;
-QWidget* pmw2;
+MainWindow* pmw;;
 MouseHook* pmh;
 QTextCodec* utf8 = QTextCodec::codecForName("utf-8");
 QTextCodec* gbk = QTextCodec::codecForName("GBK");
@@ -79,7 +78,7 @@ void Init(MainWindow* mainwindow){
 
 
 void inplace(QWidget* aim) {
-    // 接入到壁纸层
+    // 接入到图标层
     HWND background = NULL;
     HWND hwnd = FindWindowA("Progman", "Program Manager");
     HWND worker = NULL;
@@ -114,7 +113,7 @@ void inplace(QWidget* aim) {
     }
 }
 
-void inplace2() {
+void inplace2(QWidget* pmw2) {
     // 接入到壁纸层
     HWND background = NULL;
     HWND hwnd = FindWindowA("Progman", "Program Manager");
@@ -149,18 +148,6 @@ void inplace2() {
         qDebug() << "未能找到合适的WorkerW窗口";
     }
 }
-
-
-
-
-struct FileInfo
-{
-    //定义返回的结构体
-    QString name;
-    QString filePath;
-    QIcon icon;
-};
-
 
 QList<FileInfo> scandesktopfiles(const QString &desktopPath)
 {
