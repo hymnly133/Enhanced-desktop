@@ -170,6 +170,15 @@ void ED_BLOCK::mouse_leave_action(){
 void ED_BLOCK::paintEvent(QPaintEvent *event)
 {
     ED_Unit::paintEvent(event);
-    paintRect(this,QColor(mainColor.red(),mainColor.green(),mainColor.blue(),aim_Alpha));
+    QColor alphaed = QColor(mainColor.red(),mainColor.green(),mainColor.blue(),aim_Alpha);
+    // paintRect(this,alphaed);
+
+    QRadialGradient radialGradient(width()/2 , height()/2, 200, width()/2 , height()/2);
+    //创建了一个QRadialGradient对象实例，参数分别为中心坐标，半径长度和焦点坐标,如果需要对称那么中心坐标和焦点坐标要一致
+    QPainter painter(this);
+    radialGradient.setColorAt(0,alphaed);
+    radialGradient.setColorAt(1.0,QColor(mainColor.red(),mainColor.green(),mainColor.blue(),0));
+    painter.setBrush(QBrush(radialGradient));
+    painter.drawRect(rect());//在相应的坐标画出来
 
 }

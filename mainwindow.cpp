@@ -120,11 +120,12 @@ MainWindow::MainWindow(QWidget *parent)
             }
         }
     });
-    QAction* act4  = new QAction("updateMask");
+    QAction* act4  = new QAction("exit");
     this->addAction(act4);
     connect(act4, &QAction::triggered, this, [=]()
     {
-        bgshower->updateMask();
+         QCoreApplication::quit() ;
+
     });
     QAction* act5  = new QAction("print main window");
     this->addAction(act5);
@@ -137,7 +138,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->addAction(act6);
     connect(act6, &QAction::triggered, this, [=]()
     {
-        inplace( bgshower);
+        inplace(bgshower);
         // qDebug()<<"shower windowr Pos:"<<bgshower->pos()<<" geometry :"<<bgshower->geometry()<<"rect: "<<bgshower->rect();
     });
 }
