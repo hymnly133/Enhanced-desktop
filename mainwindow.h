@@ -48,4 +48,5 @@ public:
 };
 extern MainWindow* pmw;
 extern ED_Unit* pMovingUnit;
+
 #endif // MAINWINDOW_H

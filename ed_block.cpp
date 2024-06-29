@@ -13,7 +13,7 @@
 #include "qpainter.h"
 #include"QGraphicsDropShadowEffect"
 int ED_BLOCK::default_size = 48;
-ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, int sizex, int sizey)
+ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, int sizex, int sizey)
     : ED_Unit(parent,sizex,sizey),previewWidget(new FilePreviewWidget(this))
 {
     type =Block;
@@ -33,7 +33,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, i
     // 显示图标
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
     double defaultRatio = (double)default_size/image.size().width();
-    iconmap.convertFromImage(image);
+    iconmap=image;
     mainColor = pixmapMainColor(iconmap,0.5);
 
     gv->setImage(image,1.0,defaultRatio);
@@ -41,12 +41,12 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QImage image, QString _name, QString _cmd, i
     vl->setAlignment(Qt::AlignHCenter);
 
     // 添加布局
-        vl->addStretch();
+    vl->addStretch();
     vl->addWidget(gv);
     vl->setAlignment(gv,Qt::AlignHCenter);
     vl->addWidget(lb);
     vl->setAlignment(lb,Qt::AlignHCenter);
-            vl->addStretch();
+    vl->addStretch();
 
     // 显示名字
     lb->setAlignment(Qt::AlignHCenter);
@@ -123,7 +123,7 @@ void ED_BLOCK::update_after_resize(){
 }
 void ED_BLOCK::mouse_enter_action(){
     ED_Unit::mouse_enter_action();
-    mainColor = pixmapMainColor(iconmap,0.9);
+    mainColor = pixmapMainColor(iconmap,active_color_ratio);
 
     //文件预览
     QFileInfo fileInfo(cmd.mid(8)); // 去掉 "file:///"
@@ -162,8 +162,8 @@ void ED_BLOCK::mouse_enter_action(){
 void ED_BLOCK::mouse_leave_action(){
     //最终移动执行
     ED_Unit::mouse_leave_action();
-    mainColor = pixmapMainColor(iconmap,0.5);
 
+    mainColor = pixmapMainColor(iconmap,sleep_color_ratio);
     //文件预览
     previewWidget->hide();
 }

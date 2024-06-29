@@ -7,7 +7,7 @@
 #include"QDesktopServices"
 
 int ED_HideTextBlock::default_size = 48;
-ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QImage image,QString _name,QString _cmd,int sizex,int sizey)
+ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QPixmap image,QString _name,QString _cmd,int sizex,int sizey)
     :ED_Unit(parent,sizex,sizey)
 {
     type =Block;

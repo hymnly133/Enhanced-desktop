@@ -5,7 +5,7 @@
 #include"SysFunctions.h"
 #include"ed_layout.h"
 #include"ed_container.h"
-#include<QtWinExtras>
+#include "style.h"
 
 ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
@@ -36,11 +36,11 @@ void ED_Unit::double_click_action(){
 
 void ED_Unit::mouse_enter_action(){
     //最终移动执行
-    aim_Alpha = 255;
+    aim_Alpha = active_alpha;
 }
 void ED_Unit::mouse_leave_action(){
     //最终移动执行
-    aim_Alpha = 200;
+    aim_Alpha = sleep_alpha;
 }
 
 
@@ -125,9 +125,6 @@ void ED_Unit::leaveEvent(QEvent *event){
     repaintAround(this);
 }
 
-
-
-
 void ED_Unit::setBlockSize(int w,int h){
     ED_Layout* tem = nullptr;
     if(edlayout){
@@ -147,9 +144,6 @@ void ED_Unit::setBlockSize(int w,int h){
         sizeX = w;
         sizeY = h;
     }
-
-
-
 
 }
 

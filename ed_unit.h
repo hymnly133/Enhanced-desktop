@@ -1,9 +1,10 @@
 #ifndef ED_UNIT_H
 #define ED_UNIT_H
-
+#include "style.h"
 #include <QWidget>
 #include<qlabel.h>
 class ED_Layout;
+
 class ED_Unit : public QWidget
 {
     Q_OBJECT
@@ -16,7 +17,7 @@ public:
     int sizeX;
     int sizeY;
     int ind;
-    int aim_Alpha = 60;
+    int aim_Alpha =  sleep_alpha;
     bool alwaysShow;
     int LayoutBlockX = -1;
     int LayoutBlockY = -1;

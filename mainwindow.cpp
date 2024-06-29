@@ -3,7 +3,6 @@
 #include "ed_block.h"
 #include "ed_dock.h"
 #include "qgraphicseffect.h"
-#include "qpainter.h"
 #include "ui_mainwindow.h"
 #include "SysFunctions.h"
 #include <QMouseEvent>
@@ -11,18 +10,21 @@
 #include <QWidget>
 #include <QFileDialog>
 ED_Unit* pMovingUnit = nullptr;
+
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow),weatherwidget(nullptr)
+    : QMainWindow(parent), weatherwidget(nullptr),ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     Init(this);
 
     //设置背景
-    bgshower = new ed_bgShower(this);
-    bgshower->setFixedSize(size());
+    bgshower = new ed_bgShower();
+    bgshower->setFixedSize(size()/2);
     bgshower->setVisible(true);
-    bgshower->lower();
+    bgshower->raise();
+    bgshower->move(0,0);
+    bgshower->setWindowTitle("BG_Shower");
 
     // 初始化选择背景按钮
     selectBackgroundButton = new QPushButton("选择背景", this);
@@ -59,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
         if(i%3==0){
             sizey=2;
         }
-        auto tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256).toImage(),iconns[i].name,iconns[i].filePath,sizex,sizey);
+        auto tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256),iconns[i].name,iconns[i].filePath,sizex,sizey);
 
         if(i <=2){
             bc->edlayout->InitAUnit(tem);
@@ -70,7 +72,11 @@ MainWindow::MainWindow(QWidget *parent)
 
         tem->raise();
     }
+    auto scene = new QGraphicsScene(this);
+    scene->addPixmap(iconns[0].icon.pixmap(512));
 
+    ui->graphicsView->setScene(scene);
+    ui->pushButton->setIcon(iconns[0].icon);
     //初始化一些
     pmw = this;
     bg = QPixmap(":/images/background");
@@ -119,7 +125,20 @@ MainWindow::MainWindow(QWidget *parent)
     {
         bgshower->updateMask();
     });
+    QAction* act5  = new QAction("print main window");
+    this->addAction(act5);
+    connect(act5, &QAction::triggered, this, [=]()
+    {
+        qDebug()<<"main windowr Pos:"<<pos()<<" geometry :"<<geometry()<<"rect: "<<rect();
 
+    });
+    QAction* act6  = new QAction("insert bg");
+    this->addAction(act6);
+    connect(act6, &QAction::triggered, this, [=]()
+    {
+        inplace( bgshower);
+        // qDebug()<<"shower windowr Pos:"<<bgshower->pos()<<" geometry :"<<bgshower->geometry()<<"rect: "<<bgshower->rect();
+    });
 }
 void MainWindow::InitAUnit(ED_Unit* aim){
     // connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
@@ -156,8 +175,9 @@ void MainWindow::setIconHight(int val){
 
 void MainWindow::paintEvent(QPaintEvent * ev)
 {
-    QPainter painter(this);
-    painter.drawPixmap(rect(),bg);
+    // QPainter painter(this);
+    // painter.drawPixmap(rect(),bg);
+    bgshower->repaint();
 }
 
 void MainWindow::on_horizontalSlider_2_valueChanged(int value)
@@ -204,3 +224,5 @@ void MainWindow::onSelectBackground() {
         }
     }
 }
+
+

@@ -1,5 +1,4 @@
-QT       += core gui widgets
-QT       += core gui network
+QT       += core gui widgets winextras network
 win32 {
 LIBS+= -luser32    # 使用WindowsAPI需要链接库
 }
@@ -14,6 +13,7 @@ CONFIG += c++17
 
 SOURCES += \
     SysFunctions.cpp \
+    cglasseffect.cpp \
     dsvideoplayer.cpp \
     ed_bgshower.cpp \
     ed_block.cpp \
@@ -27,10 +27,12 @@ SOURCES += \
     mainwindow.cpp \
     mousehook.cpp \
     picturebox.cpp \
+    style.cpp \
     weatherwidget.cpp
 
 HEADERS += \
     SysFunctions.h \
+    cglasseffect.h \
     dsvideoplayer.h \
     ed_bgshower.h \
     ed_block.h \
@@ -43,6 +45,7 @@ HEADERS += \
     mainwindow.h \
     mousehook.h \
     picturebox.h \
+    style.h \
     weatherwidget.h
 
 FORMS += \
@@ -67,6 +70,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     res.qrc
+
+DISTFILES += \
+    style.json
 
 
 

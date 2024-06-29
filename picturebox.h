@@ -24,7 +24,7 @@ protected:
     void paintEvent(QPaintEvent * event);
 
 public slots:
-    bool setImage(QImage &image, double scale =1.0,double pixresize =1.0);
+    bool setImage(QPixmap &image, double scale =1.0,double pixresize =1.0);
     void setBackground(QBrush brush);
 };
 #endif

@@ -16,7 +16,7 @@ public:
 public:
     PictureBox* gv ;
     QVBoxLayout* vl;
-    explicit     ED_HideTextBlock(QWidget *parent,QImage image,QString name,QString cmd,int sizex,int sizey);
+    explicit     ED_HideTextBlock(QWidget *parent,QPixmap image,QString name,QString cmd,int sizex,int sizey);
 
     void update_after_resize() override;
 protected:

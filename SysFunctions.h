@@ -11,6 +11,7 @@ QString GetCorrectUnicode(const QByteArray &ba);
 QString elidedLineText(QWidget *pWidget, int nLine, QString strText);
 extern bool ShowRect;
 extern bool ShowSide;
+
 struct FileInfo
 {
     //定义返回的结构体
@@ -21,6 +22,7 @@ struct FileInfo
 QList<FileInfo> scanalldesktopfiles();
 void paintRect(QWidget* aim,QColor color);
 void repaintAround(QWidget* aim);
+void inplace(QWidget* aim);
 QColor pixmapMainColor(QPixmap p, double bright);
 void paintside(QWidget* aim,QColor color);
 #endif // SYSFUNCTIONS_H

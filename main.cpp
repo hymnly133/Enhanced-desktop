@@ -25,10 +25,6 @@ int main(int argc, char *argv[])
     //鼠标钩子
     // InitMouseHook();
 
-    //注入壁纸
-    inplace();
-
-
     mw.show();
     return a.exec();
 }

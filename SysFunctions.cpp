@@ -1,6 +1,7 @@
 #include<windows.h>
 #include"mainwindow.h"
 #include"mousehook.h"
+#include"SysFunctions.h"
 #include"QTextCodec"
 #include "qpainter.h"
 #include <QJsonObject>
@@ -17,11 +18,16 @@ QTextCodec* gbk = QTextCodec::codecForName("GBK");
 bool ShowRect = true;
 bool ShowSide = false;
 
-//主窗口指针
+QRect AbsoluteRect(QWidget* aim){
+    auto tem = aim->geometry();
+    auto pos = aim->parentWidget()->pos();
+    return QRect(pos.x()+tem.x(),pos.y()+tem.y(),tem.width(),tem.height());
+}
+
 void paintRect(QWidget* aim,QColor color){
     if(ShowRect){
         QPainter paint(aim);
-        paint.fillRect(aim->rect(), QBrush(color));
+        paint.fillRect(aim->rect(),color);
     }
 }
 
@@ -56,17 +62,22 @@ void InitMouseHook(){
 
 
 void Init(MainWindow* mainwindow){
-    // QTextCodec::setCodecForLocale(gbk);
     //初始化
     qDebug()<<"Initing";
     //无边框全屏
     mainwindow->setWindowState(Qt::WindowFullScreen);
+    mainwindow->setAttribute(Qt::WA_TranslucentBackground);
+    // mainwindow-> setWindowFlags(Qt::FramelessWindowHint);
 
+    //注入壁纸
+    inplace((QWidget* )mainwindow);
     qDebug()<<"Initing done";
     pmw = mainwindow;
 }
 
-void inplace() {
+
+
+void inplace(QWidget* aim) {
     // 接入到壁纸层
     HWND background = NULL;
     HWND hwnd = FindWindowA("Progman", "Program Manager");
@@ -92,23 +103,15 @@ void inplace() {
 
     // 如果找到了正确的WorkerW窗口，设置父窗口
     if (background != NULL) {
-        SetParent((HWND)pmw->winId(), background);
-        SetWindowPos((HWND)pmw->winId(), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-        SetWindowPos((HWND)pmw->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-        SetFocus((HWND)pmw->winId());
+        SetParent((HWND)aim->winId(), background);
+        SetWindowPos((HWND)aim->winId(), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        SetWindowPos((HWND)aim->winId(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        SetFocus((HWND)aim->winId());
     } else {
         // 如果没有找到合适的WorkerW窗口，可以在这里处理错误
         qDebug() << "未能找到合适的WorkerW窗口";
     }
 }
-
-struct FileInfo
-{
-    //定义返回的结构体
-    QString name;
-    QString filePath;
-    QIcon icon;
-};
 
 
 QList<FileInfo> scandesktopfiles(const QString &desktopPath)
