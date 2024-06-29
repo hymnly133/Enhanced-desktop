@@ -5,7 +5,6 @@
 #include"SysFunctions.h"
 #include"ed_layout.h"
 #include"ed_container.h"
-#include<QtWinExtras>
 
 ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {

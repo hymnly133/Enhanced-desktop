@@ -1,6 +1,7 @@
 #ifndef SYSFUNCTIONS_H
 #define SYSFUNCTIONS_H
 #include<windows.h>
+#include <QIcon>
 #include"mainwindow.h"
 void Init(MainWindow* mainwindow);
 void inplace();
