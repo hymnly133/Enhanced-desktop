@@ -1,4 +1,5 @@
 QT       += core gui widgets
+QT       += core gui network
 win32 {
 LIBS+= -luser32    # 使用WindowsAPI需要链接库
 }
@@ -22,7 +23,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mousehook.cpp \
-    picturebox.cpp
+    picturebox.cpp \
+    weatherwidget.cpp
 
 HEADERS += \
     SysFunctions.h \
@@ -34,7 +36,8 @@ HEADERS += \
     ed_unit.h \
     mainwindow.h \
     mousehook.h \
-    picturebox.h
+    picturebox.h \
+    weatherwidget.h
 
 FORMS += \
     mainwindow.ui

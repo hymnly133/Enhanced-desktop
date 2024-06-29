@@ -3,6 +3,7 @@
 #include "ed_layout.h"
 #include <QMainWindow>
 #include <mousehook.h>
+#include "weatherwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,6 +21,7 @@ public:
     ~MainWindow();
     ED_Layout* edlayout;
     ED_Unit* cds[200];
+    WEATHERWIDGET *weatherwidget;
 
 private slots:;
     void setIconScale(double Scale);
