@@ -234,6 +234,13 @@ QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
     return QPoint(bpw,bph);
 }
 
+void ED_Layout::setwinblur(){
+    for(ED_Unit* unit:*contents){
+        unit->setwinblur();
+    }
+}
+
+
 void ED_Layout::setVisible(bool val){
     int countt =0;
     for(ED_Unit* unit:*contents){

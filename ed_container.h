@@ -15,7 +15,8 @@ public:
     void Say();
     virtual void InplaceAUnit(ED_Unit* aim);
     virtual bool OKforput(ED_Unit* aim);
-
+    virtual void changeToSimpleMode();
+    virtual void changeToComplexMode();
 protected:
     void double_click_action();
     void single_click_action();

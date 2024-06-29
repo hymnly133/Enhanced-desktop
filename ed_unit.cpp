@@ -9,7 +9,6 @@
 
 ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
-    alwaysShow = false;
     sizeX = sizex;
     sizeY = sizey;
     moving = false;
@@ -42,7 +41,26 @@ void ED_Unit::mouse_leave_action(){
     //最终移动执行
     aim_Alpha = sleep_alpha;
 }
-
+void ED_Unit::setwinblur(){
+    // setWindowFlags( Qt::Window | Qt::FramelessWindowHint);
+    // setWindowState(Qt::WindowFullScreen);
+    // setAttribute(Qt::WA_TranslucentBackground);//背景半透明属性设置   //窗口透明
+    // HWND hWnd = HWND(this->winId());
+    // HMODULE hUser = GetModuleHandle(L"user32.dll");
+    // if (hUser)
+    // {
+    //     pfnSetWindowCompositionAttribute setWindowCompositionAttribute = (pfnSetWindowCompositionAttribute)GetProcAddress(hUser, "SetWindowCompositionAttribute");
+    //     if (setWindowCompositionAttribute)
+    //     {
+    //         ACCENT_POLICY accent = { ACCENT_ENABLE_BLURBEHIND, 0xf2f230, 0, 0 };
+    //         WINDOWCOMPOSITIONATTRIBDATA data;
+    //         data.Attrib = WCA_ACCENT_POLICY;
+    //         data.pvData = &accent;
+    //         data.cbData = sizeof(accent);
+    //         setWindowCompositionAttribute(hWnd, &data);
+    //     }
+    // }
+}
 
 void ED_Unit::mouse_move_action(){
     //最终移动执行
@@ -157,9 +175,23 @@ void ED_Unit::getaDoubleClick( ){
 
 void ED_Unit::update_after_resize(){
 }
+
+void ED_Unit::setSimpleMode(bool val){
+    simpleMode = val;
+    if(val) changeToSimpleMode();
+    else changeToComplexMode();
+}
+
+void ED_Unit::changeSimpleMode(){
+    setSimpleMode(!simpleMode);
+}
+
+void ED_Unit::changeToSimpleMode(){}
+void ED_Unit::changeToComplexMode(){}
+
 void ED_Unit::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-        // 创建QLabel并设置背景图片
-    paintside(this,QColor("green"));
+    paintSide(this,QColor("green"));
+    paintRect(this,QColor(100,0,0,20));
 }

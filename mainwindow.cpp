@@ -1,7 +1,9 @@
 #include "mainwindow.h"
+#include "ed_bgshower.h"
 #include "ed_container.h"
 #include "ed_block.h"
 #include "ed_dock.h"
+#include "ed_editbox.h"
 #include "ed_hidetextblock.h"
 #include "qgraphicseffect.h"
 #include "ui_mainwindow.h"
@@ -13,38 +15,108 @@
 #include<qtimer.h>
 ED_Unit* pMovingUnit = nullptr;
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), weatherwidget(nullptr),ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
 
-    Init(this);
+void MainWindow::setupActions(){
+    // 只要将某个QAction添加给对应的窗口, 这个action就是这个窗口右键菜单中的一个菜单项了
+    // 在窗口中点击鼠标右键, 就可以显示这个菜单
+    setContextMenuPolicy(Qt::ActionsContextMenu);
+    // 给当前窗口添加QAction对象
+    QAction* act1  = new QAction("改变可见");
+    this->addAction(act1);
+    connect(act1, &QAction::triggered, this, [=]()
+    {
+        edlayout->setVisible(!edlayout->Visible());
+    });
 
+
+    QAction* act2  = new QAction("改变复杂度");
+    this->addAction(act2);
+
+    connect(act2, &QAction::triggered, this, [=]()
+    {
+        for(ED_Unit* content:*(edlayout->contents)){
+            content->changeSimpleMode();
+        }
+    });
+
+    QAction* act3  = new QAction("切换背景");
+    this->addAction(act3);
+    connect(act3, &QAction::triggered, this, [=]()
+    {
+        setTransparent(!transparent);
+    });
+
+
+    QAction* act4  = new QAction("exit");
+    this->addAction(act4);
+    connect(act4, &QAction::triggered, this, [=]()
+            {
+                QCoreApplication::quit() ;
+            });
+
+    QAction* act5  = new QAction("raisebg");
+    this->addAction(act5);
+    connect(act5, &QAction::triggered, this, [=]()
+            {
+                // bgshower->raise();
+            });
+
+    QAction* act6  = new QAction("insert bg");
+    this->addAction(act6);
+    connect(act6, &QAction::triggered, this, [=]()
+            {
+                // inplace2(bgshower);
+
+            });
+
+
+    QAction* act7  = new QAction("lowerbg");
+    this->addAction(act7);
+    connect(act7, &QAction::triggered, this, [=]()
+            {
+                qDebug()<<"main windowr Pos:"<<pos()<<" geometry :"<<geometry()<<"rect: "<<rect();
+                // bgshower->lower();
+            });
+
+    QAction* act8  = new QAction("blur");
+    this->addAction(act8);
+    connect(act8, &QAction::triggered, this, [=]()
+    {
+
+        // bgshower->setwinblur();
+        // edlayout->setwinblur();
+    });
+
+
+}
+void MainWindow::setupUnits(){
+    // setMouseTracking(true);
     //设置背景
-    bgshower = new ed_bgShower();
-    bgshower->setFixedSize(size()/2);
+    bgshower = new ed_bgShower(this);
+    bgshower->setFixedSize(size());
     bgshower->setVisible(true);
-    bgshower->raise();
     bgshower->move(0,0);
-    bgshower->setWindowTitle("BG_Shower");
-    inplace2(bgshower);
+    // inplace(bgshower);
+    bgshower->lower();
 
-    setMouseTracking(true);
 
     // 初始化选择背景按钮
     selectBackgroundButton = new QPushButton("选择背景", this);
     connect(selectBackgroundButton, &QPushButton::clicked, this, &MainWindow::onSelectBackground);
 
-    edlayout = new ED_Layout(this,20,15,5,10,10);
+    edlayout = new ED_Layout(this,20,12,5,10,10);
     // qDebug()<<edlayout->W_Container()<<edlayout->H_Container();
 
     //获取图标
     QList<FileInfo> iconns = scanalldesktopfiles();
 
+    auto eb = new ED_EditBox(this);
+    InitAUnit(eb);
+
     auto bc = new ED_Container(this,4,4,3,3,5);
     InitAUnit(bc);
 
-    auto dock = new ED_Dock(this,6,2,4);
+    auto dock = new ED_Dock(this,6,1,4);
     InitAUnit(dock);
 
     weatherwidget = new WEATHERWIDGET(this,2,1);
@@ -58,25 +130,19 @@ MainWindow::MainWindow(QWidget *parent)
         int sizex=1;
         int sizey=1;
 
-        // if(i%2==0){
-        //     sizex = 2;
-        // }
-        // if(i%3==0){
-        //     sizey=2;
-        // }
         ED_Unit* tem = nullptr;
         if(!nametem.contains(iconns[i].name))
-        switch (iconns[i].type) {
-        case FileInfo::HORI:
-            tem = new ED_HideTextBlock(this,iconns[i].icon.pixmap(256),iconns[i].name,iconns[i].filePath,1,2);
-            break;
-        case FileInfo::VERT:
-            tem = new ED_HideTextBlock(this,iconns[i].icon.pixmap(256),iconns[i].name,iconns[i].filePath,2,1);
-            break;
-        default:
-            tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256),iconns[i].name,iconns[i].filePath,sizex,sizey);
-            break;
-        }
+            switch (iconns[i].type) {
+            case FileInfo::HORI:
+                tem = new ED_HideTextBlock(this,iconns[i].icon.pixmap(512),iconns[i].name,iconns[i].filePath,1,2);
+                break;
+            case FileInfo::VERT:
+                tem = new ED_HideTextBlock(this,iconns[i].icon.pixmap(512),iconns[i].name,iconns[i].filePath,2,1);
+                break;
+            default:
+                tem = new ED_BLOCK(this,iconns[i].icon.pixmap(256),iconns[i].name,iconns[i].filePath,sizex,sizey);
+                break;
+            }
         nametem.append(iconns[i].name);
 
         if(tem){
@@ -86,7 +152,7 @@ MainWindow::MainWindow(QWidget *parent)
             else{
                 InitAUnit(tem);
             }
-                    tem->raise();
+            tem->raise();
         }
 
 
@@ -100,76 +166,35 @@ MainWindow::MainWindow(QWidget *parent)
     pmw = this;
     bg = QPixmap(":/images/background");
 
-
-
-    // 只要将某个QAction添加给对应的窗口, 这个action就是这个窗口右键菜单中的一个菜单项了
-    // 在窗口中点击鼠标右键, 就可以显示这个菜单
-    setContextMenuPolicy(Qt::ActionsContextMenu);
-    // 给当前窗口添加QAction对象
-    QAction* act1  = new QAction("改变可见");
-    this->addAction(act1);
-    connect(act1, &QAction::triggered, this, [=]()
-    {
-        edlayout->setVisible(!edlayout->Visible());
-    });
     setVisible(true);
     edlayout->Update_Region();
     update();
-    bgshower->update();
+    // bgshower->update();
+}
 
-    QAction* act2  = new QAction("Update_Region");
-    this->addAction(act2);
-    connect(act2, &QAction::triggered, this, [=]()
-    {
-        edlayout->Update_Region();
-    });
-    QAction* act3  = new QAction("update");
-    this->addAction(act3);
-    connect(act3, &QAction::triggered, this, [=]()
-    {
-        repaint();
-        bgshower->update();
-        int count=0;
-        for(ED_Unit* content:*(edlayout->contents)){
-            if(content->type == ED_Unit::Block){
-                ED_BLOCK* p = (ED_BLOCK*)content;
-                qDebug()<<++count<<" "<<p->name;
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow),weatherwidget(nullptr)
+{
+    ui->setupUi(this);
 
-            }
-        }
-    });
-    QAction* act4  = new QAction("exit");
-    this->addAction(act4);
-    connect(act4, &QAction::triggered, this, [=]()
-    {
-         QCoreApplication::quit() ;
+    Init(this);
 
-    });
-    QAction* act5  = new QAction("print main window");
-    this->addAction(act5);
-    connect(act5, &QAction::triggered, this, [=]()
-    {
-        qDebug()<<"main windowr Pos:"<<pos()<<" geometry :"<<geometry()<<"rect: "<<rect();
+    setupUnits();
 
-    });
-    QAction* act6  = new QAction("insert bg");
-    this->addAction(act6);
-    connect(act6, &QAction::triggered, this, [=]()
-    {
-        inplace(bgshower);
-        // qDebug()<<"shower windowr Pos:"<<bgshower->pos()<<" geometry :"<<bgshower->geometry()<<"rect: "<<bgshower->rect();
-    });
+    setupActions();
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updatePer01second())); // slotCountMessage是我们需要执行的响应函数
-    timer->start(100); // 每隔1s
+    timer->start(100); // 每隔0.1s
+
 }
+
+
 void MainWindow::InitAUnit(ED_Unit* aim){
     // connect(aim, &ED_Unit::sendSelf, this, &MainWindow::getObject);
     edlayout->InitAUnit(aim);
-    aim->ind = iconNum;
-    iconNum++;
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -197,13 +222,20 @@ void MainWindow::setIconHight(int val){
 
 void MainWindow::updatePer01second(){
     repaint();
+    // bgshower->repaint();
 }
 
 void MainWindow::paintEvent(QPaintEvent * ev)
 {
-    // QPainter painter(this);
-    // painter.drawPixmap(rect(),bg);
-    bgshower->repaint();
+    QPainter painter(this);
+    if(!transparent){
+        painter.drawPixmap(rect(),bg);
+        // bgshower->repaint();
+    }
+    // else{
+    //     painter.eraseRect(rect());
+    //     painter.end();
+    // }
 }
 
 void MainWindow::on_horizontalSlider_2_valueChanged(int value)
@@ -249,6 +281,12 @@ void MainWindow::onSelectBackground() {
             // }
         }
     }
+}
+
+void  MainWindow::setTransparent(bool val){
+    transparent = val;
+    bgshower->setVisible(!val);
+    // qDebug()<<transparent<<val;
 }
 
 

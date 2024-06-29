@@ -1,7 +1,5 @@
 #include "ed_container.h"
 #include "qdebug.h"
-#include "qgraphicseffect.h"
-#include "qpainter.h"
 #include"SysFunctions.h"
 
 ED_Container::ED_Container(QWidget *parent, int sizex, int sizey,int row,int cal,int space,int space_x,int space_y)
@@ -20,7 +18,7 @@ ED_Container::ED_Container(QWidget *parent, int sizex, int sizey,int row,int cal
 }
 void ED_Container::paintEvent(QPaintEvent *event){
     paintRect(this,QColor(255,255,255,aim_Alpha));
-
+    Q_UNUSED(event);
 }
 void ED_Container::double_click_action(){
     ED_Unit::double_click_action();
@@ -41,4 +39,14 @@ void ED_Container::InplaceAUnit(ED_Unit* aim){
 }
 bool ED_Container::OKforput(ED_Unit* aim){
     return edlayout->OKforput(aim);
+}
+void ED_Container::changeToSimpleMode(){
+    for(ED_Unit* content:*(edlayout->contents)){
+        content->setSimpleMode(true);
+    }
+}
+void ED_Container::changeToComplexMode(){
+    for(ED_Unit* content:*(edlayout->contents)){
+        content->setSimpleMode(false);
+    }
 }

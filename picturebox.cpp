@@ -1,4 +1,5 @@
 #include "picturebox.h"
+#include "SysFunctions.h"
 #include <QPainter>
 #include <QDebug>
 static const int IMAGE_WIDTH = 300;
@@ -30,6 +31,7 @@ void PictureBox::setMode(PB_MODE mode)
     }
     else
     {
+
         setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
         setMinimumSize(0, 0);
     }
@@ -81,6 +83,7 @@ void PictureBox::paintEvent(QPaintEvent * event)
     case FIXED_SIZE:
     case AUTO_SIZE:
         painter.scale(m_scale, m_scale);
+
         painter.drawPixmap(0, 0, m_pixmap);
         break;
 
@@ -104,26 +107,33 @@ void PictureBox::paintEvent(QPaintEvent * event)
         break;
 
     case AUTO_ZOOM:
+
         window_width = width();
         window_height = height();
         image_width = m_pixmap.width();
         image_height = m_pixmap.height();
         r1 = window_width / image_width;
         r2 = window_height / image_height;
-        r = qMin(r1, r2);
-        offset_x = (window_width - r * image_width) / 2;
-        offset_y = (window_height - r * image_height) / 2;
-        painter.translate(offset_x, offset_y);
+        r = qMax(r1, r2);
+        m_logopix = m_pixmap.scaled(QSize(image_width * r, image_height *r)
+                                    , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-        m_logopix = m_pixmap.scaled(QSize(width() * r, height() *r)
-                                     , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        painter.scale(r, r);
-        painter.drawPixmap(0, 0, m_logopix);
+
+        image_width = m_logopix.width();
+        image_height = m_logopix.height();
+        int dis_x = (window_width-image_width)/2;
+        int dis_y = (window_height-image_height)/2;
+
+        // qDebug()<<window_width<<window_height<<image_width<<image_height<<r<<dis_x<<dis_y<<parentWidget()->size();
+
+        painter.drawPixmap(dis_x, dis_y, m_logopix);
         break;
     }
     // QPainter p(this);
     // p.setPen(QColor("green")); //设置画笔记颜色
     // p.drawRect(0, 0, width() -1, height() -1); //绘制边框
+
+    paintSide(this,QColor("red"));
 }
 PictureBox::~PictureBox()
 {

@@ -3,7 +3,6 @@
 
 #include "ed_unit.h"
 #include "picturebox.h"
-#include "qboxlayout.h"
 #include "qlabel.h"
 class ED_HideTextBlock:public ED_Unit
 {

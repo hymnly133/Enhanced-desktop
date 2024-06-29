@@ -107,7 +107,7 @@ public:
 
     //将一个ED_Unit按序号最下且可放置的位置放置
     void default_Put_ED_Unit(ED_Unit* aim);
-
+    void setwinblur();
     void setVisible(bool val);
     bool Visible();
 

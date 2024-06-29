@@ -10,7 +10,7 @@ int ED_HideTextBlock::default_size = 48;
 ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QPixmap image,QString _name,QString _cmd,int sizex,int sizey)
     :ED_Unit(parent,sizex,sizey)
 {
-    type =Block;
+    type =Unit;
     cmd = _cmd;
     cmd = QString("file:///")+cmd;
     name = _name;
@@ -26,24 +26,25 @@ ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QPixmap image,QString _name,Q
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
     double defaultRatio = (double)default_size/image.size().width();
     qDebug()<<defaultRatio;
-    gv->setImage(image,1.0,defaultRatio);
+    gv->setImage(image,1.0,1);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
+    gv->setMode(PictureBox::AUTO_ZOOM);
 
     // gv->QWidget::setAlignment(Qt::AlignVCenter);
 
     // 显示名字
-    lb->setAlignment(Qt::AlignHCenter);
-    lb->setFont(QFont("MiSans",10,40));
-    lb->setFixedWidth(width()-5);
+    // lb->setAlignment(Qt::AlignHCenter);
+    // lb->setFont(QFont("MiSans",10,40));
+    // lb->setFixedWidth(width()-5);
 
-    lb->setText(elidedLineText(lb,3,name));
-    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
-    effect->setColor(QColor(100,100,100,100));
-    effect->setBlurRadius(2);   //模糊半径
-    effect->setOffset(10);      //偏移量
-    lb->setGraphicsEffect(effect);
+    // lb->setText(elidedLineText(lb,3,name));
+    // QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+    // effect->setColor(QColor(100,100,100,100));
+    // effect->setBlurRadius(2);   //模糊半径
+    // effect->setOffset(10);      //偏移量
+    // lb->setGraphicsEffect(effect);
 
-    gv->setGraphicsEffect(effect);
+    // gv->setGraphicsEffect(effect);
 }
 void ED_HideTextBlock::single_click_action(){
     //最终单击执行
@@ -71,12 +72,13 @@ void ED_HideTextBlock::getaDoubleClick( ){
 void ED_HideTextBlock::update_after_resize(){
     lb->setFixedWidth(width()-5);
     lb->setText(elidedLineText(lb,3,name));
+    gv->setFixedSize(rect().size());
 }
 
 void ED_HideTextBlock::paintEvent(QPaintEvent *event)
 {
-    QPainter p(this);
-    p.setPen(QColor("green")); //设置画笔记颜色
-    p.drawRect(0, 0, width() -1, height() -1); //绘制边框
+    // QPainter p(this);
+    // p.setPen(QColor("green")); //设置画笔记颜色
+    // p.drawRect(0, 0, width() -1, height() -1); //绘制边框
 }
 

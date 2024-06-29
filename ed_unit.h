@@ -18,7 +18,8 @@ public:
     int sizeY;
     int ind;
     int aim_Alpha =  sleep_alpha;
-    bool alwaysShow;
+    bool alwaysShow = false;
+    bool simpleMode = false;
     int LayoutBlockX = -1;
     int LayoutBlockY = -1;
     explicit ED_Unit(QWidget *parent,int sizex,int sizey);
@@ -33,6 +34,8 @@ public:
     virtual void mouse_enter_action();
     virtual void mouse_leave_action();
     virtual void setBlockSize(int w,int h);
+    virtual void changeToSimpleMode();
+    virtual void changeToComplexMode();
 
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
@@ -41,6 +44,9 @@ public:
     void enterEvent(QEvent *) override;                      //进入QWidget瞬间事件
     void leaveEvent(QEvent *) override;                      //离开QWidget瞬间事件
     void paintEvent(QPaintEvent *event) override;
+    void setwinblur();
+    void setSimpleMode(bool);
+    void changeSimpleMode();
 
 public slots:
     void getaClick();

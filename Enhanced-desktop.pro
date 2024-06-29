@@ -19,6 +19,7 @@ SOURCES += \
     ed_block.cpp \
     ed_container.cpp \
     ed_dock.cpp \
+    ed_editbox.cpp \
     ed_hidetextblock.cpp \
     ed_layout.cpp \
     ed_unit.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     ed_block.h \
     ed_container.h \
     ed_dock.h \
+    ed_editbox.h \
     ed_hidetextblock.h \
     ed_layout.h \
     ed_unit.h \
@@ -72,6 +74,7 @@ RESOURCES += \
     res.qrc
 
 DISTFILES += \
+    AcrylicMaterial/CMakeLists.txt \
     style.json
 
 

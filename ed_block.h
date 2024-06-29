@@ -24,6 +24,8 @@ public:
     void update_after_resize() override;
     void mouse_enter_action() override;
     void mouse_leave_action()override;
+    virtual void changeToSimpleMode();
+    virtual void changeToComplexMode();
 protected:
     void double_click_action() override;
     void paintEvent(QPaintEvent *event) override;
