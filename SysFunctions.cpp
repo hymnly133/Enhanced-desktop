@@ -24,14 +24,18 @@ QRect AbsoluteRect(QWidget* aim){
 }
 
 void paintRect(QWidget* aim,QColor color){
-    if(ShowRect){
+    bool another = true;
+    if(aim->inherits("ED_Unit")) another = ((ED_Unit*)aim)->showRect;
+    if(ShowRect&another){
         QPainter paint(aim);
         paint.fillRect(aim->rect(),color);
     }
 }
 
 void paintLight(QWidget* aim,QColor color){
-    if(ShowLight){
+    bool another = true;
+    if(aim->inherits("ED_Unit")) another = ((ED_Unit*)aim)->showLight;
+    if(ShowLight&another){
         color.setAlpha(light_alpha_start);
         auto pos =aim->mapFromGlobal(aim->cursor().pos());
         QRadialGradient radialGradient(aim->width()/2 , aim->height()/2, qMax(aim->width(),aim->height()),pos.x() ,pos.y());
@@ -47,9 +51,11 @@ void paintLight(QWidget* aim,QColor color){
 }
 
 void paintSide(QWidget* aim,QColor color){
-    if(ShowSide){
+    bool another = true;
+    if(aim->inherits("ED_Unit")) another = ((ED_Unit*)aim)->showSide;
+    if(ShowSide&another){
         QPainter p(aim);
-        p.setPen(QColor("green")); //设置画笔记颜色
+        p.setPen(color); //设置画笔记颜色
         p.drawRect(0, 0, aim->width() -1, aim->height() -1); //绘制边框
     }
 }

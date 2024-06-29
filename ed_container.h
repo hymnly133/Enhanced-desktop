@@ -17,6 +17,7 @@ public:
     virtual bool OKforput(ED_Unit* aim);
     virtual void changeToSimpleMode();
     virtual void changeToComplexMode();
+    virtual void update_after_resize();
 protected:
     void double_click_action();
     void single_click_action();

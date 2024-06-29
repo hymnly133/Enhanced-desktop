@@ -33,7 +33,6 @@ class ED_Layout
             return QPoint(CenterX(),CenterY());
         };
         little_Block(ED_Layout* playout,int indx,int indy):indX(indx),indY(indy),playout(playout){
-
         }
     };
 public:
@@ -55,6 +54,7 @@ public:
     int space_x;
     int space_y;
     bool visibal;
+    bool isMain = false;
     QRegion region;
     QWidget* pContainer;
     QVector<ED_Unit*>* contents = new QVector<ED_Unit*>;
@@ -115,6 +115,7 @@ public:
     bool OKforput(ED_Unit*aim);
 
     void Update_Region();
+    void Update_Positon();
 };
 
 #endif // ED_LAYOUT_H

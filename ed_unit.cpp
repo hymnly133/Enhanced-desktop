@@ -1,10 +1,12 @@
 #include "ed_unit.h"
 #include "mainwindow.h"
+#include "qaction.h"
 #include "qdebug.h"
 #include "qevent.h"
 #include"SysFunctions.h"
 #include"ed_layout.h"
 #include"ed_container.h"
+#include "qgraphicseffect.h"
 #include "style.h"
 
 ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
@@ -12,6 +14,63 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
     sizeX = sizex;
     sizeY = sizey;
     moving = false;
+    QGraphicsDropShadowEffect* effect1 = new QGraphicsDropShadowEffect;
+    effect1->setColor(QColor(255,255,255,200));
+    effect1->setBlurRadius(20);   //模糊半径
+    effect1->setOffset(0,0);      //偏移量
+    setGraphicsEffect(effect1);
+
+
+    setContextMenuPolicy(Qt::ActionsContextMenu);
+    QAction* act1  = new QAction("加宽");
+    this->addAction(act1);
+    connect(act1, &QAction::triggered, this, [=]()
+            {
+                setBlockSize(sizeX+1,sizeY);
+            });
+
+    QAction* act3  = new QAction("减宽");
+    this->addAction(act3);
+    connect(act3, &QAction::triggered, this, [=]()
+            {
+                if(sizeX>=2)
+                    setBlockSize(sizeX-1,sizeY);
+            });
+
+    QAction* act2  = new QAction("加高");
+    this->addAction(act2);
+    connect(act2, &QAction::triggered, this, [=]()
+            {
+                setBlockSize(sizeX,sizeY+1);
+            });
+
+
+
+    QAction* act4  = new QAction("减高");
+    this->addAction(act4);
+    connect(act4, &QAction::triggered, this, [=]()
+            {
+                if(sizeY>=2)
+                    setBlockSize(sizeX,sizeY-1);
+            });
+
+
+
+    QAction* act5  = new QAction("切换复杂度");
+    this->addAction(act5);
+    connect(act5, &QAction::triggered, this, [=]()
+            {
+                changeSimpleMode();
+            });
+
+
+    QAction* act6  = new QAction("删除");
+    this->addAction(act6);
+    connect(act6, &QAction::triggered, this, [=]()
+            {
+                removeFromLayout();
+                deleteLater();
+            });
 }
 
 void ED_Unit::single_click_action(){

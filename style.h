@@ -13,4 +13,6 @@ extern bool ShowRect;
 extern bool ShowSide;
 extern bool ShowLight;
 
+extern int icon_shadow_alpha;
+extern int icon_shadow_blur_radius;
 #endif // STYLE_H

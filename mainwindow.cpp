@@ -13,6 +13,8 @@
 #include <QWidget>
 #include <QFileDialog>
 #include<qtimer.h>
+#include"QScreen"
+#include"QThread"
 ED_Unit* pMovingUnit = nullptr;
 
 
@@ -54,12 +56,18 @@ void MainWindow::setupActions(){
                 QCoreApplication::quit() ;
             });
 
-    QAction* act5  = new QAction("raisebg");
+    QAction* act5  = new QAction("获取背景");
     this->addAction(act5);
     connect(act5, &QAction::triggered, this, [=]()
-            {
-                // bgshower->raise();
-            });
+    {
+        setVisible(false);
+        QThread::msleep(200);
+        QScreen *screen = QGuiApplication::primaryScreen();
+        bgshower->captrued = screen->grabWindow(0);
+        bgshower->show = true;
+        bgshower->setVisible(true);
+        setVisible(true);
+    });
 
     QAction* act6  = new QAction("insert bg");
     this->addAction(act6);
@@ -105,6 +113,7 @@ void MainWindow::setupUnits(){
     connect(selectBackgroundButton, &QPushButton::clicked, this, &MainWindow::onSelectBackground);
 
     edlayout = new ED_Layout(this,20,12,5,10,10);
+    edlayout->isMain = true;
     // qDebug()<<edlayout->W_Container()<<edlayout->H_Container();
 
     //获取图标
@@ -157,10 +166,7 @@ void MainWindow::setupUnits(){
 
 
     }
-    auto scene = new QGraphicsScene(this);
-    scene->addPixmap(iconns[0].icon.pixmap(512));
 
-    ui->graphicsView->setScene(scene);
     ui->pushButton->setIcon(iconns[0].icon);
     //初始化一些
     pmw = this;
@@ -222,13 +228,15 @@ void MainWindow::setIconHight(int val){
 
 void MainWindow::updatePer01second(){
     repaint();
+
     // bgshower->repaint();
 }
 
 void MainWindow::paintEvent(QPaintEvent * ev)
 {
-    QPainter painter(this);
+
     if(!transparent){
+        QPainter painter(this);
         painter.drawPixmap(rect(),bg);
         // bgshower->repaint();
     }
@@ -268,9 +276,6 @@ void MainWindow::onSelectBackground() {
                 // this->setPalette(palette);
                 qDebug() << "Image set as background";
             }
-
-            // videoPlayer->stop();
-            // videoPlayer->hide();
         } else {
             // if (videoPlayer->loadFile(fileName)) {
             //     videoPlayer->play();
@@ -285,7 +290,9 @@ void MainWindow::onSelectBackground() {
 
 void  MainWindow::setTransparent(bool val){
     transparent = val;
+    bgshower->show = !val;
     bgshower->setVisible(!val);
+    bgshower->captrued = bg;
     // qDebug()<<transparent<<val;
 }
 

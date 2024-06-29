@@ -13,6 +13,9 @@ public:
     ED_TYPE type = Unit;
     ED_Layout* edlayout;
     bool moving;
+    bool showRect = true;
+    bool showLight = true;
+    bool showSide = true;
     QPoint relativeP;
     int sizeX;
     int sizeY;

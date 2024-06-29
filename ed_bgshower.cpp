@@ -10,7 +10,7 @@ ed_bgShower::ed_bgShower(QWidget *parent)
     QGraphicsBlurEffect* ef = new QGraphicsBlurEffect(this);
     ef->setBlurHints(QGraphicsBlurEffect::PerformanceHint);
     ef->setEnabled(true);
-    ef->setBlurRadius(20);
+    ef->setBlurRadius(30);
     setGraphicsEffect(ef);
 
     setWindowTitle("BG_Shower");
@@ -42,18 +42,11 @@ void ed_bgShower::setwinblur(){
 
 void ed_bgShower::paintEvent(QPaintEvent * ev){
     // qDebug()<<"bg_pre_painted"<<pmw->transparent;
-    if(!pmw->transparent){
+    if(show){
         auto tem = updateMask();
         setMask(tem);
-        QPainter painter;
-        painter.begin(this);
-
-        // painter.setBrush(QBrush(QColor(10,10,10,40)));
-        // painter.drawRect(rect());
-
-        // qDebug()<<"bg_painted";
-        painter.drawPixmap(rect(),pmw->bg);
-        painter.end();
+        QPainter painter(this);
+        painter.drawPixmap(rect(),captrued);
     }
 }
 

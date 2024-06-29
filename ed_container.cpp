@@ -50,3 +50,7 @@ void ED_Container::changeToComplexMode(){
         content->setSimpleMode(false);
     }
 }
+
+void ED_Container::update_after_resize(){
+    edlayout->Update_Positon();
+}

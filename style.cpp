@@ -10,3 +10,6 @@ int light_alpha_end = 0;
 bool ShowRect = true;
 bool ShowSide = false;
 bool ShowLight = true;
+
+int icon_shadow_alpha = 255;
+int icon_shadow_blur_radius = 50;

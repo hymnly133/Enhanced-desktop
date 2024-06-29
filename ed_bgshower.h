@@ -11,6 +11,8 @@ class ed_bgShower : public QWidget
 public:
     explicit ed_bgShower(QWidget *parent = nullptr);
     QRegion updateMask();
+    QPixmap captrued;
+    bool show;
     void setwinblur();
     bool useWindowsEffect;
 public:
