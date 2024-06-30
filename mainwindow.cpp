@@ -74,14 +74,14 @@ void MainWindow::setupActions(){
     this->addAction(act6);
     connect(act6,&QAction::triggered, this, [=]()
     {
-        auto bc = new ED_Container(this,2,2,2,2,5);
+        auto bc = new ED_Container(this,2,2,2,15,15);
         InitAUnit(bc);
     });
     QAction* act7 =new QAction("新建中型格子");
     this->addAction(act7);
     connect(act7,&QAction::triggered, this, [=]()
             {
-                auto bc = new ED_Container(this,3,3,3,3,5);
+                auto bc = new ED_Container(this,3,3,3,20,20);
                 InitAUnit(bc);
             });
 
@@ -89,7 +89,7 @@ void MainWindow::setupActions(){
     this->addAction(act8);
     connect(act8,&QAction::triggered, this, [=]()
             {
-                auto bc = new ED_Container(this,4,4,4,4,5);
+                auto bc = new ED_Container(this,4,4,4,30,30);
                 InitAUnit(bc);
             });
 
@@ -134,17 +134,7 @@ void MainWindow::setupActions(){
 void MainWindow::setupUnits(){
     // setMouseTracking(true);
     //设置背景
-
-    bgshower = new ED_BGShower(this);
-    bgshower->setFixedSize(size());
-    bgshower->setVisible(enable_background_blur);
-    bgshower->move(0,0);
-    // inplace(bgshower);
-    bgshower->lower();
-
-    // 初始化选择背景按钮
-    //selectBackgroundButton = new QPushButton("选择背景", this);
-    //connect(selectBackgroundButton, &QPushButton::clicked, this, &MainWindow::onSelectBackground);
+    setBlur(enable_background_blur);
 
     edlayout = new ED_Layout(this,20,12,5,10,10);
     edlayout->isMain = true;
@@ -290,3 +280,21 @@ void  MainWindow::setTransparent(bool val){
 }
 
 
+void  MainWindow::setBlur(bool val){
+    enable_background_blur = val;
+    if(bgshower){
+        bgshower->setEnabled(val);
+        bgshower->setVisible(val);
+    }
+    else{
+        if(val){
+            bgshower = new ED_BGShower(this);
+            bgshower->setFixedSize(size());
+            bgshower->setVisible(enable_background_blur);
+            bgshower->move(0,0);
+            bgshower->setVisible(true);
+        }
+    }
+
+    // qDebug()<<transparent<<val;
+}

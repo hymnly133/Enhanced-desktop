@@ -23,7 +23,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     Ui::MainWindow *ui;
-    ED_BGShower* bgshower;
+    ED_BGShower* bgshower = nullptr;
     bool moving = false;
 
     ED_Layout* edlayout;
@@ -41,6 +41,7 @@ private:
     void setupActions();
     void setupUnits();
     void setTransparent(bool val);
+    void setBlur(bool val);
 
 public slots:;
     void setScale(double Scale);
