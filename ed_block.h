@@ -33,8 +33,6 @@ protected:
     void double_click_action() override;
     void paintEvent(QPaintEvent *event) override;
     FilePreviewWidget *previewWidget;
-    QMediaPlayer *mediaPlayer; // 新增：用于视频播放
-    QVideoWidget *videoWidget; // 新增：用于显示视频
     QVBoxLayout *layout; // 新增 QVBoxLayout 成员
 };
 

@@ -29,7 +29,6 @@ SOURCES += \
     mousehook.cpp \
     picturebox.cpp \
     style.cpp \
-    videopreview.cpp \
     weather.cpp
 
 HEADERS += \
@@ -48,8 +47,6 @@ HEADERS += \
     mousehook.h \
     picturebox.h \
     style.h \
-    videopreview.h \
-    videopreview.h \
     weather.h
 
 FORMS += \

@@ -207,15 +207,6 @@ void ED_Unit::setBlockSize(int w,int h){
         sizeX = w;
         sizeY = h;
     }
-
-}
-
-void ED_Unit::getaClick( ){
-    single_click_action();
-}
-
-void ED_Unit::getaDoubleClick( ){
-    double_click_action();
 }
 
 void ED_Unit::update_after_resize(){
