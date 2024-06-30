@@ -50,7 +50,7 @@ void MainWindow::setupActions(){
     });
 
 
-    QAction* act4  = new QAction("exit");
+    QAction* act4  = new QAction("退出程序");
     this->addAction(act4);
     connect(act4, &QAction::triggered, this, [=]()
             {
@@ -70,7 +70,40 @@ void MainWindow::setupActions(){
         setVisible(true);
     });
 
-    QAction* act6  = new QAction("insert bg");
+    QAction* act6 =new QAction("新建小型格子");
+    this->addAction(act6);
+    connect(act6,&QAction::triggered, this, [=]()
+    {
+        auto bc = new ED_Container(this,2,2,2,2,5);
+        InitAUnit(bc);
+    });
+    QAction* act7 =new QAction("新建中型格子");
+    this->addAction(act7);
+    connect(act7,&QAction::triggered, this, [=]()
+            {
+                auto bc = new ED_Container(this,3,3,3,3,5);
+                InitAUnit(bc);
+            });
+
+    QAction* act8 =new QAction("新建小格子");
+    this->addAction(act8);
+    connect(act8,&QAction::triggered, this, [=]()
+            {
+                auto bc = new ED_Container(this,4,4,4,4,5);
+                InitAUnit(bc);
+            });
+
+
+
+    QAction* act9  = new QAction("新建dock栏");
+    this->addAction(act9);
+    connect(act9, &QAction::triggered, this, [=]()
+            {
+                auto dock = new ED_Dock(this,6,1,4);
+                InitAUnit(dock);
+            });
+
+    /*QAction* act6  = new QAction("insert bg");
     this->addAction(act6);
     connect(act6, &QAction::triggered, this, [=]()
             {
@@ -94,7 +127,7 @@ void MainWindow::setupActions(){
 
         // bgshower->setwinblur();
         // edlayout->setwinblur();
-    });
+    });*/
 
 
 }
@@ -131,6 +164,8 @@ void MainWindow::setupUnits(){
 
     weatherwidget = new Weather(this,4,2);
     InitAUnit(weatherwidget);
+    htkt = new Hitokoto(this,2,1);
+    InitAUnit(htkt);
 
     auto bc_ = new ED_Container(this,3,3,2,2,4);
     InitAUnit(bc_);

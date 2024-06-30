@@ -41,9 +41,19 @@ QPoint ED_Layout::BlockInd2CenterPoint(int x,int y){
 
 //从Block序号获取是否占用
 bool& ED_Layout::Occupied(QPoint ind){
+    if(ind.x()<0||ind.y()<0||ind.x()>=row||ind.y()>=col)
+    {
+        bool x=false;
+        return x;
+    }
     return blocks[ind.x()][ind.y()]->occupied;
 }
 bool& ED_Layout::Occupied(int x,int y){
+    if(x<0||y<0||x>=row||y>=col)
+    {
+        bool x=false;
+        return x;
+    }
     return blocks[x][y]->occupied;
 }
 
