@@ -57,7 +57,7 @@ void MainWindow::setupActions(){
                 QCoreApplication::quit() ;
             });
 
-    /*QAction* act5  = new QAction("获取背景");
+    QAction* act5  = new QAction("获取背景");
     this->addAction(act5);
     connect(act5, &QAction::triggered, this, [=]()
     {
@@ -65,10 +65,9 @@ void MainWindow::setupActions(){
         QThread::msleep(200);
         QScreen *screen = QGuiApplication::primaryScreen();
         bgshower->captrued = screen->grabWindow(0);
-        bgshower->show = true;
-        bgshower->setVisible(true);
+        bgshower->cap = true;
         setVisible(true);
-    })*/;
+    });
 
     QAction* act6 =new QAction("新建小型格子");
     this->addAction(act6);
@@ -272,7 +271,6 @@ void MainWindow::onSelectBackground() {
 void  MainWindow::setTransparent(bool val){
     enable_background_transparent = val;
     if(enable_background_blur){
-        bgshower->show = !val;
         bgshower->setVisible(!val);
         bgshower->captrued = bg;
     }
@@ -285,6 +283,7 @@ void  MainWindow::setBlur(bool val){
     if(bgshower){
         bgshower->setEnabled(val);
         bgshower->setVisible(val);
+        bgshower->lower();
     }
     else{
         if(val){
@@ -293,6 +292,7 @@ void  MainWindow::setBlur(bool val){
             bgshower->setVisible(enable_background_blur);
             bgshower->move(0,0);
             bgshower->setVisible(true);
+            bgshower->lower();
         }
     }
 

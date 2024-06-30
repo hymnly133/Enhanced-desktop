@@ -36,12 +36,12 @@ public:
     void mouseDoubleClickEvent(QMouseEvent* ev) override;
     QPushButton *selectBackgroundButton;  // 新增：选择背景按钮
     // DSVideoPlayer *videoPlayer;  // 新增：用于视频播放
+    void setTransparent(bool val);
+    void setBlur(bool val);
 
 private:
     void setupActions();
     void setupUnits();
-    void setTransparent(bool val);
-    void setBlur(bool val);
 
 public slots:;
     void setScale(double Scale);

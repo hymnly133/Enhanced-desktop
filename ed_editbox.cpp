@@ -18,7 +18,7 @@ ED_EditBox::ED_EditBox(QWidget *parent)
     checkBox1->setChecked(enable_background_transparent);
     overall->addWidget(checkBox1);
     connect(checkBox1, &QCheckBox::clicked, this, [](bool checked) {
-        enable_background_transparent=checked;
+        pmw->setTransparent(checked);
     });
 
     QCheckBox *checkBox2 = new QCheckBox(this);
@@ -26,7 +26,7 @@ ED_EditBox::ED_EditBox(QWidget *parent)
     checkBox2->setChecked(enable_background_blur);
     overall->addWidget(checkBox2);
     connect(checkBox2, &QCheckBox::clicked, this, [](bool checked) {
-        enable_background_blur = checked;
+        pmw->setBlur(checked);
     });
 
     QCheckBox *checkBox3 = new QCheckBox(this);

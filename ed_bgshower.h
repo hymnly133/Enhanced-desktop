@@ -11,7 +11,7 @@ public:
     explicit ED_BGShower(QWidget *parent = nullptr);
     QRegion updateMask();
     QPixmap captrued;
-    bool show;
+    bool cap = false;
 public:
     void paintEvent(QPaintEvent * ev) override;
 

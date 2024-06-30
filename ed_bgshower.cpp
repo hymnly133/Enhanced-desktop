@@ -23,11 +23,14 @@ ED_BGShower::ED_BGShower(QWidget *parent)
 
 void ED_BGShower::paintEvent(QPaintEvent * ev){
     // qDebug()<<"bg_pre_painted"<<pmw->transparent;
-    if(show){
-        auto tem = updateMask();
-        setMask(tem);
-        QPainter painter(this);
+    auto tem = updateMask();
+    setMask(tem);
+    QPainter painter(this);
+    if(enable_background_transparent&&cap){
         painter.drawPixmap(rect(),captrued);
+    }
+    else{
+        painter.drawPixmap(rect(),pmw->bg);
     }
 }
 
