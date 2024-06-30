@@ -167,7 +167,7 @@ void MainWindow::setupUnits(){
 
     }
 
-    ui->pushButton->setIcon(iconns[0].icon);
+
     //初始化一些
     pmw = this;
     bg = QPixmap(":/images/background");
