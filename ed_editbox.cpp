@@ -81,5 +81,10 @@ ED_EditBox::ED_EditBox(QWidget *parent)
     });
     settings->addWidget(scale_Slider);
 
-
+    QPushButton *button = new QPushButton("选择背景", this);
+    paint->addWidget(button);
+    connect(button, &QPushButton::clicked, this, []() {
+        // 点击按钮后的处理逻辑
+        pmw->onSelectBackground();
+    });
 }

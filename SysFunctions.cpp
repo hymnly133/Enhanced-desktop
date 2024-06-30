@@ -182,6 +182,7 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
 {
     //对于指定桌面路径，返还桌面路径中的文件信息的列表
     QList<FileInfo> files;
+    QList<FileInfo> steamfiles;
     QDir desktopDir(desktopPath);
     desktopDir.setFilter(QDir::Files|QDir::Dirs|QDir::NoDotAndDotDot);
     QFileInfoList fileInfoList=desktopDir.entryInfoList();
@@ -216,7 +217,6 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
                     QFileIconProvider iconProvider;
                     file.icon =iconProvider.icon(QFileInfo(target));
                 }
-                qDebug()<<file.icon.isNull();
             }
         }
         else
@@ -250,6 +250,7 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
                     file.icon=QIcon(directory.absoluteFilePath(steamfilename));
                     file.type = FileInfo::HORI;
                     files.append(file);
+                    steamfiles.append(file);
                 }
             }
 
@@ -264,7 +265,7 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
                     file.icon=QIcon(directory.absoluteFilePath(steamfilename));
                     file.type = FileInfo::VERT;
                     files.append(file);
-
+                    steamfiles.append(file);
                 }
             }
 
@@ -284,7 +285,20 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
         //以上为针对steam游戏
         files.append(file);
     }
-    return files;
+    QList<FileInfo> files2;
+    for (int i = 0; i < files.size(); ++i) {
+        bool found = false;
+        for (int j = 0; j < steamfiles.size(); ++j) {
+            if (files[i].filePath == steamfiles[j].filePath) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            files2.append(files[i]);
+        }
+    }
+    return files2+steamfiles;
 }
 
 

@@ -57,7 +57,7 @@ void MainWindow::setupActions(){
                 QCoreApplication::quit() ;
             });
 
-    QAction* act5  = new QAction("获取背景");
+    /*QAction* act5  = new QAction("获取背景");
     this->addAction(act5);
     connect(act5, &QAction::triggered, this, [=]()
     {
@@ -68,7 +68,7 @@ void MainWindow::setupActions(){
         bgshower->show = true;
         bgshower->setVisible(true);
         setVisible(true);
-    });
+    })*/;
 
     QAction* act6 =new QAction("新建小型格子");
     this->addAction(act6);
@@ -143,8 +143,8 @@ void MainWindow::setupUnits(){
     bgshower->lower();
 
     // 初始化选择背景按钮
-    selectBackgroundButton = new QPushButton("选择背景", this);
-    connect(selectBackgroundButton, &QPushButton::clicked, this, &MainWindow::onSelectBackground);
+    //selectBackgroundButton = new QPushButton("选择背景", this);
+    //connect(selectBackgroundButton, &QPushButton::clicked, this, &MainWindow::onSelectBackground);
 
     edlayout = new ED_Layout(this,20,12,5,10,10);
     edlayout->isMain = true;
@@ -152,23 +152,6 @@ void MainWindow::setupUnits(){
 
     //获取图标
     QList<FileInfo> iconns = scanalldesktopfiles();
-
-    auto eb = new ED_EditBox(this);
-    InitAUnit(eb);
-
-    auto bc = new ED_Container(this,4,4,3,3,5);
-    InitAUnit(bc);
-
-    auto dock = new ED_Dock(this,6,1,4);
-    InitAUnit(dock);
-
-    weatherwidget = new Weather(this,4,2);
-    InitAUnit(weatherwidget);
-    htkt = new Hitokoto(this,2,1);
-    InitAUnit(htkt);
-
-    auto bc_ = new ED_Container(this,3,3,2,2,4);
-    InitAUnit(bc_);
     QList<QString> nametem;
     for(int i=0;i<iconns.size();i++){
         qDebug()<<iconns[i].name<<iconns[i].type;
@@ -190,18 +173,23 @@ void MainWindow::setupUnits(){
             }
         nametem.append(iconns[i].name);
 
-        if(tem){
-            if(i <=2){
-                bc->edlayout->InitAUnit(tem);
-            }
-            else{
-                InitAUnit(tem);
-            }
+        if(tem)
+        {
+            InitAUnit(tem);
             tem->raise();
         }
-
-
     }
+
+
+    auto eb = new ED_EditBox(this);
+    InitAUnit(eb);
+
+    weatherwidget = new Weather(this,4,2);
+    InitAUnit(weatherwidget);
+    htkt = new Hitokoto(this,2,1);
+    InitAUnit(htkt);
+
+
     //初始化一些
     pmw = this;
     bg = QPixmap(":/images/background");
