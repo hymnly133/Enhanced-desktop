@@ -27,7 +27,7 @@
 int ED_BLOCK::default_size = 48;
 
 ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, int sizex, int sizey)
-    : ED_Unit(parent, sizex, sizey), previewWidget(new FilePreviewWidget(this)), mediaPlayer(new QMediaPlayer(this)), videoWidget(new QVideoWidget(this))
+    : ED_Unit(parent, sizex, sizey), previewWidget(new FilePreviewWidget(this))
 {
     type = Block;
     cmd = _cmd;
@@ -83,12 +83,6 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, 
     effect1->setOffset(0, 0);      // 偏移量
     gv->setGraphicsEffect(effect1);
 
-    // 初始化视频播放组件
-    // mediaPlayer->setVideoOutput(videoWidget);
-    qDebug() << "QMediaPlayer initialized: " << (mediaPlayer != nullptr);
-    qDebug() << "QVideoWidget initialized: " << (videoWidget != nullptr);
-    videoWidget->hide(); // 默认隐藏视频组件
-
     // 调试信息
     qDebug() << "ED_BLOCK initialized";
 }
@@ -140,15 +134,6 @@ void ED_BLOCK::mouse_enter_action(){
             previewWidget->move(mapToGlobal(QPoint(0, height())));
             previewWidget->show();
             qDebug() << "Image file preview shown"; // 调试信息
-        } else if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "avi" || fileInfo.suffix() == "mkv") {
-            // 新增视频预览功能
-            qDebug() << "Preparing video preview"; // 调试信息
-            mediaPlayer->setMedia(QUrl::fromLocalFile(fileInfo.filePath()));
-            mediaPlayer->play();
-            videoWidget->setGeometry(0, height(), width(), height() / 2); // 设置视频预览窗口大小
-            videoWidget->move(mapToGlobal(QPoint(0, height()))); // 修改部分：确保videoWidget的位置正确
-            videoWidget->show();
-            qDebug() << "Video file preview shown"; // 调试信息
         }
     }
 }
@@ -163,8 +148,6 @@ void ED_BLOCK::mouse_leave_action(){
     // 文件预览
     previewWidget->hide();
         // 隐藏视频预览
-    mediaPlayer->stop();
-    videoWidget->hide();
 }
 
 void ED_BLOCK::double_click_action(){

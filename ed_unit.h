@@ -59,9 +59,6 @@ public:
     virtual void setSimpleMode(bool);
     virtual void setScale(float val);
 
-public slots:
-    void getaClick();
-    void getaDoubleClick();
 };
 
 

@@ -23,7 +23,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     Ui::MainWindow *ui;
-    ed_bgShower* bgshower;
+    ED_BGShower* bgshower;
     bool moving = false;
 
     ED_Layout* edlayout;

@@ -135,7 +135,7 @@ void MainWindow::setupUnits(){
     // setMouseTracking(true);
     //设置背景
 
-    bgshower = new ed_bgShower(this);
+    bgshower = new ED_BGShower(this);
     bgshower->setFixedSize(size());
     bgshower->setVisible(enable_background_blur);
     bgshower->move(0,0);
