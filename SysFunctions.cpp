@@ -204,7 +204,7 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
             QString target = x.symLinkTarget();
             if (!target.isEmpty())
             {
-
+                qDebug()<<target<<"success";
                 QDir targetDir(QFileInfo(target).absolutePath());
                 QStringList iconFiles = targetDir.entryList(QStringList() << "*.ico", QDir::Files);
                 if (!iconFiles.isEmpty())
@@ -216,6 +216,7 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
                     QFileIconProvider iconProvider;
                     file.icon =iconProvider.icon(QFileInfo(target));
                 }
+                qDebug()<<file.icon.isNull();
             }
         }
         else

@@ -2,6 +2,7 @@
 #include "SysFunctions.h"
 #include <QPainter>
 #include <QDebug>
+#include "style.h"
 static const int IMAGE_WIDTH = 300;
 static const int IMAGE_HEIGHT = 300;
 static const QSize IMAGE_SIZE = QSize(IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -114,7 +115,10 @@ void PictureBox::paintEvent(QPaintEvent * event)
         image_height = m_pixmap.height();
         r1 = window_width / image_width;
         r2 = window_height / image_height;
-        r = qMin(r1, r2);
+        if(image_alpha==true)
+            r = qMax(r1, r2);
+        else
+            r=qMin(r1,r2);
         m_logopix = m_pixmap.scaled(QSize(image_width * r, image_height *r)
                                     , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 

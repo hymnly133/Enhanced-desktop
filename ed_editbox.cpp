@@ -66,6 +66,14 @@ ED_EditBox::ED_EditBox(QWidget *parent)
         ShowLight = checked;
     });
 
+    QCheckBox *checkBox7 = new QCheckBox(this);
+    checkBox7->setText("大图标填充");
+    checkBox7->setChecked(image_alpha);
+    overall->addWidget(checkBox7);
+    connect(checkBox7, &QCheckBox::clicked, this, [](bool checked) {
+        image_alpha = checked;
+    });
+
     QSlider* scale_Slider = new QSlider(this);
     scale_Slider->setRange(0, 100);
     connect(scale_Slider, &QSlider::valueChanged, this, [](int val) {
