@@ -6,6 +6,7 @@
 #include "ed_editbox.h"
 #include "ed_hidetextblock.h"
 #include "qgraphicseffect.h"
+#include "qpainter.h"
 #include "ui_mainwindow.h"
 #include "SysFunctions.h"
 #include <QMouseEvent>
@@ -45,7 +46,7 @@ void MainWindow::setupActions(){
     this->addAction(act3);
     connect(act3, &QAction::triggered, this, [=]()
     {
-        setTransparent(!transparent);
+        setTransparent(!enable_background_transparent);
     });
 
 
@@ -100,13 +101,13 @@ void MainWindow::setupActions(){
 void MainWindow::setupUnits(){
     // setMouseTracking(true);
     //设置背景
+
     bgshower = new ed_bgShower(this);
     bgshower->setFixedSize(size());
-    bgshower->setVisible(true);
+    bgshower->setVisible(enable_background_blur);
     bgshower->move(0,0);
     // inplace(bgshower);
     bgshower->lower();
-
 
     // 初始化选择背景按钮
     selectBackgroundButton = new QPushButton("选择背景", this);
@@ -166,8 +167,6 @@ void MainWindow::setupUnits(){
 
 
     }
-
-
     //初始化一些
     pmw = this;
     bg = QPixmap(":/images/background");
@@ -208,12 +207,9 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::setIconScale(double scale){
+void MainWindow::setScale(double scale){
     for(ED_Unit* content:*(edlayout->contents)){
-        if(content->type == ED_Unit::Block){
-            ED_BLOCK* p = (ED_BLOCK*)content;
-            p->gv->setScale(scale);
-        }
+        content->setScale(scale);
     }
 }
 
@@ -227,34 +223,16 @@ void MainWindow::setIconHight(int val){
 }
 
 void MainWindow::updatePer01second(){
-    repaint();
-
-    // bgshower->repaint();
+    // repaint();
 }
 
 void MainWindow::paintEvent(QPaintEvent * ev)
 {
 
-    if(!transparent){
+    if(!enable_background_transparent){
         QPainter painter(this);
         painter.drawPixmap(rect(),bg);
-        // bgshower->repaint();
     }
-    // else{
-    //     painter.eraseRect(rect());
-    //     painter.end();
-    // }
-}
-
-void MainWindow::on_horizontalSlider_2_valueChanged(int value)
-{
-    setIconHight(value);
-}
-
-
-void MainWindow::on_horizontalSlider_valueChanged(int value)
-{
-    setIconScale((double)value/50);
 }
 
 void MainWindow::mouseDoubleClickEvent(QMouseEvent* ev) {
@@ -289,10 +267,12 @@ void MainWindow::onSelectBackground() {
 }
 
 void  MainWindow::setTransparent(bool val){
-    transparent = val;
-    bgshower->show = !val;
-    bgshower->setVisible(!val);
-    bgshower->captrued = bg;
+    enable_background_transparent = val;
+    if(enable_background_blur){
+        bgshower->show = !val;
+        bgshower->setVisible(!val);
+        bgshower->captrued = bg;
+    }
     // qDebug()<<transparent<<val;
 }
 

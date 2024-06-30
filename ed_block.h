@@ -7,13 +7,16 @@
 #include "qboxlayout.h"
 #include "qlabel.h"
 #include <QWidget>
+//新增
+#include <QMediaPlayer>
+#include <QVideoWidget>
+#include <QVBoxLayout>
 
 class ED_BLOCK : public ED_Unit
 {
     Q_OBJECT;
     QLabel* lb ;
     QString cmd;
-    QColor mainColor;
     QPixmap iconmap;
     static int default_size;
 public:
@@ -24,12 +27,15 @@ public:
     void update_after_resize() override;
     void mouse_enter_action() override;
     void mouse_leave_action()override;
-    virtual void changeToSimpleMode();
-    virtual void changeToComplexMode();
+    void whenSimpleModeChange(bool) override;
+    void whenScaleChange(float) override;
 protected:
     void double_click_action() override;
     void paintEvent(QPaintEvent *event) override;
     FilePreviewWidget *previewWidget;
+    QMediaPlayer *mediaPlayer; // 新增：用于视频播放
+    QVideoWidget *videoWidget; // 新增：用于显示视频
+    QVBoxLayout *layout; // 新增 QVBoxLayout 成员
 };
 
 

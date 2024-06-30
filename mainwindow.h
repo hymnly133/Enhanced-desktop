@@ -25,7 +25,6 @@ public:
     ~MainWindow();
     Ui::MainWindow *ui;
     ed_bgShower* bgshower;
-    bool transparent =true;
     bool moving = false;
 
     ED_Layout* edlayout;
@@ -44,11 +43,9 @@ private:
     void setupUnits();
     void setTransparent(bool val);
 
-private slots:;
-    void setIconScale(double Scale);
+public slots:;
+    void setScale(double Scale);
     void setIconHight(int val);
-    void on_horizontalSlider_2_valueChanged(int value);
-    void on_horizontalSlider_valueChanged(int value);
     void onSelectBackground();  // 新增：选择背景文件槽函数
     void updatePer01second();
 

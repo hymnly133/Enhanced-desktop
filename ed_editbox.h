@@ -2,6 +2,7 @@
 #define ED_EDITBOX_H
 
 #include "ed_unit.h"
+#include "qboxlayout.h"
 #include <QWidget>
 
 class ED_EditBox : public ED_Unit
@@ -9,7 +10,11 @@ class ED_EditBox : public ED_Unit
     Q_OBJECT
 public:
     explicit ED_EditBox(QWidget *parent = nullptr);
-
+    QHBoxLayout* settings;
+    QVBoxLayout* overall;
+    QVBoxLayout* paint;
+    QVBoxLayout* scale;
+    QVBoxLayout* tem;
 signals:
 };
 

@@ -15,4 +15,12 @@ extern bool ShowLight;
 
 extern int icon_shadow_alpha;
 extern int icon_shadow_blur_radius;
+
+extern int unit_shadow_alpha;
+extern int unit_shadow_blur_radius;
+
+extern bool enable_background_transparent;
+extern bool enable_background_blur;
+extern bool enable_light_track;
+
 #endif // STYLE_H

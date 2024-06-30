@@ -13,14 +13,14 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
     sizeX = sizex;
     sizeY = sizey;
-    moving = false;
-    QGraphicsDropShadowEffect* effect1 = new QGraphicsDropShadowEffect;
-    effect1->setColor(QColor(255,255,255,200));
-    effect1->setBlurRadius(20);   //模糊半径
-    effect1->setOffset(0,0);      //偏移量
-    setGraphicsEffect(effect1);
 
+    shadow_main_color = new QGraphicsDropShadowEffect;
+    shadow_main_color->setBlurRadius(unit_shadow_blur_radius);   //模糊半径
+    shadow_main_color->setOffset(0,0);      //偏移量
+    setGraphicsEffect(shadow_main_color);
 
+    setMainColor(QColor(88,119,144,255));
+    // shadow_main_color->setEnabled(false);
     setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction* act1  = new QAction("加宽");
     this->addAction(act1);
@@ -59,9 +59,9 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
     QAction* act5  = new QAction("切换复杂度");
     this->addAction(act5);
     connect(act5, &QAction::triggered, this, [=]()
-            {
-                changeSimpleMode();
-            });
+    {
+        changeSimpleMode();
+    });
 
 
     QAction* act6  = new QAction("删除");
@@ -88,37 +88,20 @@ void ED_Unit::single_click_action(){
 
 }
 
+
 void ED_Unit::double_click_action(){
     //最终双击执行
 }
 
 void ED_Unit::mouse_enter_action(){
-    //最终移动执行
+    pmw->repaint();
+    onmouse = true  ;
     aim_Alpha = active_alpha;
 }
 void ED_Unit::mouse_leave_action(){
-    //最终移动执行
+
+    onmouse = false;
     aim_Alpha = sleep_alpha;
-}
-void ED_Unit::setwinblur(){
-    // setWindowFlags( Qt::Window | Qt::FramelessWindowHint);
-    // setWindowState(Qt::WindowFullScreen);
-    // setAttribute(Qt::WA_TranslucentBackground);//背景半透明属性设置   //窗口透明
-    // HWND hWnd = HWND(this->winId());
-    // HMODULE hUser = GetModuleHandle(L"user32.dll");
-    // if (hUser)
-    // {
-    //     pfnSetWindowCompositionAttribute setWindowCompositionAttribute = (pfnSetWindowCompositionAttribute)GetProcAddress(hUser, "SetWindowCompositionAttribute");
-    //     if (setWindowCompositionAttribute)
-    //     {
-    //         ACCENT_POLICY accent = { ACCENT_ENABLE_BLURBEHIND, 0xf2f230, 0, 0 };
-    //         WINDOWCOMPOSITIONATTRIBDATA data;
-    //         data.Attrib = WCA_ACCENT_POLICY;
-    //         data.pvData = &accent;
-    //         data.cbData = sizeof(accent);
-    //         setWindowCompositionAttribute(hWnd, &data);
-    //     }
-    // }
 }
 
 void ED_Unit::mouse_move_action(){
@@ -237,20 +220,38 @@ void ED_Unit::update_after_resize(){
 
 void ED_Unit::setSimpleMode(bool val){
     simpleMode = val;
-    if(val) changeToSimpleMode();
-    else changeToComplexMode();
+    whenSimpleModeChange(val);
 }
 
 void ED_Unit::changeSimpleMode(){
     setSimpleMode(!simpleMode);
 }
 
-void ED_Unit::changeToSimpleMode(){}
-void ED_Unit::changeToComplexMode(){}
+void ED_Unit::whenSimpleModeChange(bool val){}
+
+void ED_Unit::whenScaleChange(float val){}
+
+void ED_Unit::setScale(float val){
+    scale = val;
+    whenScaleChange(val);
+}
 
 void ED_Unit::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     paintSide(this,QColor("green"));
-    paintRect(this,QColor(100,0,0,20));
+    paintRect(this,mainColor_Alphaed());
+}
+
+void ED_Unit::setMainColor(QColor color){
+    mainColor = color;
+    auto tem = color;
+    tem.setAlpha(unit_shadow_alpha);
+    shadow_main_color->setColor(tem);
+    shadow_main_color->update();
+}
+QColor ED_Unit::mainColor_Alphaed(){
+    QColor tem = mainColor;
+    tem.setAlpha(aim_Alpha);
+    return tem;
 }
