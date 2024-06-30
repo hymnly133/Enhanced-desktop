@@ -24,6 +24,7 @@ WEATHERWIDGET::WEATHERWIDGET(QWidget *parent, int sizex, int sizey)
     temperatureLabel=new QLabel(this);
     weatherlabel=new QLabel(this);
     advicelabel=new QLabel(this);
+    advicelabel->setWordWrap(true);
     wlayout->addWidget(temperatureLabel, 0, Qt::AlignHCenter);
     wlayout->addWidget(weatherlabel, 0, Qt::AlignHCenter);
     wlayout->addWidget(advicelabel, 0, Qt::AlignHCenter);

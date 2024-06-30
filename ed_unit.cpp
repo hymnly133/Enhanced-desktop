@@ -120,15 +120,18 @@ void ED_Unit::mouse_release_action(){
         //首先检查是否拖到文件夹
         ED_Layout* mwlayout = pmw->edlayout;
         QPoint point = mwlayout->NearestBlockInd(pos().x(),pos().y());
-        if(mwlayout->Occupied(point)){
-            if(mwlayout->getUnitFromBlock(point)->type == ED_Unit::Container){
-                qDebug()<<"Container";
-                ED_Container*  c = (ED_Container*)mwlayout->getUnitFromBlock(point);
-                if(c->OKforput(this)){
-                    c->InplaceAUnit(this);
-                    c->raise();
-                    moving = false;
-                    return;
+        if(!(point.x()<0||point.y()<0||point.x()>=mwlayout->row||point.y()>=mwlayout->col))
+        {
+            if(mwlayout->Occupied(point)){
+                if(mwlayout->getUnitFromBlock(point)->type == ED_Unit::Container){
+                    qDebug()<<"Container";
+                    ED_Container*  c = (ED_Container*)mwlayout->getUnitFromBlock(point);
+                    if(c->OKforput(this)){
+                        c->InplaceAUnit(this);
+                        c->raise();
+                        moving = false;
+                        return;
+                    }
                 }
             }
         }
