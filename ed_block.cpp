@@ -71,6 +71,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, 
     QGraphicsDropShadowEffect* effect0 = new QGraphicsDropShadowEffect;
     auto tem = mainColor;
     tem.setAlpha(icon_shadow_alpha);
+
     effect0->setColor(tem);
     effect0->setBlurRadius(10);   // 模糊半径
     effect0->setOffset(10);      // 偏移量
@@ -83,7 +84,7 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, 
     gv->setGraphicsEffect(effect1);
 
     // 初始化视频播放组件
-    mediaPlayer->setVideoOutput(videoWidget);
+    // mediaPlayer->setVideoOutput(videoWidget);
     qDebug() << "QMediaPlayer initialized: " << (mediaPlayer != nullptr);
     qDebug() << "QVideoWidget initialized: " << (videoWidget != nullptr);
     videoWidget->hide(); // 默认隐藏视频组件
@@ -166,10 +167,17 @@ void ED_BLOCK::mouse_leave_action(){
     videoWidget->hide();
 }
 
+void ED_BLOCK::double_click_action(){
+    //最终双击执行
+    ED_Unit::double_click_action();
+    qDebug("cmd = %s",qPrintable(cmd));
+    QDesktopServices::openUrl(QUrl(cmd));
+}
+
 void ED_BLOCK::paintEvent(QPaintEvent *event)
 {
     ED_Unit::paintEvent(event);
-    QColor alphaed = QColor(mainColor.red(),mainColor.green(),mainColor.blue(),aim_Alpha);
+    QColor alphaed = mainColor_Alphaed();
     paintRect(this,alphaed);
     paintLight(this,alphaed);
 }
@@ -181,5 +189,4 @@ void ED_BLOCK::whenSimpleModeChange(bool val){
 void ED_BLOCK::whenScaleChange(float val){
     ED_Unit::whenSimpleModeChange(val);
     gv->setScale(val);
-
 }

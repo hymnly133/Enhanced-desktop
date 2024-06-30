@@ -19,8 +19,8 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
     shadow_main_color->setOffset(0,0);      //偏移量
     setGraphicsEffect(shadow_main_color);
 
-    setMainColor(QColor(88,119,144));
-
+    setMainColor(QColor(88,119,144,255));
+    // shadow_main_color->setEnabled(false);
     setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction* act1  = new QAction("加宽");
     this->addAction(act1);
@@ -240,16 +240,18 @@ void ED_Unit::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     paintSide(this,QColor("green"));
-    auto tem  = mainColor;
-    tem.setAlpha(aim_Alpha);
-    paintRect(this,tem);
+    paintRect(this,mainColor_Alphaed());
 }
 
 void ED_Unit::setMainColor(QColor color){
     mainColor = color;
-    shadow_main_color->setColor(mainColor_Alphaed());
+    auto tem = color;
+    tem.setAlpha(unit_shadow_alpha);
+    shadow_main_color->setColor(tem);
+    shadow_main_color->update();
 }
 QColor ED_Unit::mainColor_Alphaed(){
     QColor tem = mainColor;
     tem.setAlpha(aim_Alpha);
+    return tem;
 }
