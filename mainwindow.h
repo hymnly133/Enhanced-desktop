@@ -1,12 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "dsvideoplayer.h"
 #include "ed_bgshower.h"
 #include "ed_layout.h"
 #include <QMainWindow>
 #include <mousehook.h>
 #include <QPushButton>  // 添加QPushButton头文件
-#include "weatherwidget.h"
+#include "weather.h"
 #include "hitokoto.h"
 
 QT_BEGIN_NAMESPACE
@@ -29,7 +28,7 @@ public:
 
     ED_Layout* edlayout;
     QPixmap bg;
-    WEATHERWIDGET *weatherwidget;
+    Weather *weatherwidget;
     Hitokoto *htkt;
 
     void InitAUnit(ED_Unit* aim);

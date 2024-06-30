@@ -18,8 +18,8 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
     shadow_main_color->setBlurRadius(unit_shadow_blur_radius);   //模糊半径
     shadow_main_color->setOffset(0,0);      //偏移量
     setGraphicsEffect(shadow_main_color);
+    setMainColor(QColor(88,119,144));
 
-    setMainColor(QColor(88,119,144,255));
     // shadow_main_color->setEnabled(false);
     setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction* act1  = new QAction("加宽");
@@ -67,10 +67,10 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
     QAction* act6  = new QAction("删除");
     this->addAction(act6);
     connect(act6, &QAction::triggered, this, [=]()
-            {
-                removeFromLayout();
-                deleteLater();
-            });
+    {
+        removeFromLayout();
+        deleteLater();
+    });
 }
 
 void ED_Unit::single_click_action(){

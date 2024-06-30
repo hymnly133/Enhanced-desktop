@@ -14,6 +14,8 @@ ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QPixmap image,QString _name,Q
     cmd = _cmd;
     cmd = QString("file:///")+cmd;
     name = _name;
+
+    setMainColor(pixmapMainColor(image,sleep_color_ratio));
     // 初始化内部组件
 
     gv = new PictureBox(this,1.0);

@@ -15,8 +15,8 @@ bool ShowLight = true;
 int icon_shadow_alpha = 255;
 int icon_shadow_blur_radius = 50;
 
-int unit_shadow_alpha = 255;
-int unit_shadow_blur_radius = 5;
+int unit_shadow_alpha = 120;
+int unit_shadow_blur_radius = 50;
 
 bool enable_background_transparent = true;
 bool enable_background_blur = false;

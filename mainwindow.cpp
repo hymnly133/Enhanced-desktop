@@ -129,7 +129,7 @@ void MainWindow::setupUnits(){
     auto dock = new ED_Dock(this,6,1,4);
     InitAUnit(dock);
 
-    weatherwidget = new WEATHERWIDGET(this,4,2);
+    weatherwidget = new Weather(this,4,2);
     InitAUnit(weatherwidget);
 
     auto bc_ = new ED_Container(this,3,3,2,2,4);
@@ -228,7 +228,6 @@ void MainWindow::updatePer01second(){
 
 void MainWindow::paintEvent(QPaintEvent * ev)
 {
-
     if(!enable_background_transparent){
         QPainter painter(this);
         painter.drawPixmap(rect(),bg);
@@ -250,18 +249,9 @@ void MainWindow::onSelectBackground() {
                 qDebug() << "Failed to load image";
             } else {
                 bg = pixmap;
-                // palette.setBrush(QPalette::Window, QBrush(pixmap));
-                // this->setPalette(palette);
+                repaint();
                 qDebug() << "Image set as background";
             }
-        } else {
-            // if (videoPlayer->loadFile(fileName)) {
-            //     videoPlayer->play();
-            //     videoPlayer->show();
-            //     qDebug() << "Video started";
-            // } else {
-            //     qDebug() << "Failed to load video";
-            // }
         }
     }
 }

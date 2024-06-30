@@ -14,7 +14,6 @@ CONFIG += c++17
 
 SOURCES += \
     SysFunctions.cpp \
-    dsvideoplayer.cpp \
     ed_bgshower.cpp \
     ed_block.cpp \
     ed_container.cpp \
@@ -31,11 +30,10 @@ SOURCES += \
     picturebox.cpp \
     style.cpp \
     videopreview.cpp \
-    weatherwidget.cpp
+    weather.cpp
 
 HEADERS += \
     SysFunctions.h \
-    dsvideoplayer.h \
     ed_bgshower.h \
     ed_block.h \
     ed_container.h \
@@ -52,7 +50,7 @@ HEADERS += \
     style.h \
     videopreview.h \
     videopreview.h \
-    weatherwidget.h
+    weather.h
 
 FORMS += \
     mainwindow.ui
