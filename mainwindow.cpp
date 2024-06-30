@@ -85,7 +85,7 @@ void MainWindow::setupActions(){
                 InitAUnit(bc);
             });
 
-    QAction* act8 =new QAction("新建小格子");
+    QAction* act8 =new QAction("新建大型格子");
     this->addAction(act8);
     connect(act8,&QAction::triggered, this, [=]()
             {

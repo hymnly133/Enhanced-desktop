@@ -23,4 +23,6 @@ extern bool enable_background_transparent;
 extern bool enable_background_blur;
 extern bool enable_light_track;
 
+extern bool image_alpha;
+
 #endif // STYLE_H

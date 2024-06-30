@@ -21,3 +21,5 @@ int unit_shadow_blur_radius = 50;
 bool enable_background_transparent = true;
 bool enable_background_blur = false;
 bool enable_light_track = false;
+
+bool image_alpha=false;

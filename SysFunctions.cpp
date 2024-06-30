@@ -206,11 +206,11 @@ QList<FileInfo> scandesktopfiles(const QString &desktopPath)
             {
 
                 QDir targetDir(QFileInfo(target).absolutePath());
-                QStringList iconFiles = targetDir.entryList(QStringList() << "*.ico", QDir::Files);
+                /*QStringList iconFiles = targetDir.entryList(QStringList() << "*.ico", QDir::Files);
                 if (!iconFiles.isEmpty())
                 {
                     file.icon = QIcon(targetDir.absoluteFilePath(iconFiles.first())); // 或者根据需要设置其他类型
-                }
+                }*/
                 if(file.icon.isNull())
                 {
                     QFileIconProvider iconProvider;
