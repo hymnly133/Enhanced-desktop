@@ -133,6 +133,13 @@ void MainWindow::setupActions(){
 void MainWindow::setupUnits(){
     // setMouseTracking(true);
     //设置背景
+    bgshower = new ED_BGShower(this);
+    bgshower->setFixedSize(size());
+    bgshower->setVisible(enable_background_blur);
+    bgshower->move(0,0);
+    bgshower->setVisible(true);
+    bgshower->lower();
+
     setBlur(enable_background_blur);
 
     edlayout = new ED_Layout(this,20,12,5,10,10);
@@ -280,21 +287,10 @@ void  MainWindow::setTransparent(bool val){
 
 void  MainWindow::setBlur(bool val){
     enable_background_blur = val;
-    if(bgshower){
-        bgshower->setEnabled(val);
-        bgshower->setVisible(val);
-        bgshower->lower();
-    }
-    else{
-        if(val){
-            bgshower = new ED_BGShower(this);
-            bgshower->setFixedSize(size());
-            bgshower->setVisible(enable_background_blur);
-            bgshower->move(0,0);
-            bgshower->setVisible(true);
-            bgshower->lower();
-        }
-    }
+
+    bgshower->setEnabled(val);
+    bgshower->setVisible(val);
+    bgshower->lower();
 
     // qDebug()<<transparent<<val;
 }

@@ -16,9 +16,6 @@ ED_BGShower::ED_BGShower(QWidget *parent)
     setWindowTitle("BG_Shower");
     setAttribute(Qt::WA_TransparentForMouseEvents, true);
     setAttribute(Qt::WA_TranslucentBackground);
-
-
-
 }
 
 void ED_BGShower::paintEvent(QPaintEvent * ev){
