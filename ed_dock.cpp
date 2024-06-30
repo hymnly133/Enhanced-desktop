@@ -42,10 +42,9 @@ void ED_Dock::paintEvent(QPaintEvent *event){
 
     for(int i=0;i<insize;i++){
         if(edlayout->Occupied(i,0)){
-
             auto temm = edlayout->getUnitFromBlock(i,0)->mainColor;
             float ratio = 1.0*edlayout->blocks[i][0]->CenterX()/width();
-            qDebug()<<"found" << i<<ratio<<edlayout->blocks[i][0]->CenterX()<<width();
+            // qDebug()<<"found" << i<<ratio<<edlayout->blocks[i][0]->CenterX()<<width();
             temm.setAlpha(aim_Alpha);
             linearGradient.setColorAt(ratio, temm);
         }
