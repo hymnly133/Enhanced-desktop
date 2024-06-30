@@ -1,7 +1,6 @@
 #include "ed_block.h"
 #include "QWidget"
 #include"QProcess"
-#include "qaction.h"
 #include "qboxlayout.h"
 #include"SysFunctions.h"
 #include "qfileinfo.h"
@@ -34,8 +33,9 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, 
     gv->setMode(PictureBox::FIX_SIZE_CENTRED);
     double defaultRatio = (double)default_size/image.size().width();
     iconmap=image;
-    mainColor = pixmapMainColor(iconmap,sleep_color_ratio);
+    setMainColor(pixmapMainColor(iconmap,sleep_color_ratio));
 
+    (( QGraphicsDropShadowEffect*)graphicsEffect())->setColor(mainColor);
     gv->setImage(image,1.0,defaultRatio);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
     vl->setAlignment(Qt::AlignHCenter);
@@ -81,7 +81,7 @@ void ED_BLOCK::double_click_action(){
 }
 
 void ED_BLOCK::update_after_resize(){
-        ED_Unit::update_after_resize();
+    ED_Unit::update_after_resize();
     lb->setFixedWidth(width()-5);
     lb->setText(elidedLineText(lb,4,name));
 }
@@ -123,6 +123,7 @@ void ED_BLOCK::mouse_enter_action(){
         previewWidget->show();
     }
 }
+
 void ED_BLOCK::mouse_leave_action(){
     //最终移动执行
     ED_Unit::mouse_leave_action();
@@ -138,9 +139,12 @@ void ED_BLOCK::paintEvent(QPaintEvent *event)
     paintRect(this,alphaed);
     paintLight(this,alphaed);
 }
-void ED_BLOCK::changeToSimpleMode(){
-    lb->setVisible(false);
+void ED_BLOCK::whenSimpleModeChange(bool val){
+    ED_Unit::whenSimpleModeChange(val);
+    lb->setVisible(!val);
 }
-void ED_BLOCK::changeToComplexMode(){
-    lb->setVisible(true);
+
+void ED_BLOCK::whenScaleChange(float val){
+    ED_Unit::whenSimpleModeChange(val);
+    gv->setScale(val);
 }

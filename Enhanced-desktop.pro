@@ -13,7 +13,6 @@ CONFIG += c++17
 
 SOURCES += \
     SysFunctions.cpp \
-    cglasseffect.cpp \
     dsvideoplayer.cpp \
     ed_bgshower.cpp \
     ed_block.cpp \
@@ -34,7 +33,6 @@ SOURCES += \
 
 HEADERS += \
     SysFunctions.h \
-    cglasseffect.h \
     dsvideoplayer.h \
     ed_bgshower.h \
     ed_block.h \

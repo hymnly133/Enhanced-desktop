@@ -4,7 +4,6 @@
 #include "ed_container.h"
 #include "ed_unit.h"
 #include <QWidget>
-#include"ed_layout.h"
 
 class ED_Dock : public ED_Container
 {

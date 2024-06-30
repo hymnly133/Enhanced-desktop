@@ -114,7 +114,7 @@ void PictureBox::paintEvent(QPaintEvent * event)
         image_height = m_pixmap.height();
         r1 = window_width / image_width;
         r2 = window_height / image_height;
-        r = qMax(r1, r2);
+        r = qMin(r1, r2);
         m_logopix = m_pixmap.scaled(QSize(image_width * r, image_height *r)
                                     , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 

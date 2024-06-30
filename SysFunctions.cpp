@@ -25,8 +25,12 @@ QRect AbsoluteRect(QWidget* aim){
 
 void paintRect(QWidget* aim,QColor color){
     bool another = true;
-    if(aim->inherits("ED_Unit")) another = ((ED_Unit*)aim)->showRect;
-    if(ShowRect&another){
+    bool choosen = false;
+    if(aim->inherits("ED_Unit")) {
+        another = ((ED_Unit*)aim)->showRect;
+        choosen = ((ED_Unit*)aim)->onmouse;
+    }
+    if(ShowRect&(another)){
         QPainter paint(aim);
         paint.fillRect(aim->rect(),color);
     }
@@ -34,18 +38,29 @@ void paintRect(QWidget* aim,QColor color){
 
 void paintLight(QWidget* aim,QColor color){
     bool another = true;
+    bool choosen = false;
+    if(aim->inherits("ED_Unit")) {
+        another = ((ED_Unit*)aim)->showRect;
+        choosen = ((ED_Unit*)aim)->onmouse;
+    }
     if(aim->inherits("ED_Unit")) another = ((ED_Unit*)aim)->showLight;
-    if(ShowLight&another){
+    if(ShowLight&(another)){
         color.setAlpha(light_alpha_start);
         auto pos =aim->mapFromGlobal(aim->cursor().pos());
-        QRadialGradient radialGradient(aim->width()/2 , aim->height()/2, qMax(aim->width(),aim->height()),pos.x() ,pos.y());
+        QRadialGradient* radialGradient;
+        if(enable_light_track){
+            radialGradient = new QRadialGradient(aim->width()/2 , aim->height()/2, qMax(aim->width(),aim->height()),pos.x() ,pos.y());
+        }
+        else{
+            radialGradient = new QRadialGradient(aim->width()/2 , aim->height()/2, qMax(aim->width(),aim->height()),0, aim->height());
+        }
         //创建了一个QRadialGradient对象实例，参数分别为中心坐标，半径长度和焦点坐标,如果需要对称那么中心坐标和焦点坐标要一致
         QPainter painter(aim);
         painter.setPen(Qt::NoPen);
-        radialGradient.setColorAt(0,color);
+        radialGradient->setColorAt(0,color);
         color.setAlpha(light_alpha_end);
-        radialGradient.setColorAt(1.0,color);
-        painter.setBrush(QBrush(radialGradient));
+        radialGradient->setColorAt(1.0,color);
+        painter.setBrush(QBrush(*radialGradient));
         painter.drawRect(aim->rect());//在相应的坐标画出来
     }
 }
@@ -386,7 +401,7 @@ QColor pixmapMainColor(QPixmap p, double bright) //p为目标图片 bright为亮
 
 void repaintAround(QWidget* aim){
     auto tem = aim->geometry();
-    auto rrect = QRect(tem.x()-60,tem.y()-60,tem.width()+120,tem.height()+120);
+    auto rrect = QRect(tem.x()-100,tem.y()-100,tem.width()+200,tem.height()+200);
     pmw->repaint(rrect);
 
 }

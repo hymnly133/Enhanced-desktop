@@ -13,57 +13,7 @@
   <property name="windowTitle">
    <string>MainWindow_ED</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="QSlider" name="horizontalSlider">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>1120</y>
-      <width>531</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QSlider" name="horizontalSlider_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>1090</y>
-      <width>531</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>1330</x>
-      <y>950</y>
-      <width>256</width>
-      <height>192</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>1019</x>
-      <y>967</y>
-      <width>291</width>
-      <height>151</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
-  </widget>
+  <widget class="QWidget" name="centralwidget"/>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionNew">
    <property name="text">

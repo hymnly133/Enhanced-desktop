@@ -1,7 +1,6 @@
 #ifndef ED_BGSHOWER_H
 #define ED_BGSHOWER_H
 
-#include <CglasseFfect.h>
 #include <QWidget>
 #include <QtWin>
 

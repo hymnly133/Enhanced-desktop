@@ -29,39 +29,6 @@ WEATHERWIDGET::WEATHERWIDGET(QWidget *parent, int sizex, int sizey)
     wlayout->addWidget(advicelabel, 0, Qt::AlignHCenter);
     connect(manager,&QNetworkAccessManager::finished,this,&WEATHERWIDGET::handleWeatherResponse);
     addWeatherInfo("101010200");
-    setContextMenuPolicy(Qt::ActionsContextMenu);
-    QAction* act1  = new QAction("加宽");
-    this->addAction(act1);
-    connect(act1, &QAction::triggered, this, [=]()
-            {
-                setBlockSize(sizeX+1,sizeY);
-            });
-
-    QAction* act3  = new QAction("减宽");
-    this->addAction(act3);
-    connect(act3, &QAction::triggered, this, [=]()
-            {
-                if(sizeX>=2)
-                    setBlockSize(sizeX-1,sizeY);
-            });
-
-    QAction* act2  = new QAction("加高");
-    this->addAction(act2);
-    connect(act2, &QAction::triggered, this, [=]()
-            {
-                setBlockSize(sizeX,sizeY+1);
-            });
-
-
-
-    QAction* act4  = new QAction("减高");
-    this->addAction(act4);
-    connect(act4, &QAction::triggered, this, [=]()
-            {
-                if(sizeY>=2)
-                    setBlockSize(sizeX,sizeY-1);
-            });
-
 }
 
 

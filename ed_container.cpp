@@ -20,13 +20,6 @@ void ED_Container::paintEvent(QPaintEvent *event){
     paintRect(this,QColor(255,255,255,aim_Alpha));
     Q_UNUSED(event);
 }
-void ED_Container::double_click_action(){
-    ED_Unit::double_click_action();
-
-}
-void ED_Container::single_click_action(){
-    ED_Unit::single_click_action();
-}
 
 void ED_Container::Say(){
     for(ED_Unit* content:*(edlayout->contents)){
@@ -40,16 +33,20 @@ void ED_Container::InplaceAUnit(ED_Unit* aim){
 bool ED_Container::OKforput(ED_Unit* aim){
     return edlayout->OKforput(aim);
 }
-void ED_Container::changeToSimpleMode(){
+void ED_Container::setSimpleMode(bool val){
+    ED_Unit::setSimpleMode(val);
     for(ED_Unit* content:*(edlayout->contents)){
-        content->setSimpleMode(true);
+        content->setSimpleMode(val);
     }
 }
-void ED_Container::changeToComplexMode(){
+
+void ED_Container::setScale(float val){
+    ED_Unit::setScale(val);
     for(ED_Unit* content:*(edlayout->contents)){
-        content->setSimpleMode(false);
+        content->setScale(val);
     }
 }
+
 
 void ED_Container::update_after_resize(){
     edlayout->Update_Positon();
