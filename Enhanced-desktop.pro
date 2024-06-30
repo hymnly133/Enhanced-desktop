@@ -1,6 +1,7 @@
-QT       += core gui widgets winextras network
+QT       += core gui widgets winextras network multimedia multimediawidgets
 win32 {
 LIBS+= -luser32    # 使用WindowsAPI需要链接库
+
 }
 QMAKE_PROJECT_DEPTH = 0
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -30,6 +31,7 @@ SOURCES += \
     mousehook.cpp \
     picturebox.cpp \
     style.cpp \
+    videopreview.cpp \
     weatherwidget.cpp
 
 HEADERS += \
@@ -50,6 +52,8 @@ HEADERS += \
     mousehook.h \
     picturebox.h \
     style.h \
+    videopreview.h \
+    videopreview.h \
     weatherwidget.h
 
 FORMS += \
