@@ -73,14 +73,14 @@ void MainWindow::setupActions(){
     this->addAction(act6);
     connect(act6,&QAction::triggered, this, [=]()
     {
-        auto bc = new ED_Container(this,2,2,2,15,15);
+        auto bc = new ED_Container(this,2,2,2,2,5);
         InitAUnit(bc);
     });
     QAction* act7 =new QAction("新建中型格子");
     this->addAction(act7);
     connect(act7,&QAction::triggered, this, [=]()
             {
-                auto bc = new ED_Container(this,3,3,3,20,20);
+                auto bc = new ED_Container(this,3,3,3,3,5);
                 InitAUnit(bc);
             });
 
@@ -88,7 +88,7 @@ void MainWindow::setupActions(){
     this->addAction(act8);
     connect(act8,&QAction::triggered, this, [=]()
             {
-                auto bc = new ED_Container(this,4,4,4,30,30);
+                auto bc = new ED_Container(this,4,4,4,4,5);
                 InitAUnit(bc);
             });
 
