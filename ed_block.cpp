@@ -12,17 +12,6 @@
 #include"QTextCodec"
 #include "qpainter.h"
 #include"QGraphicsDropShadowEffect"
-#include "QProcess"
-#include "QAction"
-#include "QFileInfo"
-#include "QLabel"
-#include "QDebug"
-#include "QUrl"
-#include "QDesktopServices"
-#include "QTextCodec"
-#include "QPainter"
-#include "QGraphicsDropShadowEffect"
-#include "QMediaMetaData"
 
 int ED_BLOCK::default_size = 48;
 
@@ -68,10 +57,12 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, 
     lb->setFixedWidth(width() - 5);
 
     lb->setText(elidedLineText(lb, 3, name));
-    QGraphicsDropShadowEffect* effect0 = new QGraphicsDropShadowEffect;
+
+
     auto tem = mainColor;
     tem.setAlpha(icon_shadow_alpha);
 
+    QGraphicsDropShadowEffect* effect0 = new QGraphicsDropShadowEffect;
     effect0->setColor(tem);
     effect0->setBlurRadius(10);   // 模糊半径
     effect0->setOffset(10);      // 偏移量
@@ -162,7 +153,6 @@ void ED_BLOCK::paintEvent(QPaintEvent *event)
     ED_Unit::paintEvent(event);
     QColor alphaed = mainColor_Alphaed();
     paintRect(this,alphaed);
-    paintLight(this,alphaed);
 }
 void ED_BLOCK::whenSimpleModeChange(bool val){
     ED_Unit::whenSimpleModeChange(val);

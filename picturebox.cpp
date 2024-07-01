@@ -115,7 +115,7 @@ void PictureBox::paintEvent(QPaintEvent * event)
         image_height = m_pixmap.height();
         r1 = window_width / image_width;
         r2 = window_height / image_height;
-        if(image_alpha==true)
+        if(enable_image_fill==true)
             r = qMax(r1, r2);
         else
             r=qMin(r1,r2);

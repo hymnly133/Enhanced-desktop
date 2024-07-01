@@ -73,14 +73,14 @@ void MainWindow::setupActions(){
     this->addAction(act6);
     connect(act6,&QAction::triggered, this, [=]()
     {
-        auto bc = new ED_Container(this,2,2,2,2,5);
+        auto bc = new ED_Container(this,2,2,2,2,5,10,10);
         InitAUnit(bc);
     });
     QAction* act7 =new QAction("新建中型格子");
     this->addAction(act7);
     connect(act7,&QAction::triggered, this, [=]()
             {
-                auto bc = new ED_Container(this,3,3,3,3,5);
+                auto bc = new ED_Container(this,3,3,3,3,5,15,15);
                 InitAUnit(bc);
             });
 
@@ -88,7 +88,7 @@ void MainWindow::setupActions(){
     this->addAction(act8);
     connect(act8,&QAction::triggered, this, [=]()
             {
-                auto bc = new ED_Container(this,4,4,4,4,5);
+                auto bc = new ED_Container(this,4,4,4,4,5,20,20);
                 InitAUnit(bc);
             });
 
@@ -209,7 +209,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updatePer01second())); // slotCountMessage是我们需要执行的响应函数
-    timer->start(100); // 每隔0.1s
+    timer->start(50); // 每隔0.1s
 
 }
 
@@ -242,7 +242,8 @@ void MainWindow::setIconHight(int val){
 }
 
 void MainWindow::updatePer01second(){
-    // repaint();
+    if(enable_intime_repaint)
+    repaint();
 }
 
 void MainWindow::paintEvent(QPaintEvent * ev)

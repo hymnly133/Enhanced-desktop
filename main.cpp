@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include"SysFunctions.h"
 #include<windows.h>
 #include <QJsonObject>
 #include <QApplication>

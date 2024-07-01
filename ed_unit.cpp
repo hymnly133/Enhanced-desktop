@@ -8,19 +8,20 @@
 #include"ed_container.h"
 #include "qgraphicseffect.h"
 #include "style.h"
+#include <cmath>
 
 ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 {
     sizeX = sizex;
     sizeY = sizey;
-
     shadow_main_color = new QGraphicsDropShadowEffect;
     shadow_main_color->setBlurRadius(unit_shadow_blur_radius);   //模糊半径
-    shadow_main_color->setOffset(0,0);      //偏移量
+    shadow_main_color->setOffset(0);      //偏移量
+    shadow_main_color->setEnabled(true);
     setGraphicsEffect(shadow_main_color);
-    setMainColor(QColor(88,119,144));
 
-    // shadow_main_color->setEnabled(false);
+    setMainColor(QColor(88,119,144));
+\
     setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction* act1  = new QAction("加宽");
     this->addAction(act1);
@@ -75,17 +76,6 @@ ED_Unit::ED_Unit(QWidget *parent,int sizex,int sizey): QWidget{parent}
 
 void ED_Unit::single_click_action(){
     //最终单击执行
-
-    moving = true;
-    QPoint usedp = mapToGlobal(QPoint(0,0));
-
-    if(edlayout)
-        removeFromLayout();
-
-    move(usedp);
-    pMovingUnit = this;
-    relativeP =cursor().pos()-pos();
-
 }
 
 
@@ -94,32 +84,45 @@ void ED_Unit::double_click_action(){
 }
 
 void ED_Unit::mouse_enter_action(){
-    pmw->repaint();
-    onmouse = true  ;
-    aim_Alpha = active_alpha;
+
 }
 void ED_Unit::mouse_leave_action(){
-
-    onmouse = false;
-    aim_Alpha = sleep_alpha;
 }
 
 void ED_Unit::mouse_move_action(){
     //最终移动执行
-    if (moving)
-    {
-        move(cursor().pos()-relativeP);
-    }
-    else{
-    }
+
+
 }
 
 void ED_Unit::mouse_release_action(){
     //最终释放执行
+
+}
+
+void ED_Unit::removeFromLayout(){
+    edlayout->RemoveAUnit(this);
+}
+void ED_Unit::mousePressEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton){
+        grabMouse();
+        single_click_action();
+        premove = true;
+        relativeP = event->pos();
+    }
+
+}
+
+void ED_Unit::mouseReleaseEvent(QMouseEvent *event)
+{
+
+    releaseMouse();
+    mouse_release_action();
     if(moving){
         //首先检查是否拖到文件夹
         ED_Layout* mwlayout = pmw->edlayout;
-        QPoint point = mwlayout->NearestBlockInd(pos().x(),pos().y());
+        QPoint point = mwlayout->NearestBlockInd(pos().x()+width()/2,pos().y()+height()/2);
         if(!(point.x()<0||point.y()<0||point.x()>=mwlayout->row||point.y()>=mwlayout->col))
         {
             if(mwlayout->Occupied(point)){
@@ -136,32 +139,13 @@ void ED_Unit::mouse_release_action(){
             }
         }
         // 放置
-                pMovingUnit = nullptr;
+        pMovingUnit = nullptr;
         mwlayout->InplaceAUnit(this);
         moving = false;
-
     }
-}
-
-void ED_Unit::removeFromLayout(){
-    edlayout->RemoveAUnit(this);
-}
-void ED_Unit::mousePressEvent(QMouseEvent *event)
-{
-    event->accept();
-    if(event->button() == Qt::LeftButton){
-        grabMouse();
-        single_click_action();
-    }
+    premove = false;
     repaintAround(this);
-}
 
-void ED_Unit::mouseReleaseEvent(QMouseEvent *event)
-{
-    event->accept();
-    releaseMouse();
-    mouse_release_action();
-    repaintAround(this);
 }
 
 void ED_Unit::mouseDoubleClickEvent(QMouseEvent *event)
@@ -172,18 +156,35 @@ void ED_Unit::mouseDoubleClickEvent(QMouseEvent *event)
 
 void ED_Unit::mouseMoveEvent(QMouseEvent *event)
 {
-    event->accept();
     mouse_move_action();
+
+    if (moving)
+    {
+        move(cursor().pos()-relativeP);
+    }
+    else if(premove){
+        if(sqrt(QPoint::dotProduct(event->pos(),relativeP))>=10){
+            QPoint usedp = mapToGlobal(QPoint(0,0));
+            if(edlayout)
+                removeFromLayout();
+            move(usedp);
+            pMovingUnit = this;
+            moving = true;
+        }
+    }
     repaintAround(this);
 }
 
 void ED_Unit::enterEvent(QEvent *event){
-    event->ignore();
+    onmouse = true  ;
     mouse_enter_action();
     repaintAround(this);
-}                      //进入QWidget瞬间事件
+    event->accept();
+    // qDebug()<<shadow_main_color->isEnabled()<<shadow_main_color->color()<<shadow_main_color->blurRadius();
+
+}
 void ED_Unit::leaveEvent(QEvent *event){
-    event->ignore();
+    onmouse = false  ;
     mouse_leave_action();
     repaintAround(this);
 }
@@ -235,6 +236,7 @@ void ED_Unit::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
     paintSide(this,QColor("green"));
     paintRect(this,mainColor_Alphaed());
+    paintLight(this,mainColor);
 }
 
 void ED_Unit::setMainColor(QColor color){
@@ -242,10 +244,12 @@ void ED_Unit::setMainColor(QColor color){
     auto tem = color;
     tem.setAlpha(unit_shadow_alpha);
     shadow_main_color->setColor(tem);
+    shadow_main_color->setEnabled(true);
     shadow_main_color->update();
 }
+
 QColor ED_Unit::mainColor_Alphaed(){
     QColor tem = mainColor;
-    tem.setAlpha(aim_Alpha);
+    tem.setAlpha(aim_alpha());
     return tem;
 }

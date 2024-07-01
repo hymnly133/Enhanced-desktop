@@ -27,45 +27,42 @@ void ED_Dock::paintEvent(QPaintEvent *event){
     // paintRect(this,QColor(0,0,155,aim_Alpha));
 
 
-
     QPainter painter(this);
     QLinearGradient linearGradient(QPoint(0,0),QPoint(width(),0));
 
-    auto tem = mainColor;
-    tem.setAlpha(aim_Alpha);
+    auto tem = mainColor_Alphaed();
 
-
-    paintLight(this,tem);
-    linearGradient.setColorAt(0, tem);
-
-    linearGradient.setColorAt(1, tem);
-
+    int count=0;
     for(int i=0;i<insize;i++){
         if(edlayout->Occupied(i,0)){
+            count++;
             auto temm = edlayout->getUnitFromBlock(i,0)->mainColor;
             float ratio = 1.0*edlayout->blocks[i][0]->CenterX()/width();
             // qDebug()<<"found" << i<<ratio<<edlayout->blocks[i][0]->CenterX()<<width();
-            temm.setAlpha(aim_Alpha);
+            temm.setAlpha(aim_alpha());
             linearGradient.setColorAt(ratio, temm);
         }
     }
 
 
+    if(count){
+        linearGradient.setColorAt(0, QColor(255,255,255,0));
+        linearGradient.setColorAt(1, QColor(255,255,255,0));
+    }
+    else{
+        linearGradient.setColorAt(0, tem);
+        linearGradient.setColorAt(1, tem);
+    }
+
+
     // 使用线性渐变创建一个画刷，用来填充
+
     QBrush brush(linearGradient);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
     // x, y, w, h
     painter.drawRect(rect());
 
+    // paintLight(this,mainColor);
 
-    // QPainter p(this);
-    // p.setRenderHint(QPainter::Antialiasing);
-    // QPainterPath path;
-    // path.addRoundedRect(QRectF(rect()), 10, 10);
-
-
-    // p.setPen(Qt::NoPen);
-    // p.fillPath(path, QColor(0,0,155,aim_Alpha));
-    // p.drawPath(path);
 }

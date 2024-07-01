@@ -10,6 +10,7 @@ int ED_HideTextBlock::default_size = 48;
 ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QPixmap image,QString _name,QString _cmd,int sizex,int sizey)
     :ED_Unit(parent,sizex,sizey)
 {
+    dark =true;
     type =Unit;
     cmd = _cmd;
     cmd = QString("file:///")+cmd;
@@ -32,21 +33,15 @@ ED_HideTextBlock::ED_HideTextBlock(QWidget *parent,QPixmap image,QString _name,Q
     gv->setBackground(QBrush (QColor(0,0,0,0)));
     gv->setMode(PictureBox::AUTO_ZOOM);
 
-    // gv->QWidget::setAlignment(Qt::AlignVCenter);
 
-    // 显示名字
-    // lb->setAlignment(Qt::AlignHCenter);
-    // lb->setFont(QFont("MiSans",10,40));
-    // lb->setFixedWidth(width()-5);
+    auto tem = mainColor;
+    tem.setAlpha(icon_shadow_alpha);
+    QGraphicsDropShadowEffect* effect0 = new QGraphicsDropShadowEffect;
+    effect0->setColor(tem);
+    effect0->setBlurRadius(icon_shadow_blur_radius);   // 模糊半径
+    effect0->setOffset(0);      // 偏移量
+    lb->setGraphicsEffect(effect0);
 
-    // lb->setText(elidedLineText(lb,3,name));
-    // QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
-    // effect->setColor(QColor(100,100,100,100));
-    // effect->setBlurRadius(2);   //模糊半径
-    // effect->setOffset(10);      //偏移量
-    // lb->setGraphicsEffect(effect);
-
-    // gv->setGraphicsEffect(effect);
 }
 void ED_HideTextBlock::single_click_action(){
     //最终单击执行

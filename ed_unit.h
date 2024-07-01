@@ -14,16 +14,27 @@ public:
     ED_TYPE type = Unit;
     ED_Layout* edlayout;
     bool moving = false;
+    bool premove = false;
     bool showRect = true;
     bool showLight = true;
     bool showSide = true;
     bool onmouse = false;
+    bool dark = false;
     QPoint relativeP;
     QColor mainColor;
     int sizeX;
     int sizeY;
     int ind;
-    int aim_Alpha = sleep_alpha;
+    int aim_alpha(){
+        if(onmouse){
+            if(dark) return active_alpha_deep;
+            else return active_alpha;
+        }
+        else{
+            if(dark) return sleep_alpha_deep;
+            else return sleep_alpha;
+        }
+    }
     bool alwaysShow = false;
     bool simpleMode = false;
     float scale = 1.0;

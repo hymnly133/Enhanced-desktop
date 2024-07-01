@@ -20,7 +20,6 @@ public:
 protected:
     void double_click_action() override;
     void single_click_action() override;
-
     void paintEvent(QPaintEvent *event) override;
 public slots:
     void getaClick();

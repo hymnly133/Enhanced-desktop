@@ -45,7 +45,6 @@ void paintLight(QWidget* aim,QColor color){
     }
     if(aim->inherits("ED_Unit")) another = ((ED_Unit*)aim)->showLight;
     if(ShowLight&(another)){
-        color.setAlpha(light_alpha_start);
         auto pos =aim->mapFromGlobal(aim->cursor().pos());
         QRadialGradient* radialGradient;
         if(enable_light_track){
@@ -57,6 +56,7 @@ void paintLight(QWidget* aim,QColor color){
         //创建了一个QRadialGradient对象实例，参数分别为中心坐标，半径长度和焦点坐标,如果需要对称那么中心坐标和焦点坐标要一致
         QPainter painter(aim);
         painter.setPen(Qt::NoPen);
+        color.setAlpha(light_alpha_start);
         radialGradient->setColorAt(0,color);
         color.setAlpha(light_alpha_end);
         radialGradient->setColorAt(1.0,color);

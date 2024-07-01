@@ -1,6 +1,5 @@
 #include "ed_container.h"
 #include "qdebug.h"
-#include"SysFunctions.h"
 
 ED_Container::ED_Container(QWidget *parent, int sizex, int sizey,int row,int cal,int space,int space_x,int space_y)
     : ED_Unit(parent,sizex,sizey),row(row),cal(cal),space(space)
@@ -17,7 +16,7 @@ ED_Container::ED_Container(QWidget *parent, int sizex, int sizey,int row,int cal
     edlayout = new ED_Layout(this,row,cal,space,temx,temy);
 }
 void ED_Container::paintEvent(QPaintEvent *event){
-    paintRect(this,QColor(255,255,255,aim_Alpha));
+    ED_Unit::paintEvent(event);
     Q_UNUSED(event);
 }
 

@@ -68,11 +68,19 @@ ED_EditBox::ED_EditBox(QWidget *parent)
 
     QCheckBox *checkBox7 = new QCheckBox(this);
     checkBox7->setText("大图标填充");
-    checkBox7->setChecked(image_alpha);
-    overall->addWidget(checkBox7);
+    checkBox7->setChecked(enable_image_fill);
     connect(checkBox7, &QCheckBox::clicked, this, [](bool checked) {
-        image_alpha = checked;
+        enable_image_fill = checked;
     });
+    overall->addWidget(checkBox7);
+
+    QCheckBox *checkBox8 = new QCheckBox(this);
+    checkBox8->setText("即时重绘");
+    checkBox8->setChecked(enable_intime_repaint);
+    connect(checkBox8, &QCheckBox::clicked, this, [](bool checked) {
+        enable_intime_repaint = checked;
+    });
+    paint->addWidget(checkBox8);
 
     QSlider* scale_Slider = new QSlider(this);
     scale_Slider->setRange(0, 100);
