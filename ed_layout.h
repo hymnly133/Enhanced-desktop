@@ -9,10 +9,10 @@ class ED_Layout
         int indX;
         int indY;
         int posX(){
-            return playout->borad_space+indX*(playout->space_x+w());
+            return playout->space+indX*(playout->spaceX+w());
         };
         int posY(){
-            return playout->borad_space+indY*(playout->space_y+h());
+            return playout->space+indY*(playout->spaceY+h());
         };
         int w(){
             return playout->W_Block_Clean();
@@ -39,20 +39,20 @@ public:
     int row;
     int col;
     int W_Container(){
-        return pContainer->width()-2*borad_space;
+        return pContainer->width()-2*space;
     };
     int H_Container(){
-        return pContainer->height()-2*borad_space;
+        return pContainer->height()-2*space;
     };
     int W_Block_Clean(){
-        return (W_Container()-(row-1)*space_x)/row;
+        return (W_Container()-(row-1)*spaceX)/row;
     };
     int H_Block_Clean(){
-        return (H_Container()-(col-1)*space_y)/col;
+        return (H_Container()-(col-1)*spaceY)/col;
     };
-    int borad_space;
-    int space_x;
-    int space_y;
+    int space;
+    int spaceX;
+    int spaceY;
     bool visibal;
     bool isMain = false;
     QRegion region;
@@ -116,6 +116,10 @@ public:
 
     void Update_Region();
     void Update_Positon();
+
+    void load_json(QJsonObject rootObject);
+    QJsonObject to_json();
+
 };
 
 #endif // ED_LAYOUT_H

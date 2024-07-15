@@ -1,4 +1,5 @@
 #include "ed_layout.h"
+#include "SysFunctions.h"
 #include "mainwindow.h"
 #include "qdebug.h"
 #include<cmath>
@@ -8,9 +9,9 @@
 ED_Layout::ED_Layout(QWidget *father, int row, int col, int borad_space,int space_x,int space_y) {
     this->row = row;
     this->col = col;
-    this->borad_space = borad_space;
-    this->space_x = space_x;
-    this->space_y = space_y;
+    this->space = borad_space;
+    this->spaceX = space_x;
+    this->spaceY = space_y;
     this->pContainer = father;
     for(int i=0;i<row;i++){
         for(int k=0;k<col;k++){
@@ -22,13 +23,11 @@ ED_Layout::ED_Layout(QWidget *father, int row, int col, int borad_space,int spac
 }
 
 
-
-
 QPoint ED_Layout::NearestBlockInd(QPoint point){
-    return QPoint((point.x()-borad_space)/(W_Block_Clean()+space_x),(point.y()-borad_space)/(H_Block_Clean()+space_y));
+    return QPoint((point.x()-space)/(W_Block_Clean()+spaceX),(point.y()-space)/(H_Block_Clean()+spaceY));
 }
 QPoint ED_Layout::NearestBlockInd(int posx,int posy){
-    return QPoint((posx-borad_space)/(W_Block_Clean()+space_x),(posy-borad_space)/(H_Block_Clean()+space_y));
+    return QPoint((posx-space)/(W_Block_Clean()+spaceX),(posy-space)/(H_Block_Clean()+spaceY));
 }
 
 //从Block序号获取中心坐标
@@ -76,6 +75,7 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,QPoint ind){
 }
 
 void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
+    aim->setParent(pContainer);
     int x = aim->sizeX;
     int y = aim->sizeY;
     for(int i=0;i<x;i++){
@@ -84,10 +84,10 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
             blocks[xind+i][yind+k]->content = aim;
         }
     }
-    aim->LayoutBlockX = xind;
-    aim->LayoutBlockY = yind;
+    aim->indX = xind;
+    aim->indY = yind;
 
-    aim->setFixedSize(W_Block_Clean()*aim->sizeX+(aim->sizeX-1)*space_x,H_Block_Clean()*aim->sizeY+(aim->sizeY-1)*space_y);
+    aim->setFixedSize(W_Block_Clean()*aim->sizeX+(aim->sizeX-1)*spaceX,H_Block_Clean()*aim->sizeY+(aim->sizeY-1)*spaceY);
     aim->move(blocks[xind][yind]->posX(),blocks[xind][yind]->posY());
 
     aim->update_after_resize();
@@ -108,9 +108,8 @@ void ED_Layout::put_ED_Unit(ED_Unit* aim,int xind,int yind){
     contents->push_back(aim);
 
     qDebug()<<"Put Done,Container Pos:"<<pContainer->pos()<<"Aim geometry "<<aim->geometry()<<"Pos: "<<aim->pos();
-
-    Update_Region();
-    pmw->repaint();
+    if(enable_background_blur) Update_Region();
+    aim->ed_update();
 }
 
 void ED_Layout::Update_Region(){
@@ -131,8 +130,8 @@ void ED_Layout::Update_Region(){
 void ED_Layout::RemoveAUnit(ED_Unit* aim){
     int x = aim->sizeX;
     int y = aim->sizeY;
-    int xind = aim->LayoutBlockX;
-    int yind = aim->LayoutBlockY ;
+    int xind = aim->indX;
+    int yind = aim->indY ;
     QPoint tempos = aim->mapToGlobal(QPoint(0,0));
     for(int i=0;i<x;i++){
         for(int k=0;k<y;k++){
@@ -140,8 +139,8 @@ void ED_Layout::RemoveAUnit(ED_Unit* aim){
             blocks[xind+i][yind+k]->content = NULL;
         }
     }
-    aim->LayoutBlockX = -1;
-    aim->LayoutBlockY = -1;
+    aim->indX = -1;
+    aim->indY = -1;
     aim->edlayout = nullptr;
     aim->setParent(pmw);
     aim->move(tempos);
@@ -166,13 +165,11 @@ void ED_Layout::InplaceAUnit(ED_Unit* aim){
     QPoint relativePos = absolutePos-pContainer->pos();
     QPoint dis = NearestEmptyBlockInd(aim,relativePos);
     // qDebug()<<absolutePos<<relativePos<<dis;
-    aim->setParent(pContainer);
     aim->move(absolutePos);
     put_ED_Unit(aim,dis);
 }
 
 void ED_Layout::InitAUnit(ED_Unit* aim){
-    aim->setParent(pContainer);
     default_Put_ED_Unit(aim);
     aim->update_after_resize();
     aim->raise();
@@ -240,8 +237,8 @@ QPoint ED_Layout::NearestEmptyBlockInd(ED_Unit* aim,int posx,int posy)
     {
         for(int j=0;j<col;j++)
         {
-            int deltaw=abs(posx-borad_space-i*(W_Block_Clean()+space_x));
-            int deltah=abs(posy-borad_space-j*(H_Block_Clean()+space_y));
+            int deltaw=abs(posx-space-i*(W_Block_Clean()+spaceX));
+            int deltah=abs(posy-space-j*(H_Block_Clean()+spaceY));
             if((deltaw+deltah<mindeltaw+mindeltah)&&(OKForUnit(aim,i,j)))
             {
                 mindeltaw=deltaw;
@@ -265,7 +262,7 @@ void ED_Layout::setVisible(bool val){
     }
     visibal = val;
     Update_Region();
-    pmw->update();
+    pContainer->update();
     qDebug()<<"setted"<<countt<<" "<<val;
 }
 bool ED_Layout::Visible(){
@@ -273,7 +270,60 @@ bool ED_Layout::Visible(){
 }
 void ED_Layout::Update_Positon(){
     for(ED_Unit* aim:*contents){
-        aim->setFixedSize(W_Block_Clean()*aim->sizeX+(aim->sizeX-1)*space_x,H_Block_Clean()*aim->sizeY+(aim->sizeY-1)*space_y);
-        aim->move(blocks[aim->LayoutBlockX][aim->LayoutBlockY]->posX(),blocks[aim->LayoutBlockX][aim->LayoutBlockY]->posY());
+        aim->setFixedSize(W_Block_Clean()*aim->sizeX+(aim->sizeX-1)*spaceX,H_Block_Clean()*aim->sizeY+(aim->sizeY-1)*spaceY);
+        aim->move(blocks[aim->indX][aim->indY]->posX(),blocks[aim->indX][aim->indY]->posY());
+
+
     }
+}
+
+
+QJsonObject ED_Layout::to_json()
+{
+    QJsonObject rootObject;
+    rootObject.insert("row",row);
+    rootObject.insert("col",col);
+    rootObject.insert("space",space);
+    rootObject.insert("spaceX",spaceX);
+    rootObject.insert("spaceY",spaceY);
+    QJsonArray contentArray;
+    foreach (ED_Unit* content, *(contents)) {
+        contentArray.append(content->to_json());
+    }
+    rootObject.insert("contents",contentArray);
+    return rootObject;
+}
+
+void ED_Layout::load_json(QJsonObject rootObject)
+{
+
+    for(int i=0;i<row;i++){
+        for(int k=0;k<col;k++){
+            delete blocks[i][k];
+        }
+    }
+    contents->clear();
+
+    row = rootObject.value("row").toInt();
+    col = rootObject.value("col").toInt();
+    space = rootObject.value("space").toInt();
+    spaceX = rootObject.value("spaceX").toInt();
+    spaceY = rootObject.value("spaceY").toInt();
+
+
+    for(int i=0;i<row;i++){
+        for(int k=0;k<col;k++){
+            blocks[i][k] = new little_Block(this,i,k);
+            blocks[i][k]->occupied = false;
+        }
+    }
+
+    QJsonArray contentArray = rootObject.value("contents").toArray();
+    foreach (QJsonValue contentValue , (contentArray)) {
+        QJsonObject contentObject = contentValue.toObject();
+        ED_Unit* unit = from_json(contentObject);
+        put_ED_Unit(unit,unit->indX,unit->indY);
+    }
+
+
 }

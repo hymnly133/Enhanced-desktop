@@ -10,21 +10,24 @@ class PictureBox : public QWidget
 {
     Q_OBJECT
 public:
-    enum PB_MODE {FIXED_SIZE, FIX_SIZE_CENTRED, AUTO_ZOOM, AUTO_SIZE};
     explicit PictureBox(QWidget *parent=0,double m_scale =1.0);
-    void setMode(PB_MODE mode);
     void setScale(double scale);
     ~PictureBox();
-private:
-    QPixmap m_pixmap;
-    double m_scale;
-    PB_MODE m_mode;
+    QPixmap source;
+    QPixmap scaled;
     QBrush m_brush;
+    QSize displaySize;
+    QSize actualSize;
+
+    int off_x,off_y;
+    bool changed = true;
+    double m_scale = 1.0;
+    void updateDispaly();
 protected:
     void paintEvent(QPaintEvent * event);
 
 public slots:
-    bool setImage(QPixmap &image, double scale =1.0,double pixresize =1.0);
+    bool setImage(QPixmap &image);
     void setBackground(QBrush brush);
 };
 #endif

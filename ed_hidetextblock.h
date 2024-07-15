@@ -1,29 +1,20 @@
 #ifndef ED_HIDETEXTBLOCK_H
 #define ED_HIDETEXTBLOCK_H
 
-#include "ed_unit.h"
-#include "picturebox.h"
-#include "qlabel.h"
-class ED_HideTextBlock:public ED_Unit
+#include "ed_block.h"
+class ED_HideTextBlock:public ED_Block
 {
-public:
+    Q_OBJECT
 
-    QLabel* lb ;
-    QString cmd;
-    QString name;
-    static int default_size;
 public:
-    PictureBox* gv ;
-    explicit     ED_HideTextBlock(QWidget *parent,QPixmap image,QString name,QString cmd,int sizex,int sizey);
-
-    void update_after_resize() override;
-protected:
-    void double_click_action() override;
-    void single_click_action() override;
-    void paintEvent(QPaintEvent *event) override;
-public slots:
-    void getaClick();
-    void getaDoubleClick();
+    // using ED_Block::ED_Block;
+    explicit ED_HideTextBlock():ED_HideTextBlock(nullptr,1,1){};
+    explicit ED_HideTextBlock(QWidget *parent, int sizey = 1, int sizex = 1);
+    explicit ED_HideTextBlock(QWidget *parent, QPixmap image, QString _name, QString filepath, int sizex, int sizey);
+    ED_HideTextBlock(const ED_HideTextBlock& other):ED_HideTextBlock(other.parentWidget(),other.iconmap,other.name,other.filePath,other.sizeX,other.sizeY){};
+    void whenSimpleModeChange(bool val) override;
+    void whenScaleChange(double) override;
+    // void ed_update() override;
 };
-
+Q_DECLARE_METATYPE(ED_HideTextBlock)
 #endif // ED_HIDETEXTBLOCK_H

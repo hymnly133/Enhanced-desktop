@@ -1,14 +1,13 @@
 #include "ed_dock.h"
-#include "SysFunctions.h"
 #include"ed_unit.h"
 #include "qdebug.h"
 #include"QPainterPath"
 #include"QPainter"
+#include"QJsonObject"
 ED_Dock::ED_Dock(QWidget *parent,int outSizeX,int outSizeY,int inSize)
     : ED_Container(parent,outSizeX,outSizeY,inSize,1,2,80,10)
 {
     alwaysShow = true;
-    insize = inSize;
     setMainColor(QColor(79,98,124));
 }
 
@@ -33,13 +32,13 @@ void ED_Dock::paintEvent(QPaintEvent *event){
     auto tem = mainColor_Alphaed();
 
     int count=0;
-    for(int i=0;i<insize;i++){
+    for(int i=0;i<row;i++){
         if(edlayout->Occupied(i,0)){
             count++;
             auto temm = edlayout->getUnitFromBlock(i,0)->mainColor;
             float ratio = 1.0*edlayout->blocks[i][0]->CenterX()/width();
             // qDebug()<<"found" << i<<ratio<<edlayout->blocks[i][0]->CenterX()<<width();
-            temm.setAlpha(aim_alpha());
+            temm.setAlpha(colorAlpha);
             linearGradient.setColorAt(ratio, temm);
         }
     }

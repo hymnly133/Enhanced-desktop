@@ -1,9 +1,7 @@
 #include "hitokoto.h"
 #include "QWidget"
 #include"QProcess"
-#include "qaction.h"
 #include "qboxlayout.h"
-#include"SysFunctions.h"
 #include "qlabel.h"
 #include"QDebug"
 #include"QUrl"
@@ -15,7 +13,6 @@
 #include <QUrlQuery>
 #include"QDesktopServices"
 #include"QTextCodec"
-#include "qpainter.h"
 #include"QGraphicsDropShadowEffect"
 
 Hitokoto::Hitokoto(QWidget *parent,int sizex,int sizey)

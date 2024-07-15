@@ -21,8 +21,8 @@ ED_BGShower::ED_BGShower(QWidget *parent)
 void ED_BGShower::paintEvent(QPaintEvent * ev){
     // qDebug()<<"bg_pre_painted"<<pmw->transparent;
     auto tem = updateMask();
-    setMask(tem);
     QPainter painter(this);
+    painter.setClipRegion(tem);
     if(enable_background_transparent&&cap){
         painter.drawPixmap(rect(),captrued);
     }

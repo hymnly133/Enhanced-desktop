@@ -22,6 +22,8 @@ extern int icon_shadow_blur_radius;
 extern int unit_shadow_alpha;
 extern int unit_shadow_blur_radius;
 
+extern int unit_radius;
+
 extern bool enable_background_transparent;
 extern bool enable_background_blur;
 extern bool enable_light_track;
@@ -29,5 +31,9 @@ extern bool enable_light_track;
 extern bool enable_intime_repaint;
 
 extern bool enable_image_fill;
+
+extern int muilt_icon_default_type;
+
+extern double scale_fix_ratio;
 
 #endif // STYLE_H

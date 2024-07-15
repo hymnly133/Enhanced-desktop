@@ -13,19 +13,14 @@
 #include "qpainter.h"
 #include"QGraphicsDropShadowEffect"
 
-int ED_BLOCK::default_size = 48;
-
-ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, int sizex, int sizey)
-    : ED_Unit(parent, sizex, sizey), previewWidget(new FilePreviewWidget(this))
-{
-    type = Block;
-    cmd = _cmd;
-    cmd = QString("file:///") + cmd;
-    name = _name;
+int ED_Block::default_size = 48;
+ED_Block::ED_Block(QWidget *parent, int sizex, int sizey):ED_Unit(parent, sizex, sizey), previewWidget(new FilePreviewWidget(this)){
+    filePath = "empty";
+    name = "empty";
 
     // 初始化内部组件
     vl = new QVBoxLayout(this);
-    vl->setContentsMargins(5, 5, 5, 5);
+    vl->setContentsMargins(0, 5, 0, 5);
     vl->addSpacing(0);
 
     gv = new PictureBox(this, 1.0);
@@ -33,65 +28,96 @@ ED_BLOCK::ED_BLOCK(QWidget *parent, QPixmap image, QString _name, QString _cmd, 
     lb->adjustSize();
 
     // 显示图标
-    gv->setMode(PictureBox::FIX_SIZE_CENTRED);
-    double defaultRatio = (double)default_size/image.size().width();
-    iconmap=image;
+    // double defaultRatio = (double)default_size/image.size().width();
+    iconmap=QPixmap();
     setMainColor(pixmapMainColor(iconmap,sleep_color_ratio));
 
     (( QGraphicsDropShadowEffect*)graphicsEffect())->setColor(mainColor);
-    gv->setImage(image,1.0,defaultRatio);
+    gv->setImage(iconmap);
     gv->setBackground(QBrush (QColor(0,0,0,0)));
-    vl->setAlignment(Qt::AlignHCenter);
+    gv->setVisible(true);
+    // vl->setAlignment(Qt::AlignHCenter);
 
     // 添加布局
     vl->addStretch();
     vl->addWidget(gv);
-    vl->setAlignment(gv, Qt::AlignHCenter);
+    vl->setAlignment(gv, Qt::AlignCenter);
+    // vl->setAlignment(gv, Qt::AlignVCenter);
+
     vl->addWidget(lb);
-    vl->setAlignment(lb, Qt::AlignHCenter);
+    vl->setAlignment(lb, Qt::AlignCenter);
     vl->addStretch();
 
     // 显示名字
-    lb->setAlignment(Qt::AlignHCenter);
+    lb->setAlignment(Qt::AlignCenter);
     lb->setFont(QFont("MiSans", 10, 40));
     lb->setFixedWidth(width() - 5);
-
     lb->setText(elidedLineText(lb, 3, name));
 
 
     auto tem = mainColor;
     tem.setAlpha(icon_shadow_alpha);
 
-    QGraphicsDropShadowEffect* effect0 = new QGraphicsDropShadowEffect;
-    effect0->setColor(tem);
-    effect0->setBlurRadius(10);   // 模糊半径
-    effect0->setOffset(10);      // 偏移量
-    lb->setGraphicsEffect(effect0);
+    icon_shadow = new QGraphicsDropShadowEffect;
+    icon_shadow->setColor(tem);
+    icon_shadow->setBlurRadius(10);   // 模糊半径
+    icon_shadow->setOffset(10);      // 偏移量
+    lb->setGraphicsEffect(icon_shadow);
 
-    QGraphicsDropShadowEffect* effect1 = new QGraphicsDropShadowEffect;
-    effect1->setColor(tem);
-    effect1->setBlurRadius(icon_shadow_blur_radius);   // 模糊半径
-    effect1->setOffset(0, 0);      // 偏移量
-    gv->setGraphicsEffect(effect1);
-
-    // 调试信息
-    qDebug() << "ED_BLOCK initialized";
+    text_shadow = new QGraphicsDropShadowEffect;
+    text_shadow->setColor(tem);
+    text_shadow->setBlurRadius(icon_shadow_blur_radius);   // 模糊半径
+    text_shadow->setOffset(0, 0);      // 偏移量
+    gv->setGraphicsEffect(text_shadow);
+    setScale(1.0);
 }
 
+
+
+ED_Block::ED_Block(QWidget *parent, QPixmap image, QString _name, QString filepath, int sizex, int sizey)
+    : ED_Block(parent, sizex, sizey)
+{
+    filePath = filepath;
+    name = _name;
+    // 初始化内部组件
+    // 显示图标
+    iconmap=image;
+    setMainColor(pixmapMainColor(iconmap,sleep_color_ratio));
+
+    ((QGraphicsDropShadowEffect*)graphicsEffect())->setColor(mainColor);
+
+    gv->setImage(image);
+
+    lb->setText(elidedLineText(lb, 3, name));
+
+
+    auto tem = mainColor;
+    tem.setAlpha(icon_shadow_alpha);
+    icon_shadow->setColor(tem);
+    text_shadow->setColor(tem);
+
+}
+
+
+ED_Block::ED_Block(QWidget *parent, QString path, int sizeX, int sizeY):ED_Block(parent,sizeX,sizeY)
+{
+    unzip(path);
+}
 //---------------------------------------------------
 
-void ED_BLOCK::update_after_resize(){
+void ED_Block::update_after_resize(){
     ED_Unit::update_after_resize();
     lb->setFixedWidth(width()-5);
     lb->setText(elidedLineText(lb,4,name));
+    gv->updateDispaly();
 }
-void ED_BLOCK::mouse_enter_action(){
+void ED_Block::mouse_enter_action(){
     ED_Unit::mouse_enter_action();
     mainColor = pixmapMainColor(iconmap, active_color_ratio);
 
     // 文件预览
-    QFileInfo fileInfo(cmd.mid(8)); // 去掉 "file:///"
-    qDebug() << "File info: " << fileInfo.filePath(); // 调试信息
+    QFileInfo fileInfo(filePath); // 去掉 "file:///"
+    qDebug() << "File info: " << fileInfo.filePath()<<scale<<gv->m_scale<<gv->displaySize<<gv->actualSize; // 调试信息
     if (fileInfo.isFile()) {
         if (fileInfo.suffix() == "txt") {
             QFile file(fileInfo.filePath());
@@ -129,9 +155,7 @@ void ED_BLOCK::mouse_enter_action(){
     }
 }
 
-//---------------------------------------------------
-
-void ED_BLOCK::mouse_leave_action(){
+void ED_Block::mouse_leave_action(){
     // 最终移动执行
     ED_Unit::mouse_leave_action();
 
@@ -141,25 +165,84 @@ void ED_BLOCK::mouse_leave_action(){
         // 隐藏视频预览
 }
 
-void ED_BLOCK::double_click_action(){
+void ED_Block::double_click_action(){
     //最终双击执行
     ED_Unit::double_click_action();
+    QString cmd= QString("file:///")+filePath;
     qDebug("cmd = %s",qPrintable(cmd));
     QDesktopServices::openUrl(QUrl(cmd));
 }
 
-void ED_BLOCK::paintEvent(QPaintEvent *event)
+void ED_Block::paintEvent(QPaintEvent *event)
 {
+    // qDebug()<<"painter";
     ED_Unit::paintEvent(event);
     QColor alphaed = mainColor_Alphaed();
     paintRect(this,alphaed);
 }
-void ED_BLOCK::whenSimpleModeChange(bool val){
-    ED_Unit::whenSimpleModeChange(val);
+
+QJsonObject ED_Block::to_json()
+{
+    QJsonObject rootObject = ED_Unit::to_json();
+    rootObject.insert("path",filePath);
+    return rootObject;
+}
+
+void ED_Block::load_json(QJsonObject rootObject)
+{
+    ED_Unit::load_json(rootObject);
+    unzip(rootObject.value("path").toString());
+}
+
+void ED_Block::whenMainColorChange(QColor val)
+{
+    ED_Unit::whenMainColorChange(val);
+    if(dark){
+        lb->setStyleSheet("color:white;");
+    }
+    else{
+        lb->setStyleSheet("color:black;");
+    }
+}
+
+void ED_Block::ed_update()
+{
+    ED_Unit::ed_update();
+    whenScaleChange(scale*scaleFix);
+}
+void ED_Block::whenSimpleModeChange(bool val){
     lb->setVisible(!val);
 }
 
-void ED_BLOCK::whenScaleChange(float val){
-    ED_Unit::whenSimpleModeChange(val);
-    gv->setScale(val);
+void ED_Block::whenScaleChange(double val){
+    qDebug()<<"called"<<val<<default_scale;
+    gv->setScale(val*default_scale);
+}
+
+void ED_Block::unzip(QString filepath)
+{
+    QList<FileInfo> infos = getFormFileInfo(QFileInfo(filepath));
+    FileInfo info = infos[0];
+    qDebug() << info.name;
+
+    filePath = info.filePath;
+    name = info.name;
+    // 初始化内部组件
+
+    // 显示图标
+    iconmap=info.icon.pixmap(256);
+
+    setMainColor(pixmapMainColor(iconmap,sleep_color_ratio));
+
+    ((QGraphicsDropShadowEffect*)graphicsEffect())->setColor(mainColor);
+
+    gv->setImage(iconmap);
+
+    lb->setText(elidedLineText(lb, 3, name));
+
+
+    auto tem = mainColor;
+    tem.setAlpha(icon_shadow_alpha);
+    icon_shadow->setColor(tem);
+    text_shadow->setColor(tem);
 }

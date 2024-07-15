@@ -52,7 +52,6 @@ void Weather::handleWeatherResponse(QNetworkReply *reply)
 
 void Weather::double_click_action(){
     //qDebug() <<"wearther";
-    emit sendSelf();
     addWeatherInfo("101010200");
 }
 

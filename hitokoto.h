@@ -26,5 +26,5 @@ public:
     void handlehitokotoresponse(QNetworkReply *reply);
 
 };
-
+Q_DECLARE_METATYPE(Hitokoto)
 #endif // HITOKOTO_H

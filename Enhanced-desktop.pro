@@ -1,4 +1,4 @@
-QT       += core gui widgets winextras network multimedia multimediawidgets
+QT += core gui widgets winextras network multimedia multimediawidgets
 win32 {
 LIBS+= -luser32    # 使用WindowsAPI需要链接库
 

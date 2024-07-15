@@ -10,11 +10,11 @@ static const QSize IMAGE_SIZE = QSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 
 PictureBox::PictureBox(QWidget *parent,double m_scale) : QWidget(parent)
 {
-    m_pixmap = QPixmap(IMAGE_SIZE);
-    m_pixmap.fill();
-    this->m_scale = m_scale;
-    m_mode = FIXED_SIZE;
+    source = QPixmap(IMAGE_SIZE);
+    source.fill();
     m_brush = QBrush(Qt::white);
+    setScale(m_scale);
+    setAttribute(Qt::WA_TransparentForMouseEvents, true);
 }
 
 void PictureBox::setBackground(QBrush brush)
@@ -23,47 +23,21 @@ void PictureBox::setBackground(QBrush brush)
     update();
 }
 
-void PictureBox::setMode(PB_MODE mode)
-{
-    m_mode = mode;
-    if(m_mode == AUTO_SIZE)
-    {
-        setFixedSize(m_pixmap.size() * m_scale);
-    }
-    else
-    {
-
-        setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-        setMinimumSize(0, 0);
-    }
-    update();
-}
 
 void PictureBox::setScale(double scale){
-        m_scale = qBound(0.01, scale, 100.0);
-    int image_width = m_pixmap.width();
-    int image_height = m_pixmap.height();
-    setFixedSize(image_width * m_scale, image_height *m_scale);
-    update();
+
+    m_scale = qBound(0.01, scale, 2.0);
+    updateDispaly();
 }
 
-bool PictureBox::setImage(QPixmap &image, double scale,double pixresize)
+bool PictureBox::setImage(QPixmap &image)
 {
     if(image.isNull())
     {
         return false;
     }
-    m_pixmap = image;
-    m_pixmap =m_pixmap.scaled(QSize(image.width() * pixresize, image.height() *pixresize)
-                               , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
-    setScale(scale);
-
-    if(m_mode == AUTO_SIZE)
-    {
-        setFixedSize(m_pixmap.size() * m_scale);
-    }
-    update();
+    source = image;
+    updateDispaly();
     return true;
 }
 
@@ -72,73 +46,61 @@ void PictureBox::paintEvent(QPaintEvent * event)
     Q_UNUSED(event);
     QPainter painter(this);
     painter.setBackground(m_brush);
-    painter.eraseRect(rect());
+    // painter.eraseRect(rect());
+    painter.drawPixmap(off_x, off_y, scaled);
+    paintSide(this,QColor("red"));
+}
+
+void PictureBox::updateDispaly()
+{
 
     double window_width, window_height;
     double image_width, image_height;
     double r1, r2, r;
-    int offset_x, offset_y;
-    QPixmap m_logopix;
-    switch (m_mode)
-    {
-    case FIXED_SIZE:
-    case AUTO_SIZE:
-        painter.scale(m_scale, m_scale);
 
-        painter.drawPixmap(0, 0, m_pixmap);
-        break;
+    window_width = parentWidget()->width();
+    window_height = parentWidget()->height();
 
-    case FIX_SIZE_CENTRED:
-        window_width = width();
-        window_height = height();
-        image_width = m_pixmap.width();
-        image_height = m_pixmap.height();
-        offset_x = (window_width - m_scale * image_width) / 2;
-        offset_y = (window_height - m_scale * image_height) / 2;
-        painter.translate(offset_x, offset_y);
+    image_width = source.width();
+    image_height = source.height();
 
-        m_logopix = m_pixmap.scaled(QSize(image_width * m_scale, image_height *m_scale)
-                                            , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        // painter.scale(m_scale, m_scale);
-        painter.drawPixmap(0, 0, m_logopix);
+    r1 = window_width / image_width;
+    r2 = window_height / image_height;
+
+    if(enable_image_fill)
+        r = qMax(r1, r2);
+    else
+        r= qMin(r1,r2);
+
+    displaySize =QSize(image_width * r * m_scale, image_height * r * m_scale);
+
+    actualSize = displaySize;
+    off_x = 0;
+    off_y = 0 ;
 
 
-        // painter.scale(m_scale, m_scale);
-        // painter.drawPixmap(0, 0, m_pixmap);
-        break;
-
-    case AUTO_ZOOM:
-
-        window_width = width();
-        window_height = height();
-        image_width = m_pixmap.width();
-        image_height = m_pixmap.height();
-        r1 = window_width / image_width;
-        r2 = window_height / image_height;
-        if(enable_image_fill==true)
-            r = qMax(r1, r2);
-        else
-            r=qMin(r1,r2);
-        m_logopix = m_pixmap.scaled(QSize(image_width * r, image_height *r)
-                                    , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-
-
-        image_width = m_logopix.width();
-        image_height = m_logopix.height();
-        int dis_x = (window_width-image_width)/2;
-        int dis_y = (window_height-image_height)/2;
-
-        // qDebug()<<window_width<<window_height<<image_width<<image_height<<r<<dis_x<<dis_y<<parentWidget()->size();
-
-        painter.drawPixmap(dis_x, dis_y, m_logopix);
-        break;
+    if(displaySize.width()>window_width){
+        actualSize.setWidth(window_width);
+        off_x = -(displaySize.width()-window_width)/2;
     }
-    // QPainter p(this);
-    // p.setPen(QColor("green")); //设置画笔记颜色
-    // p.drawRect(0, 0, width() -1, height() -1); //绘制边框
 
-    paintSide(this,QColor("red"));
+    if(displaySize.height()>window_height){
+        actualSize.setHeight(window_height);
+        off_y = -(displaySize.height()-window_height)/2;
+    }
+
+
+    changed = true;
+
+    scaled = source.scaled(displaySize
+                           , Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+\
+
+
+    setFixedSize(actualSize);
 }
+
 PictureBox::~PictureBox()
 {
 

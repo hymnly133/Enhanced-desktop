@@ -16,7 +16,8 @@ class Weather : public ED_Unit
 {
     Q_OBJECT
 public:
-    explicit Weather(QWidget *parent = nullptr,int sizex=1,int sizey=1);
+    explicit Weather():Weather(nullptr,1,1){};
+    explicit Weather(QWidget *parent,int sizex=1,int sizey=1);
     QLabel *temperatureLabel;
     QLabel *weatherlabel;
     QLabel *advicelabel;
@@ -25,11 +26,9 @@ public:
     void addWeatherInfo(QString citycode);
     void double_click_action() override;
     void parsejson(QByteArray& byteArray);
-signals:
-    void sendSelf();
 private slots:
     void handleWeatherResponse(QNetworkReply *reply);
 
 };
-
+Q_DECLARE_METATYPE(Weather)
 #endif // WEATHER_H

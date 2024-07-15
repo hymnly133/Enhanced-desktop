@@ -17,5 +17,5 @@ public:
     QVBoxLayout* tem;
 signals:
 };
-
+Q_DECLARE_METATYPE(ED_EditBox)
 #endif // ED_EDITBOX_H

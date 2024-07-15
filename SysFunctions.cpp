@@ -1,9 +1,11 @@
 #include<windows.h>
 #include"mainwindow.h"
+#include "qpainter.h"
+#include"windows.h"
+#include "shlobj.h"
 #include"mousehook.h"
 #include"SysFunctions.h"
 #include"QTextCodec"
-#include "qpainter.h"
 #include <QJsonObject>
 #include<QDir>
 #include<QFileInfo>
@@ -11,16 +13,99 @@
 #include<QFileIconProvider>
 #include<QSettings>
 #include<QIcon>
+#include <QMetaType>
+#include <QtCore>
+#include<QMessageBox>
 MainWindow* pmw;;
 MouseHook* pmh;
+
 QTextCodec* utf8 = QTextCodec::codecForName("utf-8");
 QTextCodec* gbk = QTextCodec::codecForName("GBK");
 
+#include <QCoreApplication>
+#include <QDebug>
+#include <QFile>
+#include <QTextStream>
+#include <QDateTime>
+#include <QMutex>
+static QMutex mutex;
 
+
+void customMessageHandler(QtMsgType type,
+                          const QMessageLogContext &context,
+                          const QString &msg)
+{
+    //Q_UNUSED(context)
+    QDateTime _datetime = QDateTime::currentDateTime();
+    QString szDate = _datetime.toString("yyyy-MM-dd hh:mm:ss.zzz");//"yyyy-MM-dd hh:mm:ss ddd"
+    QString txt(szDate);
+switch (type)
+    {
+    case QtDebugMsg://调试信息提示
+    {
+        txt += QString(" [Debug] ");
+        break;
+    }
+    case QtInfoMsg://信息输出
+    {
+        txt += QString(" [Info] ");
+        break;
+    }
+    case QtWarningMsg://一般的warning提示
+    {
+        txt += QString(" [Warning] ");
+        break;
+    }
+    case QtCriticalMsg://严重错误提示
+    {
+        txt += QString(" [Critical] ");
+        break;
+    }
+    case QtFatalMsg://致命错误提示
+    {
+        txt += QString(" [Fatal] ");
+        //abort();
+        break;
+    }
+    default:
+    {
+        txt += QString(" [Trace] ");
+        break;
+    }
+    }
+
+    txt.append( QString(" %1").arg(context.file) );
+    txt.append( QString("<%1>: ").arg(context.line) );
+    txt.append(msg);
+
+    mutex.lock();
+    QFile file("log.txt");
+    file.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream text_stream(&file);
+    text_stream << txt << "\r\n";
+    file.close();
+    mutex.unlock();
+}
 QRect AbsoluteRect(QWidget* aim){
     auto tem = aim->geometry();
     auto pos = aim->parentWidget()->pos();
     return QRect(pos.x()+tem.x(),pos.y()+tem.y(),tem.width(),tem.height());
+}
+
+ED_Unit* from_json(QJsonObject data){
+    QString name = data.value("Class").toString();
+    int id = QMetaType::type(name.toStdString().c_str());
+    if (id == QMetaType::UnknownType){
+        qDebug()<<"error";
+        return nullptr;
+        ; // ERROR HERE
+
+    }
+    auto k = QMetaType::create(id);
+    ED_Unit *unit = static_cast<ED_Unit*>(QMetaType::create(id));
+    unit->load_json(data);
+    return unit;
+
 }
 
 void paintRect(QWidget* aim,QColor color){
@@ -31,8 +116,11 @@ void paintRect(QWidget* aim,QColor color){
         choosen = ((ED_Unit*)aim)->onmouse;
     }
     if(ShowRect&(another)){
-        QPainter paint(aim);
-        paint.fillRect(aim->rect(),color);
+        QPainter painter(aim);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(color);
+        painter.drawRect(aim->rect());;
     }
 }
 
@@ -55,6 +143,7 @@ void paintLight(QWidget* aim,QColor color){
         }
         //创建了一个QRadialGradient对象实例，参数分别为中心坐标，半径长度和焦点坐标,如果需要对称那么中心坐标和焦点坐标要一致
         QPainter painter(aim);
+        painter.setRenderHint(QPainter::Antialiasing);
         painter.setPen(Qt::NoPen);
         color.setAlpha(light_alpha_start);
         radialGradient->setColorAt(0,color);
@@ -101,14 +190,11 @@ void Init(MainWindow* mainwindow){
     //初始化
     qDebug()<<"Initing";
     //无边框全屏
-    mainwindow->setWindowState(Qt::WindowFullScreen);
-    mainwindow->setAttribute(Qt::WA_TranslucentBackground);
-    // mainwindow-> setWindowFlags(Qt::FramelessWindowHint);
 
     //注入壁纸
     inplace((QWidget* )mainwindow);
+
     qDebug()<<"Initing done";
-    pmw = mainwindow;
 }
 
 
@@ -178,139 +264,135 @@ void inplace2(QWidget* pmw2) {
     // 如果找到了符合条件的 WorkerW 窗口，设置 Qt 窗口的父窗口
 }
 
+QList<FileInfo>getFormFileInfo(QFileInfo x){
+    QList<FileInfo > files;
+    FileInfo file;
+    file.type = FileInfo::NORM;
+    file.filePath=x.absoluteFilePath();
+    QString fileName = x.fileName();
+    int lastDotIndex = fileName.lastIndexOf('.');
+    if (lastDotIndex != -1)
+    {
+        fileName.remove(lastDotIndex, fileName.length() - lastDotIndex);
+    }
+    file.name=fileName;
+    qDebug()<<x.suffix().toLower()<<x.symLinkTarget();
+    if (x.suffix().toLower() == "lnk")
+    {
+        // 处理快捷方式（.lnk 文件）
+        QString target = x.symLinkTarget();
+        if (!target.isEmpty())
+        {
+            qDebug()<<"redirect"<<target<<"success";
+
+            QDir targetDir(QFileInfo(target).absolutePath());
+            // QStringList iconFiles = targetDir.entryList(QStringList() << "*.ico", QDir::Files);
+            // if (!iconFiles.isEmpty())
+            // {
+            //     file.icon = QIcon(targetDir.absoluteFilePath(iconFiles.first())); // 或者根据需要设置其他类型
+            // }
+            // if(file.icon.isNull())
+            // {
+            QFileIconProvider iconProvider;
+            file.icon =iconProvider.icon(QFileInfo(target));
+            // }
+        }
+    }
+    else
+    {
+        QFileIconProvider a;
+        file.icon = a.icon(x);
+    }
+    //针对steam游戏
+    QSettings shortcut(x.filePath(), QSettings::IniFormat);
+    QString target = shortcut.value("InternetShortcut/URL").toString();
+    QRegularExpression re("steam://rungameid/(\\d+)");
+    QRegularExpressionMatch match = re.match(target);
+    if (match.hasMatch())
+    {
+        file.multi =true;
+        QString gameId = match.captured(1);
+        //QString steamPath = "C:/Program Files (x86)/Steam/appcache/librarycache"; // 你的Steam安装路径
+        QString steamPath;
+        QSettings reg("HKEY_CURRENT_USER\\Software\\Valve\\Steam", QSettings::NativeFormat);
+        steamPath = reg.value("SteamPath").toString()+"/appcache/librarycache";
+        QStringList result;
+        QDir directory(steamPath);
+        QStringList steamfileList=directory.entryList(QDir::Files);
+
+        QRegularExpression regex(gameId+"_library_600x900");
+        //长竖图标版本
+        steamfileList=directory.entryList(QDir::Files);
+
+
+        foreach(const QString& steamfilename,steamfileList)
+        {
+            if(regex.match(steamfilename).hasMatch())
+            {
+                file.icon=QIcon(directory.absoluteFilePath(steamfilename));
+                file.type = FileInfo::HORI;
+                files.append(file);
+            }
+        }
+        regex = QRegularExpression(gameId+"_header");
+        //长横图标版本
+        foreach(const QString& steamfilename,steamfileList)
+        {
+            if(regex.match(steamfilename).hasMatch())
+            {
+                file.icon=QIcon(directory.absoluteFilePath(steamfilename));
+                file.type = FileInfo::VERT;
+                files.append(file);
+            }
+        }
+
+
+        regex = QRegularExpression(gameId+"_icon");
+        //小图标版本
+        foreach(const QString& steamfilename,steamfileList)
+        {
+            if(regex.match(steamfilename).hasMatch())
+            {
+                result.append(directory.absoluteFilePath(steamfilename));
+                file.icon=QIcon(directory.absoluteFilePath(steamfilename));
+                file.type = FileInfo::NORM;
+            }
+        }
+    }
+    files.append(file);
+    qDebug()<<QString::fromLocal8Bit(x.absoluteFilePath().toLocal8Bit())<<files.size();
+    return files;
+    //以上为针对steam游戏
+}
+
 QList<FileInfo> scandesktopfiles(const QString &desktopPath)
 {
     //对于指定桌面路径，返还桌面路径中的文件信息的列表
     QList<FileInfo> files;
-    QList<FileInfo> steamfiles;
     QDir desktopDir(desktopPath);
     desktopDir.setFilter(QDir::Files|QDir::Dirs|QDir::NoDotAndDotDot);
     QFileInfoList fileInfoList=desktopDir.entryInfoList();
     foreach(const QFileInfo &x,fileInfoList)
     {
-        FileInfo file;;
-        file.type = FileInfo::NORM;
-        file.filePath=x.absoluteFilePath();
-        QString fileName = x.fileName();
-        int lastDotIndex = fileName.lastIndexOf('.');
-        if (lastDotIndex != -1)
-        {
-            fileName.remove(lastDotIndex, fileName.length() - lastDotIndex);
-        }
-        file.name=fileName;
-        qDebug()<<x.suffix().toLower()<<x.symLinkTarget();
-        if (x.suffix().toLower() == "lnk")
-        {
-            // 处理快捷方式（.lnk 文件）
-            QString target = x.symLinkTarget();
-            if (!target.isEmpty())
-            {
-                qDebug()<<target<<"success";
-                QDir targetDir(QFileInfo(target).absolutePath());
-                QStringList iconFiles = targetDir.entryList(QStringList() << "*.ico", QDir::Files);
-                if (!iconFiles.isEmpty())
-                {
-                    file.icon = QIcon(targetDir.absoluteFilePath(iconFiles.first())); // 或者根据需要设置其他类型
-                }
-                if(file.icon.isNull())
-                {
-                    QFileIconProvider iconProvider;
-                    file.icon =iconProvider.icon(QFileInfo(target));
-                }
-            }
-        }
-        else
-        {
-            QFileIconProvider a;
-            file.icon = a.icon(x);
-        }
-        //针对steam游戏
-        QSettings shortcut(x.filePath(), QSettings::IniFormat);
-        QString target = shortcut.value("InternetShortcut/URL").toString();
-        QRegularExpression re("steam://rungameid/(\\d+)");
-        QRegularExpressionMatch match = re.match(target);
-        if (match.hasMatch())
-        {
-            QString gameId = match.captured(1);
-            //QString steamPath = "C:/Program Files (x86)/Steam/appcache/librarycache"; // 你的Steam安装路径
-            QString steamPath;
-            QSettings reg("HKEY_CURRENT_USER\\Software\\Valve\\Steam", QSettings::NativeFormat);
-            steamPath = reg.value("SteamPath").toString()+"/appcache/librarycache";
-            QStringList result;
-            QDir directory(steamPath);
-            QStringList steamfileList=directory.entryList(QDir::Files);
-
-            QRegularExpression regex(gameId+"_library");
-            //长竖图标版本
-            steamfileList=directory.entryList(QDir::Files);
-            foreach(const QString& steamfilename,steamfileList)
-            {
-                if(regex.match(steamfilename).hasMatch())
-                {
-                    file.icon=QIcon(directory.absoluteFilePath(steamfilename));
-                    file.type = FileInfo::HORI;
-                    files.append(file);
-                    steamfiles.append(file);
-                }
-            }
-
-
-            regex = QRegularExpression(gameId+"_header");
-            //长横图标版本
-            steamfileList=directory.entryList(QDir::Files);
-            foreach(const QString& steamfilename,steamfileList)
-            {
-                if(regex.match(steamfilename).hasMatch())
-                {
-                    file.icon=QIcon(directory.absoluteFilePath(steamfilename));
-                    file.type = FileInfo::VERT;
-                    files.append(file);
-                    steamfiles.append(file);
-                }
-            }
-
-
-            regex = QRegularExpression(gameId+"_icon");
-            //小图标版本
-            foreach(const QString& steamfilename,steamfileList)
-            {
-                if(regex.match(steamfilename).hasMatch())
-                {
-                    result.append(directory.absoluteFilePath(steamfilename));
-                    file.icon=QIcon(directory.absoluteFilePath(steamfilename));
-                    file.type = FileInfo::NORM;
-                }
-            }
-        }
-        //以上为针对steam游戏
-        files.append(file);
+        files.append(getFormFileInfo(x));
     }
-    QList<FileInfo> files2;
-    for (int i = 0; i < files.size(); ++i) {
-        bool found = false;
-        for (int j = 0; j < steamfiles.size(); ++j) {
-            if (files[i].filePath == steamfiles[j].filePath) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            files2.append(files[i]);
-        }
-    }
-    return files2+steamfiles;
+    std::sort(files.begin(), files.end());
+    return files;
 }
-
 
 
 QList<FileInfo> scanalldesktopfiles()
 {
     //寻找桌面路径，并返回两个桌面中所有文件信息的列表
     QList<FileInfo> files;
-    QString userdesktoppath=QDir::homePath()+"/Desktop";
-    files.append(scandesktopfiles(userdesktoppath));
+    // QString userdesktoppath=QDir::homePath()+"/Desktop";
+    // files.append(scandesktopfiles(userdesktoppath));
     QString publicdesktoppath=QDir::toNativeSeparators("C:/Users/Public/Desktop");
     files.append(scandesktopfiles(publicdesktoppath));
+    QString another = getDesktopPath();
+    files.append(scandesktopfiles(another));
+    std::sort(files.begin(),files.end());
+    qDebug()<<publicdesktoppath<<another;
     return files;
 }
 
@@ -418,5 +500,158 @@ void repaintAround(QWidget* aim){
     auto tem = aim->geometry();
     auto rrect = QRect(tem.x()-100,tem.y()-100,tem.width()+200,tem.height()+200);
     pmw->repaint(rrect);
+
+}
+
+QString  getDesktopPath()
+{
+    LPITEMIDLIST pidl;
+    LPMALLOC pShellMalloc;
+    char szDir[200];
+    if (SUCCEEDED(SHGetMalloc(&pShellMalloc)))
+    {
+        if (SUCCEEDED(SHGetSpecialFolderLocation(NULL, CSIDL_DESKTOP, &pidl))) {
+            // 如果成功返回true
+            SHGetPathFromIDListA(pidl, szDir);
+            pShellMalloc->Free(pidl);
+        }
+        pShellMalloc->Release();
+    }
+
+    return QString(szDir);
+}
+
+void writeStyleIni(){
+    qDebug()<<"Write";
+    //Qt中使用QSettings类读写ini文件
+    //QSettings构造函数的第一个参数是ini文件的路径,第二个参数表示针对ini文件,第三个参数可以缺省
+    QSettings *styleIni = new QSettings("style.ini", QSettings::IniFormat);
+    //向ini文件中写入内容,setValue函数的两个参数是键值对
+    styleIni->setValue("color/sleep_alpha", sleep_alpha);
+    styleIni->setValue("color/active_alpha", active_alpha);
+    styleIni->setValue("color/sleep_alpha_deep", sleep_alpha_deep);
+    styleIni->setValue("color/active_alpha_deep", active_alpha_deep);
+
+    styleIni->setValue("color/sleep_color_ratio", QString::number(sleep_color_ratio));
+    styleIni->setValue("color/active_color_ratio", QString::number(active_color_ratio));
+
+
+    styleIni->setValue("effect/light_alpha_start", light_alpha_start);
+    styleIni->setValue("effect/light_alpha_end", light_alpha_end);
+
+    styleIni->setValue("effect/icon_shadow_alpha", icon_shadow_alpha);
+    styleIni->setValue("effect/icon_shadow_blur_radius", icon_shadow_blur_radius);
+
+    styleIni->setValue("effect/unit_shadow_alpha", unit_shadow_alpha);
+    styleIni->setValue("effect/unit_shadow_blur_radius", unit_shadow_blur_radius);
+
+
+    styleIni->setValue("render/unit_radius", unit_radius);
+
+    styleIni->setValue("render/ShowRect",ShowRect);
+    styleIni->setValue("render/ShowSide", ShowSide);
+    styleIni->setValue("render/ShowLight", ShowLight);
+
+    styleIni->setValue("render/enable_background_transparent", enable_background_transparent);
+    styleIni->setValue("render/enable_background_blur", enable_background_blur);
+    styleIni->setValue("render/enable_light_track", enable_light_track);
+
+    styleIni->setValue("render/enable_intime_repaint", enable_intime_repaint);
+
+    styleIni->setValue("preference/enable_image_fill", enable_image_fill);
+    styleIni->setValue("preference/muilt_icon_default_type", muilt_icon_default_type);
+
+    styleIni->setValue("preference/scale_fix_ratio", scale_fix_ratio);
+    //写入完成后删除指针
+    delete styleIni;
+}
+
+void readStyleIni(){
+
+    QFileInfo fi("style.ini");
+    if(fi.exists()){
+        QSettings *styleIni = new QSettings("style.ini", QSettings::IniFormat);
+
+        sleep_alpha = styleIni->value("color/sleep_alpha").toInt();
+        active_alpha = styleIni->value("color/active_alpha").toInt();
+
+        sleep_alpha_deep = styleIni->value("color/sleep_alpha_deep").toInt();
+        active_alpha_deep = styleIni->value("color/active_alpha_deep").toInt();
+
+        sleep_color_ratio = styleIni->value("color/sleep_color_ratio").toFloat();
+        active_color_ratio = styleIni->value("color/active_color_ratio").toFloat();
+
+
+        light_alpha_start = styleIni->value("effect/light_alpha_start").toInt();
+        light_alpha_end = styleIni->value("effect/light_alpha_end").toInt();
+
+        icon_shadow_alpha = styleIni->value("effect/icon_shadow_alpha").toInt();
+        icon_shadow_blur_radius = styleIni->value("effect/icon_shadow_blur_radius").toInt();
+
+        unit_shadow_alpha = styleIni->value("effect/unit_shadow_alpha").toInt();
+        unit_shadow_blur_radius = styleIni->value("effect/unit_shadow_blur_radius" ).toInt();
+
+
+        unit_radius = styleIni->value("render/unit_radius", unit_radius).toInt();
+
+        ShowRect = styleIni->value("render/ShowRect").toBool();
+        ShowSide = styleIni->value("render/ShowSide").toBool();
+        ShowLight = styleIni->value("render/ShowLight").toBool();
+
+        enable_background_transparent = styleIni->value("render/enable_background_transparent").toBool();
+        enable_background_blur = styleIni->value("render/enable_background_blur").toBool();
+        enable_light_track = styleIni->value("render/enable_light_track").toBool();
+
+        enable_intime_repaint = styleIni->value("render/enable_intime_repaint").toBool();
+
+        enable_image_fill = styleIni->value("preference/enable_image_fill").toBool();
+        muilt_icon_default_type = styleIni->value("preference/muilt_icon_default_type").toInt();
+
+        scale_fix_ratio = styleIni->value("preference/scale_fix_ratio").toDouble();
+
+        delete styleIni;
+    }
+    else{
+        writeStyleIni();
+    }
+}
+
+void writeJson(){
+    QJsonObject rootObj =  pmw->edlayout->to_json();
+    QJsonDocument document;
+    document.setObject(rootObj);
+
+    QByteArray byte_array = document.toJson(QJsonDocument::Compact);
+    QString json_str(byte_array);
+    //根据实际填写路径
+    QFile file("content.json");
+
+
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Truncate))
+    {
+        qDebug() << "file error!";
+    }
+    QTextStream in(&file);
+    in.setCodec("UTF-8");
+    in << json_str;
+
+    file.close();   // 关闭file
+}
+
+void readJson(){
+    QFile file("content.json");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString value = file.readAll();
+    file.close();
+
+    QJsonParseError parseJsonErr;
+    QJsonDocument document = QJsonDocument::fromJson(value.toUtf8(), &parseJsonErr);
+    if (! (parseJsonErr.error == QJsonParseError::NoError)) {
+        QMessageBox::about(NULL, "提示", "配置文件错误！");
+        return;
+    }
+
+    QJsonObject jsonObject = document.object();
+    pmw->edlayout->load_json(jsonObject);
 
 }
